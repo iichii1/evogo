@@ -48,6 +48,10 @@ type InstanceService interface {
 	UpdateAdvancedSettings(instanceId string, settings *instance_model.AdvancedSettings) error
 }
 
+// ErrAlreadyAuthenticated indica que a instância já está pareada e logada, então
+// não há o que parear. É uma situação de estado (409), não uma falha do servidor.
+var ErrAlreadyAuthenticated = errors.New("instance is already authenticated")
+
 type instances struct {
 	instanceRepository instance_repository.InstanceRepository
 	config             *config.Config
@@ -500,7 +504,7 @@ func (i instances) Pair(data *PairStruct, instance *instance_model.Instance) (*P
 
 	if client == nil || !client.IsConnected() {
 		if client != nil && client.IsLoggedIn() {
-			return nil, fmt.Errorf("instance is already authenticated")
+			return nil, ErrAlreadyAuthenticated
 		}
 		logger.LogInfo("[%s] No active connection, starting instance for phone pairing", instance.Id)
 		if err := i.whatsmeowService.StartInstance(instance.Id); err != nil {
@@ -517,7 +521,7 @@ func (i instances) Pair(data *PairStruct, instance *instance_model.Instance) (*P
 	}
 
 	if client.IsLoggedIn() {
-		return nil, fmt.Errorf("instance is already authenticated")
+		return nil, ErrAlreadyAuthenticated
 	}
 
 	code, err := client.PairPhone(context.Background(), data.Phone, true, whatsmeow.PairClientChrome, "Chrome (Linux)")

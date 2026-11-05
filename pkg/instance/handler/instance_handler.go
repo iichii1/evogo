@@ -1,6 +1,7 @@
 package instance_handler
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
@@ -298,6 +299,7 @@ func (i *instanceHandler) Qr(ctx *gin.Context) {
 // @Param instance body instance_service.PairStruct true "Instance data"
 // @Success 200 {object} gin.H "Pairing code"
 // @Failure 400 {object} gin.H "Error on validation"
+// @Failure 409 {object} gin.H "Instance is already authenticated"
 // @Failure 500 {object} gin.H "Internal server error"
 // @Router /instance/pair [post]
 func (i *instanceHandler) Pair(ctx *gin.Context) {
@@ -323,6 +325,12 @@ func (i *instanceHandler) Pair(ctx *gin.Context) {
 
 	pairingCode, err := i.instanceService.Pair(data, instance)
 	if err != nil {
+		// Já pareada não é falha do servidor: antes voltava 500 e o Manager
+		// mostrava erro numa instância que estava funcionando (#231).
+		if errors.Is(err, instance_service.ErrAlreadyAuthenticated) {
+			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error(), "code": "already_authenticated"})
+			return
+		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
