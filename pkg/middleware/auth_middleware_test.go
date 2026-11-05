@@ -87,3 +87,61 @@ func TestAuthInstanceOrAdminWithoutGlobalKeyConfigured(t *testing.T) {
 		t.Fatalf("status = %d, want 401", w.Code)
 	}
 }
+
+func TestMatchesGlobalKey(t *testing.T) {
+	cases := []struct {
+		name       string
+		configured string
+		supplied   string
+		want       bool
+	}{
+		{"igual", "chave-global", "chave-global", true},
+		{"diferente do mesmo tamanho", "chave-global", "chave-globaL", false},
+		{"prefixo", "chave-global", "chave", false},
+		{"maior", "chave", "chave-global", false},
+		{"sem chave configurada", "", "qualquer", false},
+		{"sem chave configurada e sem chave enviada", "", "", false},
+		{"chave enviada vazia", "chave-global", "", false},
+	}
+	for _, c := range cases {
+		if got := MatchesGlobalKey(c.configured, c.supplied); got != c.want {
+			t.Errorf("%s: MatchesGlobalKey(%q, %q) = %v, esperado %v", c.name, c.configured, c.supplied, got, c.want)
+		}
+	}
+}
+
+func TestAuthAdmin(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	call := func(configured, apikey string) int {
+		m := NewMiddleware(&config.Config{GlobalApiKey: configured}, tokenLookup{
+			byToken: map[string]*instance_model.Instance{"token-a": {Id: "A"}},
+		})
+		r := gin.New()
+		r.GET("/x", m.AuthAdmin, func(c *gin.Context) { c.Status(http.StatusOK) })
+
+		req := httptest.NewRequest(http.MethodGet, "/x", nil)
+		if apikey != "" {
+			req.Header.Set("apikey", apikey)
+		}
+		w := httptest.NewRecorder()
+		r.ServeHTTP(w, req)
+		return w.Code
+	}
+
+	if got := call("chave-global", "chave-global"); got != http.StatusOK {
+		t.Errorf("chave global: status %d, esperado 200", got)
+	}
+	if got := call("chave-global", "token-a"); got != http.StatusUnauthorized {
+		t.Errorf("token de instância numa rota de admin: status %d, esperado 401", got)
+	}
+	if got := call("chave-global", "chave-globaL"); got != http.StatusUnauthorized {
+		t.Errorf("chave quase igual: status %d, esperado 401", got)
+	}
+	if got := call("chave-global", ""); got != http.StatusUnauthorized {
+		t.Errorf("sem apikey: status %d, esperado 401", got)
+	}
+	if got := call("", "qualquer"); got != http.StatusUnauthorized {
+		t.Errorf("sem chave global configurada: status %d, esperado 401", got)
+	}
+}

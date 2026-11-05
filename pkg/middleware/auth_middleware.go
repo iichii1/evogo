@@ -25,6 +25,18 @@ func IsAdmin(ctx *gin.Context) bool {
 	return ctx.GetBool(adminContextKey)
 }
 
+// MatchesGlobalKey informa se supplied é a chave global configurada.
+//
+// A comparação leva o mesmo tempo seja qual for o ponto em que as chaves
+// diferem, para que a chave não possa ser descoberta medindo o tempo de
+// resposta. Sem chave global configurada nada coincide, nem uma chave vazia.
+func MatchesGlobalKey(configured, supplied string) bool {
+	if configured == "" || supplied == "" {
+		return false
+	}
+	return subtle.ConstantTimeCompare([]byte(supplied), []byte(configured)) == 1
+}
+
 type middleware struct {
 	config          *config.Config
 	instanceService instance_service.InstanceService
@@ -55,7 +67,7 @@ func (m middleware) AuthAdmin(ctx *gin.Context) {
 		return
 	}
 
-	if token != m.config.GlobalApiKey {
+	if !MatchesGlobalKey(m.config.GlobalApiKey, token) {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "not authorized"})
 		return
 	}
@@ -70,7 +82,7 @@ func (m middleware) AuthInstanceOrAdmin(ctx *gin.Context) {
 		return
 	}
 
-	if m.config.GlobalApiKey != "" && subtle.ConstantTimeCompare([]byte(token), []byte(m.config.GlobalApiKey)) == 1 {
+	if MatchesGlobalKey(m.config.GlobalApiKey, token) {
 		ctx.Set(adminContextKey, true)
 		ctx.Next()
 		return

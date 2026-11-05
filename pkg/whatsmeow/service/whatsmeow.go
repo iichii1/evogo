@@ -2025,7 +2025,7 @@ func (mycli *MyClient) myEventHandler(rawEvt interface{}) {
 
 		// Limpar cache de userInfo para esta instância
 		mycli.userInfoCache.Delete(mycli.Instance.Token)
-		mycli.loggerWrapper.GetLogger(mycli.userID).LogInfo("[%s] UserInfo cache cleared for token: %s", mycli.userID, mycli.Instance.Token)
+		mycli.loggerWrapper.GetLogger(mycli.userID).LogInfo("[%s] UserInfo cache cleared", mycli.userID)
 
 		mycli.Instance.DisconnectReason = evt.Reason.String()
 		mycli.Instance.Connected = false
@@ -2146,7 +2146,7 @@ func (mycli *MyClient) myEventHandler(rawEvt interface{}) {
 
 		// Limpar cache de userInfo para esta instância
 		mycli.userInfoCache.Delete(mycli.Instance.Token)
-		mycli.loggerWrapper.GetLogger(mycli.userID).LogInfo("[%s] UserInfo cache cleared for token: %s", mycli.userID, mycli.Instance.Token)
+		mycli.loggerWrapper.GetLogger(mycli.userID).LogInfo("[%s] UserInfo cache cleared", mycli.userID)
 
 		mycli.Instance.DisconnectReason = evt.Reason.String()
 		mycli.Instance.Connected = false
@@ -2160,7 +2160,7 @@ func (mycli *MyClient) myEventHandler(rawEvt interface{}) {
 
 		// Limpar cache de userInfo para esta instância (mas não para reconexão automática)
 		mycli.userInfoCache.Delete(mycli.Instance.Token)
-		mycli.loggerWrapper.GetLogger(mycli.userID).LogInfo("[%s] UserInfo cache cleared for token: %s", mycli.userID, mycli.Instance.Token)
+		mycli.loggerWrapper.GetLogger(mycli.userID).LogInfo("[%s] UserInfo cache cleared", mycli.userID)
 
 		mycli.Instance.DisconnectReason = "Disconnected emitted because the websocket is closed by the server."
 		mycli.Instance.Connected = false
@@ -2970,7 +2970,7 @@ func (w whatsmeowService) UpdateInstanceAdvancedSettings(instanceId string) erro
 }
 
 func (w whatsmeowService) ClearInstanceCache(instanceId string, token string) error {
-	w.loggerWrapper.GetLogger(instanceId).LogInfo("[%s] Clearing instance cache - Token: %s", instanceId, token)
+	w.loggerWrapper.GetLogger(instanceId).LogInfo("[%s] Clearing instance cache", instanceId)
 
 	// Para o cliente (se ainda estiver rodando) sem reiniciá-lo.
 	if w.StopClient(instanceId, stopReasonDelete) {

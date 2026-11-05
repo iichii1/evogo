@@ -247,8 +247,10 @@ func setupRouter(db *gorm.DB, authDB *sql.DB, sqliteDB *sql.DB, config *config.C
 		token := c.Query("token")
 		instanceId := c.Query("instanceId")
 
-		if token != config.GlobalApiKey {
-			logger.LogError("Token inválido: %s", token)
+		if !auth_middleware.MatchesGlobalKey(config.GlobalApiKey, token) {
+			// O token recebido não vai para o log: um erro de digitação de quem
+			// usa a chave global gravaria a chave quase inteira.
+			logger.LogError("Conexão WebSocket recusada: token inválido")
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
 		}
