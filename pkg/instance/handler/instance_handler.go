@@ -668,7 +668,7 @@ func (h *instanceHandler) GetAdvancedSettings(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param instanceId path string true "Instance ID"
-// @Param settings body instance_model.AdvancedSettings true "Advanced settings data"
+// @Param settings body instance_model.AdvancedSettingsPatch true "Advanced settings data (omitted fields keep their current value)"
 // @Success 200 {object} gin.H "Advanced settings updated successfully"
 // @Failure 400 {object} gin.H "Invalid request data"
 // @Failure 403 {object} gin.H "The apikey does not belong to this instance"

@@ -35,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_call_service.RejectCallStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_call_service.RejectCallStruct"
                         }
                     }
                 ],
@@ -75,7 +75,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_chat_service.BodyStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.BodyStruct"
                         }
                     }
                 ],
@@ -121,7 +121,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_chat_service.HistorySyncRequestStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.HistorySyncRequestStruct"
                         }
                     }
                 ],
@@ -167,7 +167,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_chat_service.BodyStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.BodyStruct"
                         }
                     }
                 ],
@@ -213,7 +213,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_chat_service.BodyStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.BodyStruct"
                         }
                     }
                 ],
@@ -259,7 +259,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_chat_service.BodyStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.BodyStruct"
                         }
                     }
                 ],
@@ -305,7 +305,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_chat_service.BodyStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.BodyStruct"
                         }
                     }
                 ],
@@ -351,7 +351,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_chat_service.BodyStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.BodyStruct"
                         }
                     }
                 ],
@@ -397,7 +397,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_community_service.AddParticipantStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_community_service.AddParticipantStruct"
                         }
                     }
                 ],
@@ -443,7 +443,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_community_service.CreateCommunityStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_community_service.CreateCommunityStruct"
                         }
                     }
                 ],
@@ -489,7 +489,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_community_service.AddParticipantStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_community_service.AddParticipantStruct"
                         }
                     }
                 ],
@@ -535,7 +535,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_group_service.CreateGroupStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.CreateGroupStruct"
                         }
                     }
                 ],
@@ -581,7 +581,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_group_service.SetGroupDescriptionStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.SetGroupDescriptionStruct"
                         }
                     }
                 ],
@@ -627,7 +627,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_group_service.GetGroupInfoStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.GetGroupInfoStruct"
                         }
                     }
                 ],
@@ -673,7 +673,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_group_service.GetGroupInviteLinkStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.GetGroupInviteLinkStruct"
                         }
                     }
                 ],
@@ -719,7 +719,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_group_service.JoinGroupStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.JoinGroupStruct"
                         }
                     }
                 ],
@@ -765,7 +765,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_group_service.LeaveGroupStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.LeaveGroupStruct"
                         }
                     }
                 ],
@@ -869,7 +869,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_group_service.SetGroupNameStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.SetGroupNameStruct"
                         }
                     }
                 ],
@@ -915,7 +915,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_group_service.AddParticipantStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.AddParticipantStruct"
                         }
                     }
                 ],
@@ -961,7 +961,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_group_service.SetGroupPhotoStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.SetGroupPhotoStruct"
                         }
                     }
                 ],
@@ -1007,7 +1007,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_group_service.UpdateGroupSettingsStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.UpdateGroupSettingsStruct"
                         }
                     }
                 ],
@@ -1082,7 +1082,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_instance_service.ConnectStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_instance_service.ConnectStruct"
                         }
                     }
                 ],
@@ -1128,7 +1128,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_instance_service.CreateStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_instance_service.CreateStruct"
                         }
                     }
                 ],
@@ -1254,7 +1254,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_instance_service.ForceReconnectStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_instance_service.ForceReconnectStruct"
                         }
                     }
                 ],
@@ -1438,7 +1438,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_instance_service.PairStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_instance_service.PairStruct"
                         }
                     }
                 ],
@@ -1451,6 +1451,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "409": {
+                        "description": "Instance is already authenticated",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -1491,7 +1497,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_instance_service.SetProxyStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_instance_service.SetProxyStruct"
                         }
                     }
                 ],
@@ -1669,11 +1675,17 @@ const docTemplate = `{
                     "200": {
                         "description": "Advanced settings retrieved successfully",
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_instance_model.AdvancedSettings"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_instance_model.AdvancedSettings"
                         }
                     },
                     "400": {
                         "description": "Invalid instance ID",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "403": {
+                        "description": "The apikey does not belong to this instance",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -1693,7 +1705,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update advanced settings for a specific instance",
+                "description": "Update advanced settings for a specific instance. Fields that are omitted keep their current value.",
                 "consumes": [
                     "application/json"
                 ],
@@ -1713,12 +1725,12 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Advanced settings data",
+                        "description": "Advanced settings data (omitted fields keep their current value)",
                         "name": "settings",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_instance_model.AdvancedSettings"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_instance_model.AdvancedSettingsPatch"
                         }
                     }
                 ],
@@ -1731,6 +1743,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Invalid request data",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "403": {
+                        "description": "The apikey does not belong to this instance",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -1770,7 +1788,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_label_service.ChatLabelStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_label_service.ChatLabelStruct"
                         }
                     }
                 ],
@@ -1816,7 +1834,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_label_service.EditLabelStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_label_service.EditLabelStruct"
                         }
                     }
                 ],
@@ -1891,7 +1909,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_label_service.MessageLabelStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_label_service.MessageLabelStruct"
                         }
                     }
                 ],
@@ -2020,7 +2038,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_message_service.MessageStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.MessageStruct"
                         }
                     }
                 ],
@@ -2066,7 +2084,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_message_service.DownloadMediaStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.DownloadMediaStruct"
                         }
                     }
                 ],
@@ -2112,7 +2130,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_message_service.EditMessageStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.EditMessageStruct"
                         }
                     }
                 ],
@@ -2158,7 +2176,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_message_service.MarkPlayedStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.MarkPlayedStruct"
                         }
                     }
                 ],
@@ -2204,7 +2222,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_message_service.MarkReadStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.MarkReadStruct"
                         }
                     }
                 ],
@@ -2250,7 +2268,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_message_service.ChatPresenceStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.ChatPresenceStruct"
                         }
                     }
                 ],
@@ -2296,7 +2314,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_message_service.ReactStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.ReactStruct"
                         }
                     }
                 ],
@@ -2342,7 +2360,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_message_service.MessageStatusStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.MessageStatusStruct"
                         }
                     }
                 ],
@@ -2388,7 +2406,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_newsletter_service.CreateNewsletterStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_newsletter_service.CreateNewsletterStruct"
                         }
                     }
                 ],
@@ -2434,7 +2452,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_newsletter_service.GetNewsletterStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_newsletter_service.GetNewsletterStruct"
                         }
                     }
                 ],
@@ -2480,7 +2498,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_newsletter_service.GetNewsletterInviteStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_newsletter_service.GetNewsletterInviteStruct"
                         }
                     }
                 ],
@@ -2555,7 +2573,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_newsletter_service.GetNewsletterMessagesStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_newsletter_service.GetNewsletterMessagesStruct"
                         }
                     }
                 ],
@@ -2601,7 +2619,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_newsletter_service.GetNewsletterStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_newsletter_service.GetNewsletterStruct"
                         }
                     }
                 ],
@@ -2818,7 +2836,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_poll_model.PollResults"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_poll_model.PollResults"
                         }
                     },
                     "400": {
@@ -2862,7 +2880,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.ButtonStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.ButtonStruct"
                         }
                     }
                 ],
@@ -2908,7 +2926,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.CarouselStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.CarouselStruct"
                         }
                     }
                 ],
@@ -2954,7 +2972,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.ContactStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.ContactStruct"
                         }
                     }
                 ],
@@ -3000,7 +3018,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.LinkStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.LinkStruct"
                         }
                     }
                 ],
@@ -3046,7 +3064,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.ListStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.ListStruct"
                         }
                     }
                 ],
@@ -3092,7 +3110,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.LocationStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.LocationStruct"
                         }
                     }
                 ],
@@ -3138,7 +3156,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.MediaStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.MediaStruct"
                         }
                     }
                 ],
@@ -3184,7 +3202,53 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.PollStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.PollStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/send/pollVote": {
+            "post": {
+                "description": "Vote on an existing poll. The poll must have been sent or received by this instance. An empty selectedOptions list removes the vote.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Send Message"
+                ],
+                "summary": "Vote on a poll",
+                "parameters": [
+                    {
+                        "description": "Vote data",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.PollVoteStruct"
                         }
                     }
                 ],
@@ -3299,7 +3363,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.StatusTextStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.StatusTextStruct"
                         }
                     }
                 ],
@@ -3345,7 +3409,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.StickerStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.StickerStruct"
                         }
                     }
                 ],
@@ -3391,7 +3455,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.TextStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.TextStruct"
                         }
                     }
                 ],
@@ -3437,7 +3501,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_label_service.ChatLabelStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_label_service.ChatLabelStruct"
                         }
                     }
                 ],
@@ -3483,7 +3547,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_label_service.MessageLabelStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_label_service.MessageLabelStruct"
                         }
                     }
                 ],
@@ -3529,7 +3593,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_user_service.GetAvatarStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.GetAvatarStruct"
                         }
                     }
                 ],
@@ -3575,7 +3639,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_user_service.BlockStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.BlockStruct"
                         }
                     }
                 ],
@@ -3650,7 +3714,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_user_service.CheckUserStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.CheckUserStruct"
                         }
                     }
                 ],
@@ -3725,7 +3789,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_user_service.CheckUserStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.CheckUserStruct"
                         }
                     }
                 ],
@@ -3798,7 +3862,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_user_service.PrivacyStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.PrivacyStruct"
                         }
                     }
                 ],
@@ -3838,7 +3902,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_user_service.SetProfilePictureStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.SetProfileNameStruct"
                         }
                     }
                 ],
@@ -3884,7 +3948,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_user_service.SetProfilePictureStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.SetProfilePictureStruct"
                         }
                     }
                 ],
@@ -3930,7 +3994,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_user_service.SetProfilePictureStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.SetProfilePictureStruct"
                         }
                     }
                 ],
@@ -3976,7 +4040,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_user_service.BlockStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.BlockStruct"
                         }
                     }
                 ],
@@ -4008,7 +4072,7 @@ const docTemplate = `{
             "type": "object",
             "additionalProperties": {}
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_call_service.RejectCallStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_call_service.RejectCallStruct": {
             "type": "object",
             "properties": {
                 "callCreator": {
@@ -4019,7 +4083,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_chat_service.BodyStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_chat_service.BodyStruct": {
             "type": "object",
             "properties": {
                 "chat": {
@@ -4027,7 +4091,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_chat_service.HistorySyncRequestStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_chat_service.HistorySyncRequestStruct": {
             "type": "object",
             "properties": {
                 "count": {
@@ -4038,7 +4102,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_community_service.AddParticipantStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_community_service.AddParticipantStruct": {
             "type": "object",
             "properties": {
                 "communityJid": {
@@ -4052,7 +4116,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_community_service.CreateCommunityStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_community_service.CreateCommunityStruct": {
             "type": "object",
             "properties": {
                 "communityName": {
@@ -4060,7 +4124,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_group_service.AddParticipantStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.AddParticipantStruct": {
             "type": "object",
             "properties": {
                 "action": {
@@ -4077,7 +4141,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_group_service.CreateGroupStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.CreateGroupStruct": {
             "type": "object",
             "properties": {
                 "groupName": {
@@ -4091,7 +4155,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_group_service.GetGroupInfoStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.GetGroupInfoStruct": {
             "type": "object",
             "properties": {
                 "groupJid": {
@@ -4099,7 +4163,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_group_service.GetGroupInviteLinkStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.GetGroupInviteLinkStruct": {
             "type": "object",
             "properties": {
                 "groupJid": {
@@ -4110,7 +4174,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_group_service.JoinGroupStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.JoinGroupStruct": {
             "type": "object",
             "properties": {
                 "code": {
@@ -4118,7 +4182,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_group_service.LeaveGroupStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.LeaveGroupStruct": {
             "type": "object",
             "properties": {
                 "groupJid": {
@@ -4126,7 +4190,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_group_service.SetGroupDescriptionStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.SetGroupDescriptionStruct": {
             "type": "object",
             "properties": {
                 "description": {
@@ -4137,7 +4201,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_group_service.SetGroupNameStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.SetGroupNameStruct": {
             "type": "object",
             "properties": {
                 "groupJid": {
@@ -4148,7 +4212,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_group_service.SetGroupPhotoStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.SetGroupPhotoStruct": {
             "type": "object",
             "properties": {
                 "groupJid": {
@@ -4159,7 +4223,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_group_service.UpdateGroupSettingsStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.UpdateGroupSettingsStruct": {
             "type": "object",
             "properties": {
                 "action": {
@@ -4171,7 +4235,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_instance_model.AdvancedSettings": {
+        "github_com_evolution-foundation_evolution-go_pkg_instance_model.AdvancedSettings": {
             "type": "object",
             "properties": {
                 "alwaysOnline": {
@@ -4194,7 +4258,30 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_instance_service.ConnectStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_instance_model.AdvancedSettingsPatch": {
+            "type": "object",
+            "properties": {
+                "alwaysOnline": {
+                    "type": "boolean"
+                },
+                "ignoreGroups": {
+                    "type": "boolean"
+                },
+                "ignoreStatus": {
+                    "type": "boolean"
+                },
+                "msgRejectCall": {
+                    "type": "string"
+                },
+                "readMessages": {
+                    "type": "boolean"
+                },
+                "rejectCall": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_instance_service.ConnectStruct": {
             "type": "object",
             "properties": {
                 "immediate": {
@@ -4223,11 +4310,11 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_instance_service.CreateStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_instance_service.CreateStruct": {
             "type": "object",
             "properties": {
                 "advancedSettings": {
-                    "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_instance_model.AdvancedSettings"
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_instance_model.AdvancedSettings"
                 },
                 "instanceId": {
                     "type": "string"
@@ -4236,14 +4323,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "proxy": {
-                    "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_instance_service.ProxyConfig"
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_instance_service.ProxyConfig"
                 },
                 "token": {
                     "type": "string"
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_instance_service.ForceReconnectStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_instance_service.ForceReconnectStruct": {
             "type": "object",
             "properties": {
                 "number": {
@@ -4251,7 +4338,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_instance_service.PairStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_instance_service.PairStruct": {
             "type": "object",
             "properties": {
                 "phone": {
@@ -4265,7 +4352,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_instance_service.ProxyConfig": {
+        "github_com_evolution-foundation_evolution-go_pkg_instance_service.ProxyConfig": {
             "type": "object",
             "properties": {
                 "host": {
@@ -4285,7 +4372,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_instance_service.SetProxyStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_instance_service.SetProxyStruct": {
             "type": "object",
             "required": [
                 "host",
@@ -4309,7 +4396,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_label_service.ChatLabelStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_label_service.ChatLabelStruct": {
             "type": "object",
             "properties": {
                 "jid": {
@@ -4320,7 +4407,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_label_service.EditLabelStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_label_service.EditLabelStruct": {
             "type": "object",
             "properties": {
                 "color": {
@@ -4337,7 +4424,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_label_service.MessageLabelStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_label_service.MessageLabelStruct": {
             "type": "object",
             "properties": {
                 "jid": {
@@ -4351,7 +4438,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_message_service.ChatPresenceStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.ChatPresenceStruct": {
             "type": "object",
             "properties": {
                 "delay": {
@@ -4369,7 +4456,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_message_service.DownloadMediaStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.DownloadMediaStruct": {
             "type": "object",
             "properties": {
                 "message": {
@@ -4377,7 +4464,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_message_service.EditMessageStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.EditMessageStruct": {
             "type": "object",
             "properties": {
                 "chat": {
@@ -4391,7 +4478,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_message_service.MarkPlayedStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.MarkPlayedStruct": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4405,7 +4492,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_message_service.MarkReadStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.MarkReadStruct": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4419,7 +4506,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_message_service.MessageStatusStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.MessageStatusStruct": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4427,7 +4514,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_message_service.MessageStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.MessageStruct": {
             "type": "object",
             "properties": {
                 "chat": {
@@ -4438,7 +4525,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_message_service.ReactStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.ReactStruct": {
             "type": "object",
             "properties": {
                 "fromMe": {
@@ -4458,7 +4545,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_newsletter_service.CreateNewsletterStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_newsletter_service.CreateNewsletterStruct": {
             "type": "object",
             "properties": {
                 "description": {
@@ -4469,7 +4556,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_newsletter_service.GetNewsletterInviteStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_newsletter_service.GetNewsletterInviteStruct": {
             "type": "object",
             "properties": {
                 "key": {
@@ -4477,7 +4564,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_newsletter_service.GetNewsletterMessagesStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_newsletter_service.GetNewsletterMessagesStruct": {
             "type": "object",
             "properties": {
                 "before_id": {
@@ -4491,7 +4578,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_newsletter_service.GetNewsletterStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_newsletter_service.GetNewsletterStruct": {
             "type": "object",
             "properties": {
                 "jid": {
@@ -4499,7 +4586,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_poll_model.PollResults": {
+        "github_com_evolution-foundation_evolution-go_pkg_poll_model.PollResults": {
             "type": "object",
             "properties": {
                 "optionCounts": {
@@ -4521,18 +4608,18 @@ const docTemplate = `{
                 "voters": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_poll_model.VoterInfo"
+                        "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_poll_model.VoterInfo"
                     }
                 },
                 "votes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_poll_model.PollVote"
+                        "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_poll_model.PollVote"
                     }
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_poll_model.PollVote": {
+        "github_com_evolution-foundation_evolution-go_pkg_poll_model.PollVote": {
             "type": "object",
             "properties": {
                 "companyId": {
@@ -4577,7 +4664,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_poll_model.VoterInfo": {
+        "github_com_evolution-foundation_evolution-go_pkg_poll_model.VoterInfo": {
             "type": "object",
             "properties": {
                 "jid": {
@@ -4600,7 +4687,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.Button": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.Button": {
             "type": "object",
             "properties": {
                 "copyCode": {
@@ -4669,14 +4756,14 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.ButtonStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.ButtonStruct": {
             "type": "object",
             "properties": {
                 "buttons": {
                     "description": "Buttons array. See combination rules on the parent type description.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.Button"
+                        "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.Button"
                     }
                 },
                 "delay": {
@@ -4722,7 +4809,7 @@ const docTemplate = `{
                     "description": "Quoted (reply-to) context.",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
                         }
                     ]
                 },
@@ -4737,7 +4824,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.CarouselButtonStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.CarouselButtonStruct": {
             "type": "object",
             "properties": {
                 "copyCode": {
@@ -4751,28 +4838,40 @@ const docTemplate = `{
                     "example": "Quero saber mais"
                 },
                 "id": {
-                    "description": "Context-dependent: REPLY payload, URL target (type=URL) or phone number (type=CALL).",
+                    "description": "REPLY callback payload. Also accepted as URL (type=URL) or phone number (type=CALL) when those fields are empty.",
                     "type": "string",
                     "example": "card1_info"
                 },
+                "phoneNumber": {
+                    "description": "Destination phone number when type=CALL.",
+                    "type": "string",
+                    "example": "+5582988898565"
+                },
                 "type": {
-                    "description": "Button kind (case-insensitive). One of: REPLY (default), URL, CALL, COPY.",
+                    "description": "Button kind (case-insensitive). One of: REPLY (default), URL, CALL, COPY (alias COPY_CODE).",
                     "type": "string",
                     "enum": [
                         "REPLY",
                         "URL",
                         "CALL",
                         "COPY",
+                        "COPY_CODE",
                         "reply",
                         "url",
                         "call",
-                        "copy"
+                        "copy",
+                        "copy_code"
                     ],
                     "example": "REPLY"
+                },
+                "url": {
+                    "description": "Target URL when type=URL.",
+                    "type": "string",
+                    "example": "https://evolutionapi.com"
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.CarouselCardBodyStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.CarouselCardBodyStruct": {
             "type": "object",
             "properties": {
                 "text": {
@@ -4782,7 +4881,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.CarouselCardHeaderStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.CarouselCardHeaderStruct": {
             "type": "object",
             "properties": {
                 "imageUrl": {
@@ -4806,14 +4905,14 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.CarouselCardStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.CarouselCardStruct": {
             "type": "object",
             "properties": {
                 "body": {
                     "description": "Card body text (required).",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.CarouselCardBodyStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.CarouselCardBodyStruct"
                         }
                     ]
                 },
@@ -4821,7 +4920,7 @@ const docTemplate = `{
                     "description": "Buttons shown on the card. See CarouselButtonStruct for combination rules.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.CarouselButtonStruct"
+                        "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.CarouselButtonStruct"
                     }
                 },
                 "footer": {
@@ -4833,13 +4932,13 @@ const docTemplate = `{
                     "description": "Card header (media + title/subtitle).",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.CarouselCardHeaderStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.CarouselCardHeaderStruct"
                         }
                     ]
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.CarouselStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.CarouselStruct": {
             "type": "object",
             "properties": {
                 "body": {
@@ -4851,7 +4950,7 @@ const docTemplate = `{
                     "description": "Cards displayed in order. At least one card is required.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.CarouselCardStruct"
+                        "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.CarouselCardStruct"
                     }
                 },
                 "delay": {
@@ -4877,13 +4976,13 @@ const docTemplate = `{
                     "description": "Quoted (reply-to) context.",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
                         }
                     ]
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.ContactStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.ContactStruct": {
             "type": "object",
             "properties": {
                 "delay": {
@@ -4908,14 +5007,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "quoted": {
-                    "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
                 },
                 "vcard": {
-                    "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_utils.VCardStruct"
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_utils.VCardStruct"
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.LinkStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.LinkStruct": {
             "type": "object",
             "properties": {
                 "delay": {
@@ -4946,7 +5045,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "quoted": {
-                    "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
                 },
                 "text": {
                     "type": "string"
@@ -4959,7 +5058,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.ListStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.ListStruct": {
             "type": "object",
             "properties": {
                 "buttonText": {
@@ -5006,7 +5105,7 @@ const docTemplate = `{
                     "description": "Quoted (reply-to) context.",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
                         }
                     ]
                 },
@@ -5014,7 +5113,7 @@ const docTemplate = `{
                     "description": "Sections with rows. At least one section with one row is required.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.Section"
+                        "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.Section"
                     }
                 },
                 "title": {
@@ -5024,7 +5123,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.LocationStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.LocationStruct": {
             "type": "object",
             "properties": {
                 "address": {
@@ -5061,11 +5160,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "quoted": {
-                    "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.MediaStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.MediaStruct": {
             "type": "object",
             "properties": {
                 "caption": {
@@ -5098,8 +5197,12 @@ const docTemplate = `{
                 "number": {
                     "type": "string"
                 },
+                "ptt": {
+                    "description": "Only for type=audio. true (default) sends a voice note; false sends a regular audio file with a player.",
+                    "type": "boolean"
+                },
                 "quoted": {
-                    "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
                 },
                 "type": {
                     "type": "string"
@@ -5109,7 +5212,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.PollStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.PollStruct": {
             "type": "object",
             "properties": {
                 "delay": {
@@ -5146,11 +5249,46 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "quoted": {
-                    "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.QuotedStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.PollVoteStruct": {
+            "type": "object",
+            "properties": {
+                "fromMe": {
+                    "description": "true when the poll was created by this instance.",
+                    "type": "boolean",
+                    "example": false
+                },
+                "number": {
+                    "description": "Chat where the poll is: phone number, group JID (@g.us) or LID (@lid).",
+                    "type": "string",
+                    "example": "5511999999999"
+                },
+                "participant": {
+                    "description": "Who created the poll, for polls in groups created by someone else. Phone number or JID.",
+                    "type": "string",
+                    "example": "5511888888888"
+                },
+                "pollMessageId": {
+                    "description": "ID of the poll message (the one returned by /send/poll or received in the webhook).",
+                    "type": "string",
+                    "example": "3EB0000000000000000008"
+                },
+                "selectedOptions": {
+                    "description": "Exact text of the options to select. An empty list removes this instance's vote.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "Option 1"
+                    ]
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct": {
             "type": "object",
             "properties": {
                 "messageId": {
@@ -5158,10 +5296,14 @@ const docTemplate = `{
                 },
                 "participant": {
                     "type": "string"
+                },
+                "text": {
+                    "description": "Text é o texto da mensagem citada. É opcional: o WhatsApp só mostra o\nconteúdo no cartão de resposta se a mensagem citada viajar junto, e a\nAPI não guarda o corpo das mensagens para buscá-lo pelo messageId (#189).",
+                    "type": "string"
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.Row": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.Row": {
             "type": "object",
             "properties": {
                 "description": {
@@ -5181,14 +5323,14 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.Section": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.Section": {
             "type": "object",
             "properties": {
                 "rows": {
                     "description": "Rows inside this section.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.Row"
+                        "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.Row"
                     }
                 },
                 "title": {
@@ -5198,7 +5340,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.StatusTextStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.StatusTextStruct": {
             "type": "object",
             "properties": {
                 "id": {
@@ -5209,7 +5351,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.StickerStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.StickerStruct": {
             "type": "object",
             "properties": {
                 "delay": {
@@ -5234,14 +5376,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "quoted": {
-                    "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
                 },
                 "sticker": {
                     "type": "string"
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.TextStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.TextStruct": {
             "type": "object",
             "properties": {
                 "delay": {
@@ -5269,14 +5411,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "quoted": {
-                    "$ref": "#/definitions/github_com_EvolutionAPI_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
                 },
                 "text": {
                     "type": "string"
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_user_service.BlockStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_user_service.BlockStruct": {
             "type": "object",
             "properties": {
                 "number": {
@@ -5284,7 +5426,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_user_service.CheckUserStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_user_service.CheckUserStruct": {
             "type": "object",
             "properties": {
                 "formatJid": {
@@ -5298,7 +5440,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_user_service.GetAvatarStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_user_service.GetAvatarStruct": {
             "type": "object",
             "properties": {
                 "number": {
@@ -5309,7 +5451,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_user_service.PrivacyStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_user_service.PrivacyStruct": {
             "type": "object",
             "properties": {
                 "callAdd": {
@@ -5335,7 +5477,15 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_user_service.SetProfilePictureStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_user_service.SetProfileNameStruct": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_user_service.SetProfilePictureStruct": {
             "type": "object",
             "properties": {
                 "image": {
@@ -5343,7 +5493,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_EvolutionAPI_evolution-go_pkg_utils.VCardStruct": {
+        "github_com_evolution-foundation_evolution-go_pkg_utils.VCardStruct": {
             "type": "object",
             "properties": {
                 "fullName": {
@@ -5373,12 +5523,14 @@ const docTemplate = `{
             "enum": [
                 "first",
                 "inner",
-                "last"
+                "last",
+                "full"
             ],
             "x-enum-varnames": [
                 "EditTypeFirst",
                 "EditTypeInner",
-                "EditTypeLast"
+                "EditTypeLast",
+                "EditTypeFull"
             ]
         },
         "types.BroadcastRecipient": {
@@ -5417,14 +5569,6 @@ const docTemplate = `{
             "x-enum-comments": {
                 "EditAttributeAdminEdit": "only used in newsletters"
             },
-            "x-enum-descriptions": [
-                "",
-                "",
-                "",
-                "only used in newsletters",
-                "",
-                ""
-            ],
             "x-enum-varnames": [
                 "EditAttributeEmpty",
                 "EditAttributeMessageEdit",
@@ -5438,16 +5582,13 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "device": {
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "integer"
                 },
                 "integrator": {
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "integer"
                 },
                 "rawAgent": {
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "integer"
                 },
                 "server": {
                     "type": "string"
@@ -5515,6 +5656,9 @@ const docTemplate = `{
                     "description": "Whether the chat is a group chat or broadcast list.",
                     "type": "boolean"
                 },
+                "isNewsletterStatus": {
+                    "type": "boolean"
+                },
                 "mediaType": {
                     "type": "string"
                 },
@@ -5571,6 +5715,10 @@ const docTemplate = `{
         "types.MsgBotInfo": {
             "type": "object",
             "properties": {
+                "clientThreadID": {
+                    "description": "For messages sent to bots",
+                    "type": "string"
+                },
                 "editSenderTimestampMS": {
                     "type": "string"
                 },
@@ -5636,11 +5784,26 @@ const docTemplate = `{
         "types.VerifiedName": {
             "type": "object",
             "properties": {
+                "actualActors": {
+                    "type": "integer"
+                },
                 "certificate": {
                     "$ref": "#/definitions/waVnameCert.VerifiedNameCertificate"
                 },
                 "details": {
                     "$ref": "#/definitions/waVnameCert.VerifiedNameCertificate_Details"
+                },
+                "hostStorage": {
+                    "type": "integer"
+                },
+                "privacyModeTS": {
+                    "type": "string"
+                },
+                "verifiedLevel": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "integer"
                 }
             }
         },
@@ -5721,8 +5884,33 @@ const docTemplate = `{
         "waAICommon.AIMetadataOperation": {
             "type": "object",
             "properties": {
+                "bizAiMetadataSync": {
+                    "$ref": "#/definitions/waAICommon.BizAIMetadataSync"
+                },
                 "hatchMetadataSync": {
                     "$ref": "#/definitions/waAICommon.HatchMetadataSync"
+                }
+            }
+        },
+        "waAICommon.AIProvenance": {
+            "type": "object",
+            "properties": {
+                "c2PaMetadata": {
+                    "$ref": "#/definitions/waAICommon.AIProvenance_Metadata"
+                },
+                "iptcMetadata": {
+                    "$ref": "#/definitions/waAICommon.AIProvenance_Metadata"
+                }
+            }
+        },
+        "waAICommon.AIProvenance_Metadata": {
+            "type": "object",
+            "properties": {
+                "createdWithGenAi": {
+                    "type": "boolean"
+                },
+                "editedWithGenAi": {
+                    "type": "boolean"
                 }
             }
         },
@@ -5750,7 +5938,6 @@ const docTemplate = `{
         },
         "waAICommon.AISubscriptionRequestType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -5796,18 +5983,19 @@ const docTemplate = `{
         },
         "waAICommon.AIThreadInfo_AIThreadClientInfo_AIThreadType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
                 2,
-                3
+                3,
+                4
             ],
             "x-enum-varnames": [
                 "AIThreadInfo_AIThreadClientInfo_UNKNOWN",
                 "AIThreadInfo_AIThreadClientInfo_DEFAULT",
                 "AIThreadInfo_AIThreadClientInfo_INCOGNITO",
-                "AIThreadInfo_AIThreadClientInfo_SIDE_CHAT"
+                "AIThreadInfo_AIThreadClientInfo_SIDE_CHAT",
+                "AIThreadInfo_AIThreadClientInfo_PRIVATE_SEARCH_CHAT"
             ]
         },
         "waAICommon.AIThreadInfo_AIThreadServerInfo": {
@@ -5815,6 +6003,14 @@ const docTemplate = `{
             "properties": {
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "waAICommon.BizAIMetadataSync": {
+            "type": "object",
+            "properties": {
+                "operation": {
+                    "description": "Types that are valid to be assigned to Operation:\n\n\t*BizAIMetadataSync_ServerEvent_"
                 }
             }
         },
@@ -5834,7 +6030,6 @@ const docTemplate = `{
         },
         "waAICommon.BotAgeCollectionMetadata_AgeCollectionType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -5847,6 +6042,12 @@ const docTemplate = `{
         "waAICommon.BotAgentDeepLinkMetadata": {
             "type": "object",
             "properties": {
+                "clientPublicKey": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "token": {
                     "type": "string"
                 }
@@ -5873,7 +6074,6 @@ const docTemplate = `{
         },
         "waAICommon.BotCapabilityMetadata_BotCapabilityType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -5940,7 +6140,24 @@ const docTemplate = `{
                 62,
                 63,
                 64,
-                65
+                65,
+                66,
+                67,
+                68,
+                69,
+                70,
+                71,
+                72,
+                73,
+                74,
+                75,
+                76,
+                77,
+                78,
+                79,
+                80,
+                81,
+                82
             ],
             "x-enum-varnames": [
                 "BotCapabilityMetadata_UNKNOWN",
@@ -6008,7 +6225,24 @@ const docTemplate = `{
                 "BotCapabilityMetadata_UNIFIED_RESPONSE_AI_CONTENT_SEARCH_ENABLED",
                 "BotCapabilityMetadata_UNIFIED_RESPONSE_MARKDOWN_LINKS_ENABLED",
                 "BotCapabilityMetadata_AI_RICH_RESPONSE_MAPS_V2_ENABLED",
-                "BotCapabilityMetadata_AI_SUBSCRIPTION_METERING_ENABLED"
+                "BotCapabilityMetadata_AI_SUBSCRIPTION_METERING_ENABLED",
+                "BotCapabilityMetadata_RICH_RESPONSE_SPORTS_WIDGET_ENABLED",
+                "BotCapabilityMetadata_AI_RICH_RESPONSE_ARTIFACTS_ENABLED",
+                "BotCapabilityMetadata_AI_RICH_RESPONSE_EMAIL_CALENDAR_ENABLED",
+                "BotCapabilityMetadata_AI_RICH_RESPONSE_REMINDERS_ENABLED",
+                "BotCapabilityMetadata_AI_STOP_GENERATION_ENABLED",
+                "BotCapabilityMetadata_AI_RICH_RESPONSE_3P_LINKING_CARD_ENABLED",
+                "BotCapabilityMetadata_HATCH_NOTIFICATION_METADATA_EVENT_ENABLED",
+                "BotCapabilityMetadata_AI_SUGGESTED_REPLIES_ENABLED",
+                "BotCapabilityMetadata_RICH_RESPONSE_IN_APP_SURVEY_BLOKS",
+                "BotCapabilityMetadata_RICH_RESPONSE_IMAGE_SOURCE_ATTRIBUTION",
+                "BotCapabilityMetadata_HATCH_CONNECTOR_ACTION_CARD_ENABLED",
+                "BotCapabilityMetadata_HATCH_SECURE_CREDENTIAL_CARD_ENABLED",
+                "BotCapabilityMetadata_HATCH_BROWSER_TASK_CARD_ENABLED",
+                "BotCapabilityMetadata_HATCH_ARTIFACT_CARD_ENABLED",
+                "BotCapabilityMetadata_AI_STUDY_CENTER_ENABLED",
+                "BotCapabilityMetadata_AI_MUSE_JARVIS_SCHEMA_ENABLED",
+                "BotCapabilityMetadata_AI_STUDY_QUIZ_ENABLED"
             ]
         },
         "waAICommon.BotCommandMetadata": {
@@ -6035,7 +6269,6 @@ const docTemplate = `{
         },
         "waAICommon.BotDocumentMessageMetadata_DocumentPluginType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -6073,7 +6306,6 @@ const docTemplate = `{
         },
         "waAICommon.BotFeedbackMessage_BotFeedbackKind": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -6111,7 +6343,6 @@ const docTemplate = `{
         },
         "waAICommon.BotFeedbackMessage_ReportKind": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -6259,6 +6490,17 @@ const docTemplate = `{
                 }
             }
         },
+        "waAICommon.BotHistoryShareMetadata": {
+            "type": "object",
+            "properties": {
+                "participantsMetadata": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/waAICommon.BotGroupParticipantMetadata"
+                    }
+                }
+            }
+        },
         "waAICommon.BotImagineMetadata": {
             "type": "object",
             "properties": {
@@ -6272,7 +6514,6 @@ const docTemplate = `{
         },
         "waAICommon.BotImagineMetadata_ImagineType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -6307,7 +6548,6 @@ const docTemplate = `{
         },
         "waAICommon.BotInfrastructureDiagnostics_BotBackend": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -6327,7 +6567,6 @@ const docTemplate = `{
         },
         "waAICommon.BotLinkedAccount_BotLinkedAccountType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0
             ],
@@ -6383,7 +6622,6 @@ const docTemplate = `{
         },
         "waAICommon.BotMediaMetadata_OrientationType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1,
                 2,
@@ -6458,12 +6696,13 @@ const docTemplate = `{
         },
         "waAICommon.BotMessageOrigin_BotMessageOriginType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
-                0
+                0,
+                1
             ],
             "x-enum-varnames": [
-                "BotMessageOrigin_BOT_MESSAGE_ORIGIN_TYPE_AI_INITIATED"
+                "BotMessageOrigin_BOT_MESSAGE_ORIGIN_TYPE_AI_INITIATED",
+                "BotMessageOrigin_BOT_MESSAGE_ORIGIN_TYPE_META_AI_THREAD_WELCOME"
             ]
         },
         "waAICommon.BotMessageSharingInfo": {
@@ -6497,6 +6736,9 @@ const docTemplate = `{
                 },
                 "botGroupMetadata": {
                     "$ref": "#/definitions/waAICommon.BotGroupMetadata"
+                },
+                "botHistoryShareMetadata": {
+                    "$ref": "#/definitions/waAICommon.BotHistoryShareMetadata"
                 },
                 "botInfrastructureDiagnostics": {
                     "$ref": "#/definitions/waAICommon.BotInfrastructureDiagnostics"
@@ -6588,6 +6830,9 @@ const docTemplate = `{
                 "resolvedToolCallMetadata": {
                     "$ref": "#/definitions/waAICommon.BotResolvedToolCallMetadata"
                 },
+                "responseStoppedByUser": {
+                    "type": "boolean"
+                },
                 "richResponseSourcesMetadata": {
                     "$ref": "#/definitions/waAICommon.BotSourcesMetadata"
                 },
@@ -6616,7 +6861,6 @@ const docTemplate = `{
         },
         "waAICommon.BotMetricsEntryPoint": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -6665,7 +6909,10 @@ const docTemplate = `{
                 47,
                 54,
                 55,
-                56
+                56,
+                57,
+                58,
+                59
             ],
             "x-enum-varnames": [
                 "BotMetricsEntryPoint_UNDEFINED_ENTRY_POINT",
@@ -6715,7 +6962,10 @@ const docTemplate = `{
                 "BotMetricsEntryPoint_WEB_NAVIGATION_BAR",
                 "BotMetricsEntryPoint_GROUP_MEMBER",
                 "BotMetricsEntryPoint_CHATLIST_SEARCH",
-                "BotMetricsEntryPoint_NEW_CHAT_LIST"
+                "BotMetricsEntryPoint_NEW_CHAT_LIST",
+                "BotMetricsEntryPoint_CONTACTS_TAB",
+                "BotMetricsEntryPoint_NEW_3P_AGENT_CREATION",
+                "BotMetricsEntryPoint_SHARE"
             ]
         },
         "waAICommon.BotMetricsMetadata": {
@@ -6734,7 +6984,6 @@ const docTemplate = `{
         },
         "waAICommon.BotMetricsThreadEntryPoint": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1,
                 2,
@@ -6769,7 +7018,6 @@ const docTemplate = `{
         },
         "waAICommon.BotModeSelectionMetadata_BotUserSelectionMode": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -6795,7 +7043,6 @@ const docTemplate = `{
         },
         "waAICommon.BotModelMetadata_ModelType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -6809,7 +7056,6 @@ const docTemplate = `{
         },
         "waAICommon.BotModelMetadata_PremiumModelStatus": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -6864,7 +7110,6 @@ const docTemplate = `{
         },
         "waAICommon.BotPluginMetadata_PluginType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -6878,7 +7123,6 @@ const docTemplate = `{
         },
         "waAICommon.BotPluginMetadata_SearchProvider": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -6974,7 +7218,6 @@ const docTemplate = `{
         },
         "waAICommon.BotProgressIndicatorMetadata_BotPlanningStepMetadata_BotPlanningSearchSourcesMetadata_BotPlanningSearchSourceProvider": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -7007,7 +7250,6 @@ const docTemplate = `{
         },
         "waAICommon.BotProgressIndicatorMetadata_BotPlanningStepMetadata_BotSearchSourceProvider": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -7023,7 +7265,6 @@ const docTemplate = `{
         },
         "waAICommon.BotProgressIndicatorMetadata_BotPlanningStepMetadata_PlanningStepStatus": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -7050,7 +7291,6 @@ const docTemplate = `{
         },
         "waAICommon.BotPromotionMessageMetadata_BotPromotionType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -7119,7 +7359,6 @@ const docTemplate = `{
         },
         "waAICommon.BotQuotaMetadata_BotFeatureQuotaMetadata_BotFeatureType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -7151,7 +7390,6 @@ const docTemplate = `{
         },
         "waAICommon.BotReminderMetadata_ReminderAction": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1,
                 2,
@@ -7167,7 +7405,6 @@ const docTemplate = `{
         },
         "waAICommon.BotReminderMetadata_ReminderFrequency": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1,
                 2,
@@ -7243,7 +7480,6 @@ const docTemplate = `{
         },
         "waAICommon.BotSessionSource": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -7284,9 +7520,14 @@ const docTemplate = `{
                     "items": {
                         "type": "array",
                         "items": {
-                            "type": "integer",
-                            "format": "int32"
+                            "type": "integer"
                         }
+                    }
+                },
+                "certificateChainSki": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/waAICommon.BotSignatureVerificationUseCaseProof_CertificateSKI"
                     }
                 },
                 "signature": {
@@ -7305,19 +7546,36 @@ const docTemplate = `{
         },
         "waAICommon.BotSignatureVerificationUseCaseProof_BotSignatureUseCase": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
                 2,
-                3
+                3,
+                4,
+                5
             ],
             "x-enum-varnames": [
                 "BotSignatureVerificationUseCaseProof_UNSPECIFIED",
                 "BotSignatureVerificationUseCaseProof_WA_BOT_MSG",
                 "BotSignatureVerificationUseCaseProof_WA_TEE_BOT_MSG",
-                "BotSignatureVerificationUseCaseProof_P2P_PILLS"
+                "BotSignatureVerificationUseCaseProof_P2P_PILLS",
+                "BotSignatureVerificationUseCaseProof_WA_WAFFLE",
+                "BotSignatureVerificationUseCaseProof_WA_FEATURE_PKI"
             ]
+        },
+        "waAICommon.BotSignatureVerificationUseCaseProof_CertificateSKI": {
+            "type": "object",
+            "properties": {
+                "ski": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "useCase": {
+                    "$ref": "#/definitions/waAICommon.BotSignatureVerificationUseCaseProof_BotSignatureUseCase"
+                }
+            }
         },
         "waAICommon.BotSourcesMetadata": {
             "type": "object",
@@ -7358,7 +7616,6 @@ const docTemplate = `{
         },
         "waAICommon.BotSourcesMetadata_BotSourceItem_SourceProvider": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -7587,7 +7844,6 @@ const docTemplate = `{
         },
         "waAICommon.SessionTransparencyType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -7624,7 +7880,6 @@ const docTemplate = `{
         },
         "waAICommonDeprecated.AIRichResponseCodeMetadata_AIRichResponseCodeHighlightType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -7666,7 +7921,6 @@ const docTemplate = `{
         },
         "waAICommonDeprecated.AIRichResponseContentItemsMetadata_ContentType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -7695,7 +7949,6 @@ const docTemplate = `{
         },
         "waAICommonDeprecated.AIRichResponseDynamicMetadata_AIRichResponseDynamicMetadataType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -7754,7 +8007,6 @@ const docTemplate = `{
         },
         "waAICommonDeprecated.AIRichResponseInlineImageMetadata_AIRichResponseImageAlignment": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -7860,7 +8112,6 @@ const docTemplate = `{
         },
         "waAICommonDeprecated.AIRichResponseMessageType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -7907,7 +8158,6 @@ const docTemplate = `{
         },
         "waAICommonDeprecated.AIRichResponseSubMessageType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -7963,7 +8213,6 @@ const docTemplate = `{
         },
         "waAdv.ADVEncryptionType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -7972,6 +8221,44 @@ const docTemplate = `{
                 "ADVEncryptionType_E2EE",
                 "ADVEncryptionType_HOSTED"
             ]
+        },
+        "waAea.NonE2EEAttestation": {
+            "type": "object",
+            "properties": {
+                "accountType": {
+                    "$ref": "#/definitions/waAea.NonE2EEAttestation_AccountType"
+                }
+            }
+        },
+        "waAea.NonE2EEAttestation_AccountType": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2
+            ],
+            "x-enum-varnames": [
+                "NonE2EEAttestation_E2EE",
+                "NonE2EEAttestation_HYBRID_E2EE",
+                "NonE2EEAttestation_NON_E2EE"
+            ]
+        },
+        "waCommon.ACP2Setting": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "initiatedByMe": {
+                    "type": "boolean"
+                },
+                "settingTimestamp": {
+                    "type": "integer"
+                },
+                "trigger": {
+                    "$ref": "#/definitions/waCommon.LimitSharing_Trigger"
+                }
+            }
         },
         "waCommon.LimitSharing": {
             "type": "object",
@@ -7992,7 +8279,6 @@ const docTemplate = `{
         },
         "waCommon.LimitSharing_Trigger": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -8125,6 +8411,9 @@ const docTemplate = `{
                 },
                 "messageType": {
                     "$ref": "#/definitions/waAICommonDeprecated.AIRichResponseMessageType"
+                },
+                "originalRecipientMetadata": {
+                    "$ref": "#/definitions/waAICommon.AIRichResponseUnifiedResponse"
                 },
                 "submessages": {
                     "type": "array",
@@ -8344,7 +8633,6 @@ const docTemplate = `{
         },
         "waE2E.BCallMessage_MediaType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -8355,6 +8643,23 @@ const docTemplate = `{
                 "BCallMessage_AUDIO",
                 "BCallMessage_VIDEO"
             ]
+        },
+        "waE2E.BotHistoryShareSyncMetadata": {
+            "type": "object",
+            "properties": {
+                "botJID": {
+                    "type": "string"
+                },
+                "historyShareCutoffTimestamp": {
+                    "type": "integer"
+                },
+                "historyShareMessages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/waE2E.HistoryShareMessageEntry"
+                    }
+                }
+            }
         },
         "waE2E.ButtonsMessage": {
             "type": "object",
@@ -8420,7 +8725,6 @@ const docTemplate = `{
         },
         "waE2E.ButtonsMessage_Button_Type": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -8434,7 +8738,6 @@ const docTemplate = `{
         },
         "waE2E.ButtonsMessage_HeaderType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -8473,7 +8776,6 @@ const docTemplate = `{
         },
         "waE2E.ButtonsResponseMessage_Type": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -8494,6 +8796,9 @@ const docTemplate = `{
                     "items": {
                         "type": "integer"
                     }
+                },
+                "callReason": {
+                    "type": "string"
                 },
                 "contextInfo": {
                     "$ref": "#/definitions/waE2E.ContextInfo"
@@ -8555,7 +8860,6 @@ const docTemplate = `{
         },
         "waE2E.CallLogMessage_CallOutcome": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -8590,7 +8894,6 @@ const docTemplate = `{
         },
         "waE2E.CallLogMessage_CallType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -8634,7 +8937,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "wallpaper": {
-                    "description": "Types that are valid to be assigned to Wallpaper:\n\n\t*ChatThemeSetting_DefaultWallpaper\n\t*ChatThemeSetting_SolidColor\n\t*ChatThemeSetting_StockImage\n\t*ChatThemeSetting_CustomImage"
+                    "description": "Types that are valid to be assigned to Wallpaper:\n\n\t*ChatThemeSetting_DefaultWallpaper\n\t*ChatThemeSetting_SolidColor\n\t*ChatThemeSetting_StockImage\n\t*ChatThemeSetting_CustomImage\n\t*ChatThemeSetting_AnimatedWallpaper"
                 }
             }
         },
@@ -8663,7 +8966,6 @@ const docTemplate = `{
         },
         "waE2E.CloudAPIThreadControlNotification_CloudAPIThreadControl": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -8685,6 +8987,17 @@ const docTemplate = `{
                 },
                 "handoffNotificationText": {
                     "type": "string"
+                }
+            }
+        },
+        "waE2E.CoexConnectionDescriptor": {
+            "type": "object",
+            "properties": {
+                "product": {
+                    "type": "string"
+                },
+                "providerID": {
+                    "type": "integer"
                 }
             }
         },
@@ -8724,7 +9037,6 @@ const docTemplate = `{
         },
         "waE2E.ConditionalRevealMessage_ConditionalRevealMessageType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -8776,6 +9088,9 @@ const docTemplate = `{
                 },
                 "afterReadDuration": {
                     "type": "integer"
+                },
+                "aiProvenance": {
+                    "$ref": "#/definitions/waAICommon.AIProvenance"
                 },
                 "alwaysShowAdAttribution": {
                     "type": "boolean"
@@ -8843,6 +9158,12 @@ const docTemplate = `{
                         "type": "integer"
                     }
                 },
+                "experienceIDs": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "expiration": {
                     "type": "integer"
                 },
@@ -8872,6 +9193,9 @@ const docTemplate = `{
                 },
                 "groupSubject": {
                     "type": "string"
+                },
+                "instagramThreadLink": {
+                    "$ref": "#/definitions/waE2E.ContextInfo_InstagramThreadLink"
                 },
                 "isForwarded": {
                     "type": "boolean"
@@ -8913,6 +9237,9 @@ const docTemplate = `{
                     "$ref": "#/definitions/waE2E.ContextInfo_PartiallySelectedContent"
                 },
                 "participant": {
+                    "type": "string"
+                },
+                "partnerDeepLinkToken": {
                     "type": "string"
                 },
                 "placeholderKey": {
@@ -8999,7 +9326,6 @@ const docTemplate = `{
         },
         "waE2E.ContextInfo_AdReplyInfo_MediaType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -9034,12 +9360,14 @@ const docTemplate = `{
                     "items": {
                         "type": "integer"
                     }
+                },
+                "unauthenticatedBusinessMetadata": {
+                    "$ref": "#/definitions/waE2E.ContextInfo_BusinessInteractionPills_UnauthenticatedBusinessMetadata"
                 }
             }
         },
         "waE2E.ContextInfo_BusinessInteractionPills_EntryPoint": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -9070,7 +9398,6 @@ const docTemplate = `{
         },
         "waE2E.ContextInfo_BusinessInteractionPills_PillType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -9102,6 +9429,23 @@ const docTemplate = `{
                 "ContextInfo_BusinessInteractionPills_ORDER"
             ]
         },
+        "waE2E.ContextInfo_BusinessInteractionPills_UnauthenticatedBusinessMetadata": {
+            "type": "object",
+            "properties": {
+                "businessCategory": {
+                    "type": "string"
+                },
+                "businessIsOpen": {
+                    "type": "boolean"
+                },
+                "businessIsOpenSnapshotMS": {
+                    "type": "integer"
+                },
+                "businessName": {
+                    "type": "string"
+                }
+            }
+        },
         "waE2E.ContextInfo_BusinessMessageForwardInfo": {
             "type": "object",
             "properties": {
@@ -9112,7 +9456,6 @@ const docTemplate = `{
         },
         "waE2E.ContextInfo_CrossAppSource": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -9203,7 +9546,13 @@ const docTemplate = `{
                 "containsAutoReply": {
                     "type": "boolean"
                 },
+                "containsCtwaFlowsAutoLabel": {
+                    "type": "boolean"
+                },
                 "containsCtwaFlowsAutoReply": {
+                    "type": "boolean"
+                },
+                "containsCtwaPromo": {
                     "type": "boolean"
                 },
                 "ctaPayload": {
@@ -9211,6 +9560,24 @@ const docTemplate = `{
                 },
                 "ctwaClid": {
                     "type": "string"
+                },
+                "ctwaPromoAdEntryID": {
+                    "type": "string"
+                },
+                "ctwaPromoAdgroupID": {
+                    "type": "string"
+                },
+                "ctwaPromoOfferID": {
+                    "type": "string"
+                },
+                "ctwaPromoResponseExpiresAtSeconds": {
+                    "type": "integer"
+                },
+                "ctwaPromoResponseID": {
+                    "type": "string"
+                },
+                "ctwaPromoSchemaVersion": {
+                    "type": "integer"
                 },
                 "disableNudge": {
                     "type": "boolean"
@@ -9225,6 +9592,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "originalImageURL": {
+                    "type": "string"
+                },
+                "productID": {
                     "type": "string"
                 },
                 "ref": {
@@ -9270,7 +9640,6 @@ const docTemplate = `{
         },
         "waE2E.ContextInfo_ExternalAdReplyInfo_AdType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -9282,7 +9651,6 @@ const docTemplate = `{
         },
         "waE2E.ContextInfo_ExternalAdReplyInfo_MediaType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -9316,7 +9684,6 @@ const docTemplate = `{
         },
         "waE2E.ContextInfo_ForwardOrigin": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -9359,7 +9726,6 @@ const docTemplate = `{
         },
         "waE2E.ContextInfo_ForwardedNewsletterMessageInfo_ContentType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1,
                 2,
@@ -9371,9 +9737,16 @@ const docTemplate = `{
                 "ContextInfo_ForwardedNewsletterMessageInfo_LINK_CARD"
             ]
         },
+        "waE2E.ContextInfo_InstagramThreadLink": {
+            "type": "object",
+            "properties": {
+                "URL": {
+                    "type": "string"
+                }
+            }
+        },
         "waE2E.ContextInfo_PairedMediaType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -9383,7 +9756,11 @@ const docTemplate = `{
                 5,
                 6,
                 7,
-                8
+                8,
+                9,
+                10,
+                11,
+                12
             ],
             "x-enum-varnames": [
                 "ContextInfo_NOT_PAIRED_MEDIA",
@@ -9394,7 +9771,11 @@ const docTemplate = `{
                 "ContextInfo_MOTION_PHOTO_PARENT",
                 "ContextInfo_MOTION_PHOTO_CHILD",
                 "ContextInfo_HEVC_VIDEO_PARENT",
-                "ContextInfo_HEVC_VIDEO_CHILD"
+                "ContextInfo_HEVC_VIDEO_CHILD",
+                "ContextInfo_AV1_VIDEO_PARENT",
+                "ContextInfo_AV1_VIDEO_CHILD",
+                "ContextInfo_STREAMED_VIDEO_PARENT",
+                "ContextInfo_STREAMED_VIDEO_CHILD"
             ]
         },
         "waE2E.ContextInfo_PartiallySelectedContent": {
@@ -9421,7 +9802,6 @@ const docTemplate = `{
         },
         "waE2E.ContextInfo_QuotedType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -9433,7 +9813,6 @@ const docTemplate = `{
         },
         "waE2E.ContextInfo_StatusAttributionType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -9465,7 +9844,6 @@ const docTemplate = `{
         },
         "waE2E.ContextInfo_StatusAudienceMetadata_AudienceType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -9477,7 +9855,6 @@ const docTemplate = `{
         },
         "waE2E.ContextInfo_StatusSourceType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -9588,7 +9965,6 @@ const docTemplate = `{
         },
         "waE2E.DisappearingMode_Initiator": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -9604,7 +9980,6 @@ const docTemplate = `{
         },
         "waE2E.DisappearingMode_Trigger": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -9853,6 +10228,9 @@ const docTemplate = `{
                 "contextInfo": {
                     "$ref": "#/definitions/waE2E.ContextInfo"
                 },
+                "coverImageHandle": {
+                    "type": "string"
+                },
                 "endTime": {
                     "type": "integer"
                 },
@@ -9865,10 +10243,40 @@ const docTemplate = `{
                 "isCanceled": {
                     "type": "boolean"
                 },
+                "lastUpdatedTSUsec": {
+                    "type": "integer"
+                },
+                "locationName": {
+                    "type": "string"
+                },
                 "startTime": {
                     "type": "integer"
+                },
+                "status": {
+                    "$ref": "#/definitions/waE2E.EventInviteMessage_EventStatus"
                 }
             }
+        },
+        "waE2E.EventInviteMessage_EventStatus": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ],
+            "x-enum-varnames": [
+                "EventInviteMessage_UNKNOWN",
+                "EventInviteMessage_ACTIVE",
+                "EventInviteMessage_CANCELED",
+                "EventInviteMessage_SUSPENDED",
+                "EventInviteMessage_DELETED",
+                "EventInviteMessage_LEFT_EVENT",
+                "EventInviteMessage_REMOVED_FROM_INVITE_LIST"
+            ]
         },
         "waE2E.EventMessage": {
             "type": "object",
@@ -9938,7 +10346,7 @@ const docTemplate = `{
                         "$ref": "#/definitions/waE2E.VideoEndCard"
                     }
                 },
-                "faviconMMSMetadata": {
+                "faviconMmsMetadata": {
                     "$ref": "#/definitions/waE2E.MMSThumbnailMetadata"
                 },
                 "font": {
@@ -10032,7 +10440,6 @@ const docTemplate = `{
         },
         "waE2E.ExtendedTextMessage_FontType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -10056,7 +10463,6 @@ const docTemplate = `{
         },
         "waE2E.ExtendedTextMessage_InviteLinkGroupType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -10072,7 +10478,6 @@ const docTemplate = `{
         },
         "waE2E.ExtendedTextMessage_PreviewType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -10106,6 +10511,9 @@ const docTemplate = `{
             "properties": {
                 "businessProduct": {
                     "type": "string"
+                },
+                "connection": {
+                    "$ref": "#/definitions/waE2E.CoexConnectionDescriptor"
                 },
                 "opaqueClientData": {
                     "type": "array",
@@ -10160,7 +10568,6 @@ const docTemplate = `{
         },
         "waE2E.GroupInviteMessage_GroupType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -10261,6 +10668,20 @@ const docTemplate = `{
                 }
             }
         },
+        "waE2E.HistoryShareMessageEntry": {
+            "type": "object",
+            "properties": {
+                "messageSecretProof": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "stanzaID": {
+                    "type": "string"
+                }
+            }
+        },
         "waE2E.HistorySyncMessageAccessStatus": {
             "type": "object",
             "properties": {
@@ -10333,7 +10754,6 @@ const docTemplate = `{
         },
         "waE2E.HistorySyncType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -10504,7 +10924,6 @@ const docTemplate = `{
         },
         "waE2E.ImageMessage_ImageSourceType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -10528,7 +10947,6 @@ const docTemplate = `{
         },
         "waE2E.InsightDeliveryState": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -10569,7 +10987,6 @@ const docTemplate = `{
         },
         "waE2E.InteractiveAnnotation_StatusLinkType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1,
                 2,
@@ -10693,7 +11110,6 @@ const docTemplate = `{
         },
         "waE2E.InteractiveResponseMessage_Body_Format": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -10752,7 +11168,6 @@ const docTemplate = `{
         },
         "waE2E.InvoiceMessage_AttachmentType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -10778,7 +11193,6 @@ const docTemplate = `{
         },
         "waE2E.KeepType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -10835,7 +11249,6 @@ const docTemplate = `{
         },
         "waE2E.LinkPreviewMetadata_SocialMediaPostType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -10887,7 +11300,6 @@ const docTemplate = `{
         },
         "waE2E.ListMessage_ListType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -11002,7 +11414,6 @@ const docTemplate = `{
         },
         "waE2E.ListResponseMessage_ListType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -11137,6 +11548,26 @@ const docTemplate = `{
                 }
             }
         },
+        "waE2E.MarkAsVerifiedAction": {
+            "type": "object",
+            "properties": {
+                "actionSeq": {
+                    "type": "integer"
+                },
+                "userJIDString": {
+                    "type": "string"
+                },
+                "verified": {
+                    "type": "boolean"
+                },
+                "verifiedIdentityKey": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
         "waE2E.MediaDomainInfo": {
             "type": "object",
             "properties": {
@@ -11153,7 +11584,6 @@ const docTemplate = `{
         },
         "waE2E.MediaKeyDomain": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -11196,6 +11626,9 @@ const docTemplate = `{
         "waE2E.Message": {
             "type": "object",
             "properties": {
+                "acp2SettingMessage": {
+                    "$ref": "#/definitions/waE2E.FutureProofMessage"
+                },
                 "albumMessage": {
                     "$ref": "#/definitions/waE2E.AlbumMessage"
                 },
@@ -11205,13 +11638,22 @@ const docTemplate = `{
                 "audioMessage": {
                     "$ref": "#/definitions/waE2E.AudioMessage"
                 },
+                "audioStickerMessage": {
+                    "$ref": "#/definitions/waE2E.FutureProofMessage"
+                },
                 "bcallMessage": {
                     "$ref": "#/definitions/waE2E.BCallMessage"
                 },
                 "botForwardedMessage": {
                     "$ref": "#/definitions/waE2E.FutureProofMessage"
                 },
+                "botGroupParticipantMessage": {
+                    "$ref": "#/definitions/waE2E.FutureProofMessage"
+                },
                 "botInvokeMessage": {
+                    "$ref": "#/definitions/waE2E.FutureProofMessage"
+                },
+                "botPlatformRegistrationSuccessMessage": {
                     "$ref": "#/definitions/waE2E.FutureProofMessage"
                 },
                 "botTaskMessage": {
@@ -11316,6 +11758,9 @@ const docTemplate = `{
                 "imageMessage": {
                     "$ref": "#/definitions/waE2E.ImageMessage"
                 },
+                "instantImageMessage": {
+                    "$ref": "#/definitions/waE2E.ImageMessage"
+                },
                 "interactiveMessage": {
                     "$ref": "#/definitions/waE2E.InteractiveMessage"
                 },
@@ -11355,13 +11800,13 @@ const docTemplate = `{
                 "messageHistoryNotice": {
                     "$ref": "#/definitions/waE2E.MessageHistoryNotice"
                 },
+                "musicMessage": {
+                    "$ref": "#/definitions/waE2E.MusicMessage"
+                },
                 "newsletterAdminInviteMessage": {
                     "$ref": "#/definitions/waE2E.NewsletterAdminInviteMessage"
                 },
                 "newsletterAdminProfileMessage": {
-                    "$ref": "#/definitions/waE2E.FutureProofMessage"
-                },
-                "newsletterAdminProfileMessageV2": {
                     "$ref": "#/definitions/waE2E.FutureProofMessage"
                 },
                 "newsletterAdminProfileStatusMessage": {
@@ -11369,6 +11814,9 @@ const docTemplate = `{
                 },
                 "newsletterFollowerInviteMessageV2": {
                     "$ref": "#/definitions/waE2E.NewsletterFollowerInviteMessage"
+                },
+                "newsletterScheduledMessage": {
+                    "$ref": "#/definitions/waE2E.FutureProofMessage"
                 },
                 "orderMessage": {
                     "$ref": "#/definitions/waE2E.OrderMessage"
@@ -11439,6 +11887,12 @@ const docTemplate = `{
                 "reactionMessage": {
                     "$ref": "#/definitions/waE2E.ReactionMessage"
                 },
+                "requestLocationMessage": {
+                    "$ref": "#/definitions/waE2E.RequestLocationMessage"
+                },
+                "requestLocationUpdateMessage": {
+                    "$ref": "#/definitions/waE2E.RequestLocationUpdateMessage"
+                },
                 "requestPaymentMessage": {
                     "$ref": "#/definitions/waE2E.RequestPaymentMessage"
                 },
@@ -11469,11 +11923,17 @@ const docTemplate = `{
                 "splitPaymentMessage": {
                     "$ref": "#/definitions/waE2E.SplitPaymentMessage"
                 },
+                "splitPaymentUpdateMessage": {
+                    "$ref": "#/definitions/waE2E.SplitPaymentUpdateMessage"
+                },
                 "spoilerMessage": {
                     "$ref": "#/definitions/waE2E.FutureProofMessage"
                 },
                 "statusAddYours": {
                     "$ref": "#/definitions/waE2E.FutureProofMessage"
+                },
+                "statusLinkPreviewMetadata": {
+                    "$ref": "#/definitions/waE2E.StatusLinkPreviewMetadata"
                 },
                 "statusMentionMessage": {
                     "$ref": "#/definitions/waE2E.FutureProofMessage"
@@ -11535,7 +11995,6 @@ const docTemplate = `{
         },
         "waE2E.MessageAssociation_AssociationType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -11557,7 +12016,9 @@ const docTemplate = `{
                 17,
                 18,
                 19,
-                20
+                20,
+                21,
+                22
             ],
             "x-enum-varnames": [
                 "MessageAssociation_UNKNOWN",
@@ -11580,12 +12041,26 @@ const docTemplate = `{
                 "MessageAssociation_STATUS_ADD_YOURS_DIWALI",
                 "MessageAssociation_STATUS_REACTION",
                 "MessageAssociation_HEVC_VIDEO_DUAL_UPLOAD",
-                "MessageAssociation_POLL_ADD_OPTION"
+                "MessageAssociation_POLL_ADD_OPTION",
+                "MessageAssociation_AV1_VIDEO_DUAL_UPLOAD",
+                "MessageAssociation_STREAMED_HD_VIDEO_DUAL_UPLOAD"
             ]
         },
         "waE2E.MessageContextInfo": {
             "type": "object",
             "properties": {
+                "accountEncryptionAttestation": {
+                    "$ref": "#/definitions/waAea.NonE2EEAttestation"
+                },
+                "acp2Setting": {
+                    "$ref": "#/definitions/waCommon.ACP2Setting"
+                },
+                "associatedPrimaryIdentityKey": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "botMessageSecret": {
                     "type": "array",
                     "items": {
@@ -11643,6 +12118,9 @@ const docTemplate = `{
                         "type": "integer"
                     }
                 },
+                "teeContextAnchorMessageID": {
+                    "type": "string"
+                },
                 "threadID": {
                     "type": "array",
                     "items": {
@@ -11656,7 +12134,6 @@ const docTemplate = `{
         },
         "waE2E.MessageContextInfo_MessageAddonExpiryType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1,
                 2
@@ -11713,6 +12190,9 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
+                "includesChatTheme": {
+                    "type": "boolean"
+                },
                 "messageCount": {
                     "type": "integer"
                 },
@@ -11733,6 +12213,9 @@ const docTemplate = `{
         "waE2E.MessageHistoryNotice": {
             "type": "object",
             "properties": {
+                "botHistoryShareSyncMetadata": {
+                    "$ref": "#/definitions/waE2E.BotHistoryShareSyncMetadata"
+                },
                 "contextInfo": {
                     "$ref": "#/definitions/waE2E.ContextInfo"
                 },
@@ -11751,6 +12234,26 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "value": {
+                    "type": "integer"
+                }
+            }
+        },
+        "waE2E.MusicMessage": {
+            "type": "object",
+            "properties": {
+                "artworkUri": {
+                    "type": "string"
+                },
+                "contextInfo": {
+                    "$ref": "#/definitions/waE2E.ContextInfo"
+                },
+                "embeddedMusic": {
+                    "$ref": "#/definitions/waE2E.EmbeddedMusic"
+                },
+                "songUri": {
+                    "type": "string"
+                },
+                "style": {
                     "type": "integer"
                 }
             }
@@ -11859,7 +12362,6 @@ const docTemplate = `{
         },
         "waE2E.OrderMessage_OrderStatus": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1,
                 2,
@@ -11873,7 +12375,6 @@ const docTemplate = `{
         },
         "waE2E.OrderMessage_OrderSurface": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1
             ],
@@ -11947,7 +12448,6 @@ const docTemplate = `{
         },
         "waE2E.PaymentBackground_Type": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -11960,6 +12460,9 @@ const docTemplate = `{
         "waE2E.PaymentExtendedMetadata": {
             "type": "object",
             "properties": {
+                "messageParamsJSON": {
+                    "type": "string"
+                },
                 "platform": {
                     "type": "string"
                 },
@@ -11990,7 +12493,6 @@ const docTemplate = `{
         },
         "waE2E.PaymentInviteMessage_InviteType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -12002,18 +12504,19 @@ const docTemplate = `{
         },
         "waE2E.PaymentInviteMessage_ServiceType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
                 2,
-                3
+                3,
+                4
             ],
             "x-enum-varnames": [
                 "PaymentInviteMessage_UNKNOWN",
                 "PaymentInviteMessage_FBPAY",
                 "PaymentInviteMessage_NOVI",
-                "PaymentInviteMessage_UPI"
+                "PaymentInviteMessage_UPI",
+                "PaymentInviteMessage_PIX"
             ]
         },
         "waE2E.PaymentLinkMetadata": {
@@ -12048,7 +12551,6 @@ const docTemplate = `{
         },
         "waE2E.PaymentLinkMetadata_PaymentLinkHeader_PaymentLinkHeaderType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -12100,7 +12602,6 @@ const docTemplate = `{
         },
         "waE2E.PaymentReminderMessage_ReminderFrequency": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -12118,7 +12619,6 @@ const docTemplate = `{
         },
         "waE2E.PaymentReminderMessage_ReminderStatus": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -12246,7 +12746,6 @@ const docTemplate = `{
         },
         "waE2E.PeerDataOperationRequestMessage_GalaxyFlowAction_GalaxyFlowActionType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1,
                 2
@@ -12366,6 +12865,9 @@ const docTemplate = `{
                 "companionMetaNonceFetchRequestResponse": {
                     "$ref": "#/definitions/waE2E.PeerDataOperationRequestResponseMessage_PeerDataOperationResult_CompanionMetaNonceFetchResponse"
                 },
+                "contactRefreshResponse": {
+                    "$ref": "#/definitions/waE2E.PeerDataOperationRequestResponseMessage_PeerDataOperationResult_ContactRefreshResponse"
+                },
                 "flowResponsesCsvBundle": {
                     "$ref": "#/definitions/waE2E.PeerDataOperationRequestResponseMessage_PeerDataOperationResult_FlowResponsesCsvBundle"
                 },
@@ -12445,6 +12947,26 @@ const docTemplate = `{
                 }
             }
         },
+        "waE2E.PeerDataOperationRequestResponseMessage_PeerDataOperationResult_ContactRefreshResponse": {
+            "type": "object",
+            "properties": {
+                "collectionVersion": {
+                    "type": "integer"
+                },
+                "coveredRequestIDs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "primaryDurationMS": {
+                    "type": "integer"
+                },
+                "uniqueContactCount": {
+                    "type": "integer"
+                }
+            }
+        },
         "waE2E.PeerDataOperationRequestResponseMessage_PeerDataOperationResult_FlowResponsesCsvBundle": {
             "type": "object",
             "properties": {
@@ -12502,7 +13024,6 @@ const docTemplate = `{
         },
         "waE2E.PeerDataOperationRequestResponseMessage_PeerDataOperationResult_FullHistorySyncOnDemandResponseCode": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -12546,7 +13067,6 @@ const docTemplate = `{
         },
         "waE2E.PeerDataOperationRequestResponseMessage_PeerDataOperationResult_HistorySyncChunkRetryResponseCode": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1,
                 2,
@@ -12683,7 +13203,6 @@ const docTemplate = `{
         },
         "waE2E.PeerDataOperationRequestType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -12698,7 +13217,8 @@ const docTemplate = `{
                 10,
                 11,
                 12,
-                13
+                13,
+                14
             ],
             "x-enum-varnames": [
                 "PeerDataOperationRequestType_UPLOAD_STICKER",
@@ -12714,7 +13234,8 @@ const docTemplate = `{
                 "PeerDataOperationRequestType_HISTORY_SYNC_CHUNK_RETRY",
                 "PeerDataOperationRequestType_GALAXY_FLOW_ACTION",
                 "PeerDataOperationRequestType_BUSINESS_BROADCAST_INSIGHTS_DELIVERED_TO",
-                "PeerDataOperationRequestType_BUSINESS_BROADCAST_INSIGHTS_REFRESH"
+                "PeerDataOperationRequestType_BUSINESS_BROADCAST_INSIGHTS_REFRESH",
+                "PeerDataOperationRequestType_CONTACT_REFRESH_REQUEST"
             ]
         },
         "waE2E.PinInChatMessage": {
@@ -12733,7 +13254,6 @@ const docTemplate = `{
         },
         "waE2E.PinInChatMessage_Type": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -12755,7 +13275,6 @@ const docTemplate = `{
         },
         "waE2E.PlaceholderMessage_PlaceholderType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0
             ],
@@ -12796,7 +13315,6 @@ const docTemplate = `{
         },
         "waE2E.PollContentType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -12913,7 +13431,6 @@ const docTemplate = `{
         },
         "waE2E.PollType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -12991,7 +13508,6 @@ const docTemplate = `{
         },
         "waE2E.ProcessedVideo_VideoQuality": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -13086,6 +13602,15 @@ const docTemplate = `{
         "waE2E.ProtocolMessage": {
             "type": "object",
             "properties": {
+                "acp2Setting": {
+                    "$ref": "#/definitions/waCommon.ACP2Setting"
+                },
+                "additionalPromptIDs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "afterReadDuration": {
                     "type": "integer"
                 },
@@ -13122,6 +13647,9 @@ const docTemplate = `{
                 "cloudApiThreadControlNotification": {
                     "$ref": "#/definitions/waE2E.CloudAPIThreadControlNotification"
                 },
+                "coexStateSync": {
+                    "$ref": "#/definitions/waServerSync.CoexStateSync"
+                },
                 "disappearingMode": {
                     "$ref": "#/definitions/waE2E.DisappearingMode"
                 },
@@ -13152,6 +13680,9 @@ const docTemplate = `{
                 "limitSharing": {
                     "$ref": "#/definitions/waCommon.LimitSharing"
                 },
+                "markAsVerifiedAction": {
+                    "$ref": "#/definitions/waE2E.MarkAsVerifiedAction"
+                },
                 "mediaNotifyMessage": {
                     "$ref": "#/definitions/waE2E.MediaNotifyMessage"
                 },
@@ -13167,6 +13698,12 @@ const docTemplate = `{
                 "requestWelcomeMessageMetadata": {
                     "$ref": "#/definitions/waE2E.RequestWelcomeMessageMetadata"
                 },
+                "sharedDeviceContactHashKeyRequest": {
+                    "$ref": "#/definitions/waE2E.SharedDeviceContactHashKeyRequest"
+                },
+                "sharedDeviceContactHashKeyShare": {
+                    "$ref": "#/definitions/waE2E.SharedDeviceContactHashKeyShare"
+                },
                 "timestampMS": {
                     "type": "integer"
                 },
@@ -13177,7 +13714,6 @@ const docTemplate = `{
         },
         "waE2E.ProtocolMessage_Type": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 3,
@@ -13208,7 +13744,12 @@ const docTemplate = `{
                 31,
                 32,
                 34,
-                35
+                35,
+                36,
+                37,
+                39,
+                40,
+                41
             ],
             "x-enum-varnames": [
                 "ProtocolMessage_REVOKE",
@@ -13240,7 +13781,12 @@ const docTemplate = `{
                 "ProtocolMessage_AI_MEDIA_COLLECTION_MESSAGE",
                 "ProtocolMessage_MESSAGE_UNSCHEDULE",
                 "ProtocolMessage_CHAT_THEME_SETTING",
-                "ProtocolMessage_AI_METADATA_OPERATION"
+                "ProtocolMessage_AI_METADATA_OPERATION",
+                "ProtocolMessage_MARK_AS_VERIFIED_ACTION",
+                "ProtocolMessage_COEX_STATE_SYNC",
+                "ProtocolMessage_ACP2_SETTING",
+                "ProtocolMessage_SHARED_DEVICE_CONTACT_HASH_KEY_SHARE",
+                "ProtocolMessage_SHARED_DEVICE_CONTACT_HASH_KEY_REQUEST"
             ]
         },
         "waE2E.QuestionResponseMessage": {
@@ -13270,6 +13816,39 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "waE2E.RequestLocationMessage": {
+            "type": "object",
+            "properties": {
+                "contextInfo": {
+                    "$ref": "#/definitions/waE2E.ContextInfo"
+                }
+            }
+        },
+        "waE2E.RequestLocationUpdateMessage": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "$ref": "#/definitions/waCommon.MessageKey"
+                },
+                "senderTimestampMS": {
+                    "type": "integer"
+                },
+                "updateType": {
+                    "$ref": "#/definitions/waE2E.RequestLocationUpdateMessage_UpdateType"
+                }
+            }
+        },
+        "waE2E.RequestLocationUpdateMessage_UpdateType": {
+            "type": "integer",
+            "enum": [
+                0,
+                1
+            ],
+            "x-enum-varnames": [
+                "RequestLocationUpdateMessage_UNKNOWN",
+                "RequestLocationUpdateMessage_CANCEL"
+            ]
         },
         "waE2E.RequestPaymentMessage": {
             "type": "object",
@@ -13321,7 +13900,6 @@ const docTemplate = `{
         },
         "waE2E.RequestWelcomeMessageMetadata_LocalChatState": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -13333,7 +13911,6 @@ const docTemplate = `{
         },
         "waE2E.RequestWelcomeMessageMetadata_WelcomeTrigger": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -13367,7 +13944,6 @@ const docTemplate = `{
         },
         "waE2E.ScheduledCallCreationMessage_CallType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -13392,7 +13968,6 @@ const docTemplate = `{
         },
         "waE2E.ScheduledCallEditMessage_EditType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -13430,7 +14005,6 @@ const docTemplate = `{
         },
         "waE2E.SecretEncryptedMessage_SecretEncType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -13479,6 +14053,55 @@ const docTemplate = `{
                 }
             }
         },
+        "waE2E.SharedDeviceContactHashKey": {
+            "type": "object",
+            "properties": {
+                "epoch": {
+                    "type": "integer"
+                },
+                "keyData": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "kind": {
+                    "$ref": "#/definitions/waE2E.SharedDeviceContactHashKey_Kind"
+                }
+            }
+        },
+        "waE2E.SharedDeviceContactHashKeyRequest": {
+            "type": "object",
+            "properties": {
+                "knownEpoch": {
+                    "type": "integer"
+                }
+            }
+        },
+        "waE2E.SharedDeviceContactHashKeyShare": {
+            "type": "object",
+            "properties": {
+                "keys": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/waE2E.SharedDeviceContactHashKey"
+                    }
+                }
+            }
+        },
+        "waE2E.SharedDeviceContactHashKey_Kind": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2
+            ],
+            "x-enum-varnames": [
+                "SharedDeviceContactHashKey_UNKNOWN",
+                "SharedDeviceContactHashKey_LID",
+                "SharedDeviceContactHashKey_PHONE_NUMBER"
+            ]
+        },
         "waE2E.SplitPaymentMessage": {
             "type": "object",
             "properties": {
@@ -13524,7 +14147,6 @@ const docTemplate = `{
         },
         "waE2E.SplitPaymentParticipant_SplitPaymentStatus": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -13532,6 +14154,40 @@ const docTemplate = `{
             "x-enum-varnames": [
                 "SplitPaymentParticipant_PENDING",
                 "SplitPaymentParticipant_PAID"
+            ]
+        },
+        "waE2E.SplitPaymentUpdateMessage": {
+            "type": "object",
+            "properties": {
+                "participantJID": {
+                    "type": "string"
+                },
+                "splitID": {
+                    "type": "string"
+                }
+            }
+        },
+        "waE2E.StatusLinkPreviewMetadata": {
+            "type": "object",
+            "properties": {
+                "style": {
+                    "$ref": "#/definitions/waE2E.StatusLinkPreviewMetadata_Style"
+                }
+            }
+        },
+        "waE2E.StatusLinkPreviewMetadata_Style": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "x-enum-varnames": [
+                "StatusLinkPreviewMetadata_AUTO",
+                "StatusLinkPreviewMetadata_COMPACT",
+                "StatusLinkPreviewMetadata_FULL",
+                "StatusLinkPreviewMetadata_IMMERSIVE"
             ]
         },
         "waE2E.StatusNotificationMessage": {
@@ -13550,18 +14206,19 @@ const docTemplate = `{
         },
         "waE2E.StatusNotificationMessage_StatusNotificationType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
                 2,
-                3
+                3,
+                4
             ],
             "x-enum-varnames": [
                 "StatusNotificationMessage_UNKNOWN",
                 "StatusNotificationMessage_STATUS_ADD_YOURS",
                 "StatusNotificationMessage_STATUS_RESHARE",
-                "StatusNotificationMessage_STATUS_QUESTION_ANSWER_RESHARE"
+                "StatusNotificationMessage_STATUS_QUESTION_ANSWER_RESHARE",
+                "StatusNotificationMessage_STATUS_GROUP_STATUS_REPLY"
             ]
         },
         "waE2E.StatusQuestionAnswerMessage": {
@@ -13597,7 +14254,6 @@ const docTemplate = `{
         },
         "waE2E.StatusQuotedMessage_StatusQuotedMessageType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 1
             ],
@@ -13621,7 +14277,6 @@ const docTemplate = `{
         },
         "waE2E.StatusStickerInteractionMessage_StatusStickerType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -13639,6 +14294,9 @@ const docTemplate = `{
                 },
                 "accessibilityLabel": {
                     "type": "string"
+                },
+                "audio": {
+                    "description": "Types that are valid to be assigned to Audio:\n\n\t*StickerMessage_AudioMessage"
                 },
                 "contextInfo": {
                     "$ref": "#/definitions/waE2E.ContextInfo"
@@ -13837,7 +14495,6 @@ const docTemplate = `{
         },
         "waE2E.StickerPackMessage_StickerPackOrigin": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -13942,7 +14599,6 @@ const docTemplate = `{
         },
         "waE2E.ThreadID_ThreadType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -14034,6 +14690,9 @@ const docTemplate = `{
                 "contextInfo": {
                     "$ref": "#/definitions/waE2E.ContextInfo"
                 },
+                "dashManifestURL": {
+                    "type": "string"
+                },
                 "directPath": {
                     "type": "string"
                 },
@@ -14097,6 +14756,9 @@ const docTemplate = `{
                 "seconds": {
                     "type": "integer"
                 },
+                "smartThumbnailTS": {
+                    "type": "integer"
+                },
                 "staticURL": {
                     "type": "string"
                 },
@@ -14134,7 +14796,6 @@ const docTemplate = `{
         },
         "waE2E.VideoMessage_Attribution": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -14150,7 +14811,6 @@ const docTemplate = `{
         },
         "waE2E.VideoMessage_VideoSourceType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -14162,7 +14822,6 @@ const docTemplate = `{
         },
         "waE2E.WebLinkRenderConfig": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1
@@ -14174,7 +14833,6 @@ const docTemplate = `{
         },
         "waMmsRetry.MediaRetryNotification_ResultType": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
@@ -14187,6 +14845,81 @@ const docTemplate = `{
                 "MediaRetryNotification_NOT_FOUND",
                 "MediaRetryNotification_DECRYPTION_ERROR"
             ]
+        },
+        "waServerSync.CoexStateSync": {
+            "type": "object",
+            "properties": {
+                "collectionMutations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/waServerSync.CoexStateSync_CollectionMutations"
+                    }
+                }
+            }
+        },
+        "waServerSync.CoexStateSync_CollectionMutations": {
+            "type": "object",
+            "properties": {
+                "collection": {
+                    "type": "string"
+                },
+                "mutations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/waServerSync.CoexStateSync_Mutation"
+                    }
+                }
+            }
+        },
+        "waServerSync.CoexStateSync_Mutation": {
+            "type": "object",
+            "properties": {
+                "dirtyVersion": {
+                    "type": "integer"
+                },
+                "index": {
+                    "$ref": "#/definitions/waServerSync.SyncdIndex"
+                },
+                "operation": {
+                    "$ref": "#/definitions/waServerSync.SyncdMutation_SyncdOperation"
+                },
+                "value": {
+                    "$ref": "#/definitions/waServerSync.SyncdValue"
+                }
+            }
+        },
+        "waServerSync.SyncdIndex": {
+            "type": "object",
+            "properties": {
+                "blob": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "waServerSync.SyncdMutation_SyncdOperation": {
+            "type": "integer",
+            "enum": [
+                0,
+                1
+            ],
+            "x-enum-varnames": [
+                "SyncdMutation_SET",
+                "SyncdMutation_REMOVE"
+            ]
+        },
+        "waServerSync.SyncdValue": {
+            "type": "object",
+            "properties": {
+                "blob": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
         },
         "waStatusAttributions.StatusAttribution": {
             "type": "object",
@@ -14204,7 +14937,6 @@ const docTemplate = `{
         },
         "waStatusAttributions.StatusAttribution_Type": {
             "type": "integer",
-            "format": "int32",
             "enum": [
                 0,
                 1,
