@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"github.com/evolution-foundation/evolution-go/pkg/runtimestate"
 	"log"
 	"net/http"
 	"os"
@@ -83,8 +84,7 @@ func init() {
 }
 
 func setupRouter(db *gorm.DB, authDB *sql.DB, sqliteDB *sql.DB, config *config.Config, conn *amqp.Connection, exPath string, runtimeCtx *core.RuntimeContext) *gin.Engine {
-	killChannel := make(map[string](chan bool))
-	clientPointer := make(map[string]*whatsmeow.Client)
+	clientPointer := runtimestate.New[string, *whatsmeow.Client]()
 
 	loggerWrapper := logger_wrapper.NewLoggerManager(config)
 
@@ -168,7 +168,6 @@ func setupRouter(db *gorm.DB, authDB *sql.DB, sqliteDB *sql.DB, config *config.C
 		message_repository.NewMessageRepository(db),
 		labelRepository,
 		config,
-		killChannel,
 		clientPointer,
 		rabbitmqProducer,
 		webhookProducer,
@@ -181,7 +180,6 @@ func setupRouter(db *gorm.DB, authDB *sql.DB, sqliteDB *sql.DB, config *config.C
 	)
 	instanceService := instance_service.NewInstanceService(
 		instanceRepository,
-		killChannel,
 		clientPointer,
 		whatsmeowService,
 		config,
