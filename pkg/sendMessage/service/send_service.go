@@ -451,9 +451,27 @@ type MessageSendStruct struct {
 	MessageContextInfo *waE2E.ContextInfo
 }
 
+// ErrInstanceNotLoggedIn indica que a instância não tem uma conta pareada (nunca
+// foi pareada ou foi deslogada). Reconectar não resolve; é preciso ler o QR code
+// ou parear por telefone, então não vale insistir.
+var ErrInstanceNotLoggedIn = errors.New("instance is not logged in: connect it and scan the QR code (or pair with a phone number) first")
+
+// isUnpaired informa se o cliente não tem um dispositivo pareado, caso em que
+// nenhuma mensagem pode ser enviada.
+func isUnpaired(client *whatsmeow.Client) bool {
+	return client != nil && (client.Store == nil || client.Store.ID == nil)
+}
+
 func (s *sendService) ensureClientConnected(instanceId string) (*whatsmeow.Client, error) {
 	client := s.clientPointer.Get(instanceId)
 	s.loggerWrapper.GetLogger(instanceId).LogInfo("[%s] Checking client connection status - Client exists: %v", instanceId, client != nil)
+
+	// Instância sem conta pareada: falha na hora. Antes cada tentativa
+	// reconectava e esperava, e o erro "the store doesn't contain a device JID"
+	// só chegava depois de mais de um minuto (#77).
+	if isUnpaired(client) {
+		return nil, ErrInstanceNotLoggedIn
+	}
 
 	if client == nil {
 		s.loggerWrapper.GetLogger(instanceId).LogInfo("[%s] No client found, attempting to start new instance", instanceId)
@@ -467,6 +485,9 @@ func (s *sendService) ensureClientConnected(instanceId string) (*whatsmeow.Clien
 		time.Sleep(2 * time.Second)
 
 		client = s.clientPointer.Get(instanceId)
+		if isUnpaired(client) {
+			return nil, ErrInstanceNotLoggedIn
+		}
 		s.loggerWrapper.GetLogger(instanceId).LogInfo("[%s] Checking new client - Exists: %v, Connected: %v",
 			instanceId,
 			client != nil,
@@ -683,7 +704,7 @@ func (s *sendService) sendTextWithRetry(data *TextStruct, instance *instance_mod
 
 		_, err := s.ensureClientConnectedWithRetry(instance.Id, 2)
 		if err != nil {
-			if attempt == maxRetries {
+			if attempt == maxRetries || errors.Is(err, ErrInstanceNotLoggedIn) {
 				return nil, err
 			}
 			continue
@@ -788,7 +809,7 @@ func (s *sendService) sendLinkWithRetry(data *LinkStruct, instance *instance_mod
 
 		_, err := s.ensureClientConnectedWithRetry(instance.Id, 2)
 		if err != nil {
-			if attempt == maxRetries {
+			if attempt == maxRetries || errors.Is(err, ErrInstanceNotLoggedIn) {
 				return nil, err
 			}
 			continue
@@ -1036,7 +1057,7 @@ func (s *sendService) sendMediaFileWithRetry(data *MediaStruct, fileData []byte,
 
 		client, err := s.ensureClientConnectedWithRetry(instance.Id, 2)
 		if err != nil {
-			if attempt == maxRetries {
+			if attempt == maxRetries || errors.Is(err, ErrInstanceNotLoggedIn) {
 				return nil, err
 			}
 			continue
@@ -1313,7 +1334,7 @@ func (s *sendService) sendMediaUrlWithRetry(data *MediaStruct, instance *instanc
 
 		client, err := s.ensureClientConnectedWithRetry(instance.Id, 2)
 		if err != nil {
-			if attempt == maxRetries {
+			if attempt == maxRetries || errors.Is(err, ErrInstanceNotLoggedIn) {
 				return nil, err
 			}
 			continue
@@ -1621,7 +1642,7 @@ func (s *sendService) sendPollWithRetry(data *PollStruct, instance *instance_mod
 
 		client, err := s.ensureClientConnectedWithRetry(instance.Id, 2)
 		if err != nil {
-			if attempt == maxRetries {
+			if attempt == maxRetries || errors.Is(err, ErrInstanceNotLoggedIn) {
 				return nil, err
 			}
 			continue
