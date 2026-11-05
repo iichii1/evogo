@@ -77,6 +77,19 @@ type SendDataStruct struct {
 type QuotedStruct struct {
 	MessageID   string `json:"messageId"`
 	Participant string `json:"participant"`
+	// Text é o texto da mensagem citada. É opcional: o WhatsApp só mostra o
+	// conteúdo no cartão de resposta se a mensagem citada viajar junto, e a
+	// API não guarda o corpo das mensagens para buscá-lo pelo messageId (#189).
+	Text string `json:"text,omitempty"`
+}
+
+// quotedContextInfo monta o contexto de resposta (reply) para a mensagem citada.
+func quotedContextInfo(q QuotedStruct) *waE2E.ContextInfo {
+	return &waE2E.ContextInfo{
+		StanzaID:      proto.String(q.MessageID),
+		Participant:   proto.String(q.Participant),
+		QuotedMessage: &waE2E.Message{Conversation: proto.String(q.Text)},
+	}
 }
 
 type TextStruct struct {
@@ -2493,126 +2506,58 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 	if data.Quoted.MessageID != "" {
 		switch messageType {
 		case "ExtendedTextMessage":
-			msg.ExtendedTextMessage.ContextInfo = &waE2E.ContextInfo{
-				StanzaID:      proto.String(data.Quoted.MessageID),
-				Participant:   proto.String(data.Quoted.Participant),
-				QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-			}
+			msg.ExtendedTextMessage.ContextInfo = quotedContextInfo(data.Quoted)
 		case "ImageMessage":
-			msg.ImageMessage.ContextInfo = &waE2E.ContextInfo{
-				StanzaID:      proto.String(data.Quoted.MessageID),
-				Participant:   proto.String(data.Quoted.Participant),
-				QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-			}
+			msg.ImageMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			isMedia = true
 		case "VideoMessage":
-			msg.VideoMessage.ContextInfo = &waE2E.ContextInfo{
-				StanzaID:      proto.String(data.Quoted.MessageID),
-				Participant:   proto.String(data.Quoted.Participant),
-				QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-			}
+			msg.VideoMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			isMedia = true
 		case "PtvMessage":
-			msg.PtvMessage.ContextInfo = &waE2E.ContextInfo{
-				StanzaID:      proto.String(data.Quoted.MessageID),
-				Participant:   proto.String(data.Quoted.Participant),
-				QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-			}
+			msg.PtvMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			isMedia = true
 		case "AudioMessage":
-			msg.AudioMessage.ContextInfo = &waE2E.ContextInfo{
-				StanzaID:      proto.String(data.Quoted.MessageID),
-				Participant:   proto.String(data.Quoted.Participant),
-				QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-			}
+			msg.AudioMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			isMedia = true
 		case "DocumentMessage":
 			if msg.DocumentMessage != nil {
-				msg.DocumentMessage.ContextInfo = &waE2E.ContextInfo{
-					StanzaID:      proto.String(data.Quoted.MessageID),
-					Participant:   proto.String(data.Quoted.Participant),
-					QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-				}
+				msg.DocumentMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			} else if msg.DocumentWithCaptionMessage != nil {
-				msg.DocumentWithCaptionMessage.Message.DocumentMessage.ContextInfo = &waE2E.ContextInfo{
-					StanzaID:      proto.String(data.Quoted.MessageID),
-					Participant:   proto.String(data.Quoted.Participant),
-					QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-				}
+				msg.DocumentWithCaptionMessage.Message.DocumentMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			}
 			isMedia = true
 		case "PollCreationMessage":
-			msg.PollCreationMessage.ContextInfo = &waE2E.ContextInfo{
-				StanzaID:      proto.String(data.Quoted.MessageID),
-				Participant:   proto.String(data.Quoted.Participant),
-				QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-			}
+			msg.PollCreationMessage.ContextInfo = quotedContextInfo(data.Quoted)
 		case "StickerMessage":
-			msg.StickerMessage.ContextInfo = &waE2E.ContextInfo{
-				StanzaID:      proto.String(data.Quoted.MessageID),
-				Participant:   proto.String(data.Quoted.Participant),
-				QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-			}
+			msg.StickerMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			isMedia = true
 		case "LocationMessage":
-			msg.LocationMessage.ContextInfo = &waE2E.ContextInfo{
-				StanzaID:      proto.String(data.Quoted.MessageID),
-				Participant:   proto.String(data.Quoted.Participant),
-				QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-			}
+			msg.LocationMessage.ContextInfo = quotedContextInfo(data.Quoted)
 		case "ContactMessage":
-			msg.ContactMessage.ContextInfo = &waE2E.ContextInfo{
-				StanzaID:      proto.String(data.Quoted.MessageID),
-				Participant:   proto.String(data.Quoted.Participant),
-				QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-			}
+			msg.ContactMessage.ContextInfo = quotedContextInfo(data.Quoted)
 		case "InteractiveMessage":
 			if msg.InteractiveMessage != nil {
-				msg.InteractiveMessage.ContextInfo = &waE2E.ContextInfo{
-					StanzaID:      proto.String(data.Quoted.MessageID),
-					Participant:   proto.String(data.Quoted.Participant),
-					QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-				}
+				msg.InteractiveMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			} else if msg.DocumentWithCaptionMessage != nil &&
 				msg.DocumentWithCaptionMessage.Message != nil &&
 				msg.DocumentWithCaptionMessage.Message.InteractiveMessage != nil {
-				msg.DocumentWithCaptionMessage.Message.InteractiveMessage.ContextInfo = &waE2E.ContextInfo{
-					StanzaID:      proto.String(data.Quoted.MessageID),
-					Participant:   proto.String(data.Quoted.Participant),
-					QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-				}
+				msg.DocumentWithCaptionMessage.Message.InteractiveMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			}
 		case "ListMessage":
 			if msg.ListMessage != nil {
-				msg.ListMessage.ContextInfo = &waE2E.ContextInfo{
-					StanzaID:      proto.String(data.Quoted.MessageID),
-					Participant:   proto.String(data.Quoted.Participant),
-					QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-				}
+				msg.ListMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			} else if msg.DocumentWithCaptionMessage != nil &&
 				msg.DocumentWithCaptionMessage.Message != nil &&
 				msg.DocumentWithCaptionMessage.Message.ListMessage != nil {
-				msg.DocumentWithCaptionMessage.Message.ListMessage.ContextInfo = &waE2E.ContextInfo{
-					StanzaID:      proto.String(data.Quoted.MessageID),
-					Participant:   proto.String(data.Quoted.Participant),
-					QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-				}
+				msg.DocumentWithCaptionMessage.Message.ListMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			}
 		case "ButtonsMessage":
 			if msg.ButtonsMessage != nil {
-				msg.ButtonsMessage.ContextInfo = &waE2E.ContextInfo{
-					StanzaID:      proto.String(data.Quoted.MessageID),
-					Participant:   proto.String(data.Quoted.Participant),
-					QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-				}
+				msg.ButtonsMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			} else if msg.DocumentWithCaptionMessage != nil &&
 				msg.DocumentWithCaptionMessage.Message != nil &&
 				msg.DocumentWithCaptionMessage.Message.ButtonsMessage != nil {
-				msg.DocumentWithCaptionMessage.Message.ButtonsMessage.ContextInfo = &waE2E.ContextInfo{
-					StanzaID:      proto.String(data.Quoted.MessageID),
-					Participant:   proto.String(data.Quoted.Participant),
-					QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-				}
+				msg.DocumentWithCaptionMessage.Message.ButtonsMessage.ContextInfo = quotedContextInfo(data.Quoted)
 			}
 		default:
 			return nil, fmt.Errorf("invalid messageType: %s", messageType)
@@ -2902,13 +2847,9 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 	}
 
 	messageSent := &MessageSendStruct{
-		Info:    messageInfo,
-		Message: msg,
-		MessageContextInfo: &waE2E.ContextInfo{
-			StanzaID:      proto.String(data.Quoted.MessageID),
-			Participant:   proto.String(data.Quoted.Participant),
-			QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
-		},
+		Info:               messageInfo,
+		Message:            msg,
+		MessageContextInfo: quotedContextInfo(data.Quoted),
 	}
 
 	postMap := make(map[string]interface{})

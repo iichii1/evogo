@@ -1191,10 +1191,17 @@ Para citar/responder uma mensagem, adicione o objeto `quoted` em qualquer endpoi
   "text": "Respondendo sua mensagem",
   "quoted": {
     "messageId": "3EB0C5A277F7F9B6C599",
-    "participant": "5511999999999@s.whatsapp.net"
+    "participant": "5511999999999@s.whatsapp.net",
+    "text": "Texto da mensagem original"
   }
 }
 ```
+
+| Campo de `quoted` | Obrigatório | Descrição |
+|-------------------|-------------|-----------|
+| `messageId` | ✅ Sim | ID da mensagem citada |
+| `participant` | ✅ Sim | JID de quem enviou a mensagem citada |
+| `text` | ❌ Não | Texto da mensagem citada. **Envie-o para o cartão da resposta mostrar o conteúdo**: sem ele o WhatsApp exibe o cartão só com o autor, vazio. A API não guarda o corpo das mensagens para buscá-lo pelo `messageId` |
 
 ### Menções em Grupos
 
