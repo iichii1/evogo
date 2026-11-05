@@ -17,12 +17,12 @@ O roteiro para testar tudo com uma conta real está em [ROTEIRO-TESTE-REAL.md](R
 ```bash
 go build ./...
 go vet ./...
-go test -race -count=1 ./...      # é o que o CI roda
+go test -race -count=1 ./...
 make swagger                      # regenera docs/swagger.*; precisa do swag v1.16.3
 go install github.com/swaggo/swag/cmd/swag@v1.16.3
 ```
 
-**No Windows** não há compilador C, e o `-race` e o pacote `webp` exigem cgo (sem ele, `pkg/routes` e `pkg/sendMessage` nem compilam; mais quatro testes de `pkg/whatsmeow/service` falham ao limpar arquivos abertos). Rode no Linux pelo Docker, o que também iguala o CI. Uma imagem com `ffmpeg` (os testes de áudio só rodam com ele):
+**No Windows** não há compilador C, e o `-race` e o pacote `webp` exigem cgo (sem ele, `pkg/routes` e `pkg/sendMessage` nem compilam; mais quatro testes de `pkg/whatsmeow/service` falham ao limpar arquivos abertos). Rode no Linux pelo Docker. Uma imagem com `ffmpeg` (os testes de áudio só rodam com ele):
 
 ```bash
 printf 'FROM golang:1.26\nRUN apt-get update -qq && apt-get install -y -qq --no-install-recommends ffmpeg ca-certificates && rm -rf /var/lib/apt/lists/*\n' | docker build -t evogo-ci:1.26 -
@@ -47,7 +47,7 @@ Os testes de integração têm a tag `integration` (por exemplo `pkg/whatsmeow/s
 
 ## O que foi feito
 
-Todas as fases estão na `main`. As fases 8 a 10 (2026-11-05) foram validadas com `go build`, `go vet` e `go test -race` em Linux (não no CI do GitHub) e entraram na `main` por fast-forward, a partir das branches empilhadas `feat/fase8-operacao-e-seguranca`, `feat/fase9-pedidos-do-upstream` e `feat/fase10-fila-de-envio`. Os branches `fix/fase*`, `feat/fase5-features`, `chore/fase7-ci-e-docs` e `feat/fase8…10` continuam no GitHub e podem ser apagados.
+Todas as fases estão na `main`. As fases 8 a 10 (2026-11-05) foram validadas com `go build`, `go vet` e `go test -race` em Linux, na máquina local, e entraram na `main` por fast-forward, a partir das branches empilhadas `feat/fase8-operacao-e-seguranca`, `feat/fase9-pedidos-do-upstream` e `feat/fase10-fila-de-envio`. Os branches `fix/fase*`, `feat/fase5-features`, `chore/fase7-ci-e-docs` e `feat/fase8…10` continuam no GitHub e podem ser apagados.
 
 ### Fases 1 a 5 (PRs #1 a #5 no fork, mergeados)
 
@@ -77,7 +77,7 @@ Já resolvidos pelas fases anteriores: #20, #21, #203.
 
 ### Fase 7 (3 commits)
 
-- **CI:** `.github/workflows/ci.yml` roda `go build`, `go vet` e `go test -race` em todo PR e em todo push na `main`. O primeiro run no GitHub passou.
+- **CI:** `.github/workflows/ci.yml` roda `go build`, `go vet` e `go test -race` em todo PR e em todo push na `main`. **Não usamos CI do GitHub** (decisão do proprietário): os testes rodam só na máquina local, e o resultado do workflow não vale como validação nem precisa ser conferido.
 - **Swagger:** regenerado com o swag v1.16.3. O `make swagger` estava quebrado (faltavam `--parseDependency` e `--parseInternal`) e foi corrigido. As rotas `/license/*` são documentadas por funções só de anotação em `pkg/routes/license_swagger.go`.
 - **Teste de rotas e Swagger:** `pkg/routes/swagger_consistency_test.go`.
 
@@ -136,7 +136,7 @@ Atualizado em 2026-11-05: os pontos B, C e D foram tratados nas fases 8 a 10 (ac
 
 ### A. Decisões suas
 
-1. **Workflow "Build and Publish Docker Image":** falha a cada push na `main` do fork, no passo "Login to Docker Hub", porque publica em `evoapicloud/evolution-go` e o fork não tem as credenciais. Opções: (a) desativar o workflow no fork; (b) trocar a imagem de destino para a sua conta e configurar os segredos; (c) fazer o workflow rodar só no repositório original (`if: github.repository == 'evolution-foundation/evolution-go'`).
+1. **Workflow "Build and Publish Docker Image":** falha a cada push na `main` do fork, no passo "Login to Docker Hub", porque publica em `evoapicloud/evolution-go` e o fork não tem as credenciais. Como o GitHub não é usado para testar nem para publicar, o mais simples é (a). Opções: (a) desativar o workflow no fork; (b) trocar a imagem de destino para a sua conta e configurar os segredos; (c) fazer o workflow rodar só no repositório original (`if: github.repository == 'evolution-foundation/evolution-go'`).
 2. **Binário de 64 MB (`evolution-go`, na raiz):** está versionado desde os commits de sincronização com o upstream. Decidir se remove do repositório. Não mexi.
 3. **Branches antigos no GitHub:** apagar ou manter.
 
