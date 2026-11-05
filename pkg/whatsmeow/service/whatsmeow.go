@@ -1261,6 +1261,26 @@ func (mycli *MyClient) myEventHandler(rawEvt interface{}) {
 	case *events.StreamReplaced:
 		mycli.loggerWrapper.GetLogger(mycli.userID).LogInfo("[%s] Received StreamReplaced event", mycli.userID)
 		return
+	case *events.NotifyAccountReachoutTimelock:
+		// O WhatsApp limitou temporariamente as mensagens desta conta para
+		// contatos que não iniciaram conversa. Enquanto durar, esses envios
+		// falham com erro 463 (#50). Não há o que corrigir do nosso lado; o
+		// evento avisa quem integra para pausar os disparos.
+		doWebhook = true
+		postMap["event"] = "AccountReachoutTimelock"
+		data := map[string]interface{}{
+			"isActive":        evt.IsActive,
+			"enforcementType": evt.EnforcementType,
+		}
+		if !evt.TimeEnforcementEnds.IsZero() {
+			data["enforcementEndsAt"] = evt.TimeEnforcementEnds.Time.UTC().Format(time.RFC3339)
+		}
+		postMap["data"] = data
+		if evt.IsActive {
+			mycli.loggerWrapper.GetLogger(mycli.userID).LogWarn("[%s] Account reachout timelock active (type=%s, ends=%v): messages to new contacts will fail with error 463", mycli.userID, evt.EnforcementType, data["enforcementEndsAt"])
+		} else {
+			mycli.loggerWrapper.GetLogger(mycli.userID).LogInfo("[%s] Account reachout timelock lifted", mycli.userID)
+		}
 	case *events.TemporaryBan:
 		mycli.loggerWrapper.GetLogger(mycli.userID).LogInfo("[%s] User received temporary ban for %s", mycli.userID, evt.Code.String())
 		doWebhook = true
@@ -2402,7 +2422,7 @@ func (w *whatsmeowService) CallWebhook(instance *instance_model.Instance, queueN
 			w.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Event received of type %s", instance.Id, eventType)
 			w.sendToQueueOrWebhook(instance, queueName, jsonData)
 		}
-	case "Connected", "PairSuccess", "TemporaryBan", "LoggedOut", "ConnectFailure", "Disconnected":
+	case "Connected", "PairSuccess", "TemporaryBan", "AccountReachoutTimelock", "LoggedOut", "ConnectFailure", "Disconnected":
 		if contains(subscriptions, "CONNECTION") {
 			w.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Event received of type %s", instance.Id, eventType)
 			w.sendToQueueOrWebhook(instance, queueName, jsonData)
@@ -2688,7 +2708,7 @@ func (w *whatsmeowService) SendToGlobalQueues(eventType string, payload []byte, 
 				globalEventType = "CHAT_PRESENCE"
 			case "CallOffer", "CallAccept", "CallTerminate", "CallOfferNotice", "CallRelayLatency":
 				globalEventType = "CALL"
-			case "Connected", "PairSuccess", "TemporaryBan", "LoggedOut", "ConnectFailure", "Disconnected":
+			case "Connected", "PairSuccess", "TemporaryBan", "AccountReachoutTimelock", "LoggedOut", "ConnectFailure", "Disconnected":
 				globalEventType = "CONNECTION"
 			case "LabelEdit", "LabelAssociationChat", "LabelAssociationMessage":
 				globalEventType = "LABEL"
@@ -2750,7 +2770,7 @@ func (w *whatsmeowService) SendToGlobalQueues(eventType string, payload []byte, 
 			globalEventType = "CHAT_PRESENCE"
 		case "CallOffer", "CallAccept", "CallTerminate", "CallOfferNotice", "CallRelayLatency":
 			globalEventType = "CALL"
-		case "Connected", "PairSuccess", "TemporaryBan", "LoggedOut", "ConnectFailure", "Disconnected":
+		case "Connected", "PairSuccess", "TemporaryBan", "AccountReachoutTimelock", "LoggedOut", "ConnectFailure", "Disconnected":
 			globalEventType = "CONNECTION"
 		case "LabelEdit", "LabelAssociationChat", "LabelAssociationMessage":
 			globalEventType = "LABEL"

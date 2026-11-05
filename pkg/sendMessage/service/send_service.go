@@ -2771,10 +2771,16 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 		sendExtra.AdditionalNodes = data.AdditionalNodes
 	}
 
-	response, err := s.clientPointer.Get(instance.Id).SendMessage(context.Background(), recipient, msg, sendExtra)
+	// O cliente pode ter sido parado/substituído desde a validação acima.
+	client := s.clientPointer.Get(instance.Id)
+	if client == nil || client.Store.ID == nil {
+		return nil, errors.New("no active session found")
+	}
+
+	response, err := client.SendMessage(context.Background(), recipient, msg, sendExtra)
 	if err != nil {
 		s.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error sending message: %v", instance.Id, err)
-		return nil, err
+		return nil, explainSendError(err)
 	}
 
 	s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Message sent successfully! ServerID: %d", instance.Id, response.ServerID)
@@ -2782,7 +2788,7 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 	messageInfo := types.MessageInfo{
 		MessageSource: types.MessageSource{
 			Chat:     recipient,
-			Sender:   *s.clientPointer.Get(instance.Id).Store.ID,
+			Sender:   *client.Store.ID,
 			IsFromMe: true,
 			IsGroup:  isGroup,
 		},
