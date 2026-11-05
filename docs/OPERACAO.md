@@ -39,7 +39,7 @@ healthcheck:
 
 ## Métricas
 
-`GET /metrics`, no formato de texto do Prometheus. Exige a chave global no header `apikey` (as métricas mostram a carga do servidor e não devem ficar públicas).
+`GET /metrics`, no formato de texto do Prometheus. Exige a chave global no header `apikey` (as métricas mostram a carga do servidor e não devem ficar públicas). Sem licença ativa, o gate de licença responde 503 (`LICENSE_REQUIRED`) antes de conferir a chave; com a licença ativa, chave ausente ou errada dá 401.
 
 ```bash
 curl -H "apikey: $GLOBAL_API_KEY" http://localhost:4000/metrics

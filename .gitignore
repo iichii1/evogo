@@ -7,3 +7,6 @@ coverage.*
 .idea/
 .vscode/
 .DS_Store
+
+# Pacotes .tar exportados por infra/scripts/export-images.ps1
+/dist/
