@@ -55,34 +55,87 @@ func (m *JIDValidationMiddleware) ValidateJIDFields(fieldNames ...string) gin.Ha
 			return
 		}
 
-		// Validate and normalize JID fields
+		// Validate and normalize JID fields. Cada campo pode ser uma string ou uma
+		// lista de strings; antes uma lista era tratada como string vazia e a
+		// requisição voltava 400 "... is required and cannot be empty" (#52, #97).
 		modified := false
 		for _, fieldName := range fieldNames {
-			if value, exists := requestData[fieldName]; exists {
-				if strValue, ok := value.(string); ok && strValue != "" {
-					// Validate and normalize the JID
-					normalizedJID, err := utils.CreateJID(strValue)
-					if err != nil {
-						c.JSON(http.StatusBadRequest, gin.H{
-							"error": fmt.Sprintf("Invalid %s format: %s", fieldName, err.Error()),
-						})
-						c.Abort()
-						return
-					}
+			value, exists := requestData[fieldName]
+			if !exists {
+				continue
+			}
 
-					// Update the value if it was normalized
-					if normalizedJID != strValue {
-						requestData[fieldName] = normalizedJID
-						modified = true
-						logger.LogDebug("Normalized %s from %s to %s", fieldName, strValue, normalizedJID)
-					}
-				} else if strValue == "" {
+			switch v := value.(type) {
+			case string:
+				if v == "" {
 					c.JSON(http.StatusBadRequest, gin.H{
 						"error": fmt.Sprintf("%s is required and cannot be empty", fieldName),
 					})
 					c.Abort()
 					return
 				}
+
+				normalizedJID, err := utils.CreateJID(v)
+				if err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{
+						"error": fmt.Sprintf("Invalid %s format: %s", fieldName, err.Error()),
+					})
+					c.Abort()
+					return
+				}
+
+				// Update the value if it was normalized
+				if normalizedJID != v {
+					requestData[fieldName] = normalizedJID
+					modified = true
+					logger.LogDebug("Normalized %s from %s to %s", fieldName, v, normalizedJID)
+				}
+			case []interface{}:
+				if len(v) == 0 {
+					c.JSON(http.StatusBadRequest, gin.H{
+						"error": fmt.Sprintf("%s cannot be empty", fieldName),
+					})
+					c.Abort()
+					return
+				}
+
+				for i, item := range v {
+					strValue, ok := item.(string)
+					if !ok || strValue == "" {
+						c.JSON(http.StatusBadRequest, gin.H{
+							"error": fmt.Sprintf("%s[%d] must be a non-empty string", fieldName, i),
+						})
+						c.Abort()
+						return
+					}
+
+					normalizedJID, err := utils.CreateJID(strValue)
+					if err != nil {
+						c.JSON(http.StatusBadRequest, gin.H{
+							"error": fmt.Sprintf("Invalid %s[%d] format: %s", fieldName, i, err.Error()),
+						})
+						c.Abort()
+						return
+					}
+
+					if normalizedJID != strValue {
+						v[i] = normalizedJID
+						modified = true
+						logger.LogDebug("Normalized %s[%d] from %s to %s", fieldName, i, strValue, normalizedJID)
+					}
+				}
+			case nil:
+				c.JSON(http.StatusBadRequest, gin.H{
+					"error": fmt.Sprintf("%s is required and cannot be empty", fieldName),
+				})
+				c.Abort()
+				return
+			default:
+				c.JSON(http.StatusBadRequest, gin.H{
+					"error": fmt.Sprintf("%s must be a string or an array of strings", fieldName),
+				})
+				c.Abort()
+				return
 			}
 		}
 
