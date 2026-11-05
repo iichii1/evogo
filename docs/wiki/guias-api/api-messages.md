@@ -204,6 +204,7 @@ delay: 0
 | `file` | binary | ✅ Sim (arquivo) | Arquivo binário (se não enviar URL) |
 | `caption` | string | ❌ Não | Legenda da mídia |
 | `filename` | string | ❌ Não | Nome do arquivo |
+| `ptt` | bool | ❌ Não | Só para `audio`. `true` (padrão) envia como mensagem de voz; `false` envia como arquivo de áudio com player |
 
 **Tipos de Mídia Aceitos**:
 
@@ -211,7 +212,7 @@ delay: 0
 |------|------------------|-------------|
 | `image` | JPG, PNG, WebP | WebP convertido para JPEG |
 | `video` | MP4 | Apenas MP4 |
-| `audio` | Qualquer | Convertido para Opus (PTT) automaticamente |
+| `audio` | Qualquer | Convertido para Opus automaticamente. Mensagem de voz (mono) por padrão; com `ptt: false`, áudio comum (estéreo) |
 | `document` | Qualquer | Qualquer tipo de arquivo |
 
 **Áudio**: O sistema converte automaticamente qualquer formato de áudio para **Opus** (formato PTT do WhatsApp). Pode usar conversor local (ffmpeg) ou API externa (configurável via `API_AUDIO_CONVERTER`).

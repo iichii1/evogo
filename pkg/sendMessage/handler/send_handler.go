@@ -213,6 +213,17 @@ func (s *sendHandler) SendMedia(ctx *gin.Context) {
 			return
 		}
 
+		// ptt é opcional; ausente mantém o áudio como mensagem de voz.
+		var ptt *bool
+		if raw := ctx.PostForm("ptt"); raw != "" {
+			value, err := strconv.ParseBool(raw)
+			if err != nil {
+				ctx.JSON(http.StatusBadRequest, gin.H{"error": "ptt must be true or false"})
+				return
+			}
+			ptt = &value
+		}
+
 		// Create MediaStruct
 		data = &send_service.MediaStruct{
 			Number:       number,
@@ -224,6 +235,7 @@ func (s *sendHandler) SendMedia(ctx *gin.Context) {
 			MentionAll:   mentionAll,
 			MentionedJID: mentionedJID,
 			Quoted:       quoted,
+			Ptt:          ptt,
 		}
 
 		// Pass fileBytes to the send service

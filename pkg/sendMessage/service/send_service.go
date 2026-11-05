@@ -119,6 +119,14 @@ type MediaStruct struct {
 	FormatJid       *bool        `json:"formatJid,omitempty"`
 	Quoted          QuotedStruct `json:"quoted"`
 	ForwardingScore *uint32      `json:"forwardingScore,omitempty"`
+	// Only for type=audio. true (default) sends a voice note; false sends a regular audio file with a player.
+	Ptt *bool `json:"ptt,omitempty"`
+}
+
+// IsPTT informa se um áudio deve ir como mensagem de voz. O padrão continua
+// sendo mensagem de voz, como antes do campo existir.
+func (m *MediaStruct) IsPTT() bool {
+	return m == nil || m.Ptt == nil || *m.Ptt
 }
 
 type PollStruct struct {
@@ -932,7 +940,18 @@ func convertAudioWithApi(apiUrl string, apiKey string, convertData ConvertAudio)
 	return base64ToBytes, apiResponse.Duration, nil
 }
 
-func convertAudioToOpusWithDuration(inputData []byte) ([]byte, int, error) {
+// opusProfile devolve os canais e o modo do encoder Opus. Mensagem de voz
+// continua mono e "voip", como sempre foi. Áudio normal (ptt=false, #217) usa
+// estéreo e "audio", que preserva melhor música.
+func opusProfile(ptt bool) (channels string, application string) {
+	if ptt {
+		return "1", "voip"
+	}
+	return "2", "audio"
+}
+
+func convertAudioToOpusWithDuration(inputData []byte, ptt bool) ([]byte, int, error) {
+	channels, application := opusProfile(ptt)
 	cmd := exec.Command("ffmpeg", "-i", "pipe:0",
 		"-f",
 		"ogg",
@@ -946,13 +965,13 @@ func convertAudioToOpusWithDuration(inputData []byte) ([]byte, int, error) {
 		"-ar",
 		"48000",
 		"-ac",
-		"1",
+		channels,
 		"-write_xing",
 		"0",
 		"-compression_level",
 		"10",
 		"-application",
-		"voip",
+		application,
 		"-fflags",
 		"+bitexact",
 		"-flags",
@@ -1052,7 +1071,7 @@ func (s *sendService) sendMediaFileWithRetry(data *MediaStruct, fileData []byte,
 			var err error
 			if converterApiUrl == "" {
 
-				convertedData, duration, err = convertAudioToOpusWithDuration(fileData)
+				convertedData, duration, err = convertAudioToOpusWithDuration(fileData, data.IsPTT())
 				if err != nil {
 					return nil, err
 				}
@@ -1181,7 +1200,7 @@ func (s *sendService) sendMediaFileWithRetry(data *MediaStruct, fileData []byte,
 			if isNewsletter {
 				media = &waE2E.Message{AudioMessage: &waE2E.AudioMessage{
 					URL:        &uploaded.URL,
-					PTT:        proto.Bool(true),
+					PTT:        proto.Bool(data.IsPTT()),
 					DirectPath: &uploaded.DirectPath,
 					Mimetype:   proto.String(mimeType),
 					FileSHA256: uploaded.FileSHA256,
@@ -1191,7 +1210,7 @@ func (s *sendService) sendMediaFileWithRetry(data *MediaStruct, fileData []byte,
 			} else {
 				media = &waE2E.Message{AudioMessage: &waE2E.AudioMessage{
 					URL:           proto.String(uploaded.URL),
-					PTT:           proto.Bool(true),
+					PTT:           proto.Bool(data.IsPTT()),
 					DirectPath:    proto.String(uploaded.DirectPath),
 					MediaKey:      uploaded.MediaKey,
 					Mimetype:      proto.String(mimeType),
@@ -1354,7 +1373,7 @@ func (s *sendService) sendMediaUrlWithRetry(data *MediaStruct, instance *instanc
 			var err error
 			if converterApiUrl == "" {
 				s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Usando conversão local...", instance.Id)
-				convertedData, duration, err = convertAudioToOpusWithDuration(fileData)
+				convertedData, duration, err = convertAudioToOpusWithDuration(fileData, data.IsPTT())
 			} else {
 				s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Usando API de conversão...", instance.Id)
 				convertedData, duration, err = convertAudioWithApi(converterApiUrl, converterApiKey, ConvertAudio{Base64: base64.StdEncoding.EncodeToString(fileData)})
@@ -1481,7 +1500,7 @@ func (s *sendService) sendMediaUrlWithRetry(data *MediaStruct, instance *instanc
 			if isNewsletter {
 				media = &waE2E.Message{AudioMessage: &waE2E.AudioMessage{
 					URL:              &uploaded.URL,
-					PTT:              proto.Bool(true),
+					PTT:              proto.Bool(data.IsPTT()),
 					DirectPath:       &uploaded.DirectPath,
 					Mimetype:         proto.String(mimeType),
 					FileSHA256:       uploaded.FileSHA256,
@@ -1493,7 +1512,7 @@ func (s *sendService) sendMediaUrlWithRetry(data *MediaStruct, instance *instanc
 			} else {
 				media = &waE2E.Message{AudioMessage: &waE2E.AudioMessage{
 					URL:              proto.String(uploaded.URL),
-					PTT:              proto.Bool(true),
+					PTT:              proto.Bool(data.IsPTT()),
 					DirectPath:       proto.String(uploaded.DirectPath),
 					MediaKey:         uploaded.MediaKey,
 					Mimetype:         proto.String(mimeType),
