@@ -6,10 +6,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	config "github.com/evolution-foundation/evolution-go/pkg/config"
 	instance_model "github.com/evolution-foundation/evolution-go/pkg/instance/model"
 	instance_service "github.com/evolution-foundation/evolution-go/pkg/instance/service"
+	auth_middleware "github.com/evolution-foundation/evolution-go/pkg/middleware"
 	"github.com/evolution-foundation/evolution-go/pkg/utils"
 )
 
@@ -596,6 +598,36 @@ func (h *instanceHandler) GetLogs(c *gin.Context) {
 	c.JSON(http.StatusOK, logs)
 }
 
+// authorizeInstanceParam garante que quem chama pode agir sobre o instanceId da
+// URL: a chave global pode agir sobre qualquer instância, o apikey de uma
+// instância só sobre ela mesma. Antes a rota aceitava o instanceId de qualquer
+// instância, então o token de uma lia e alterava as configurações de outra.
+func authorizeInstanceParam(c *gin.Context, instanceId string) bool {
+	if auth_middleware.IsAdmin(c) {
+		return true
+	}
+	authenticated, ok := c.Get("instance")
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "not authorized"})
+		return false
+	}
+	instance, ok := authenticated.(*instance_model.Instance)
+	if !ok || instance.Id != instanceId {
+		c.JSON(http.StatusForbidden, gin.H{"error": "apikey does not belong to this instance"})
+		return false
+	}
+	return true
+}
+
+// advancedSettingsError traduz o erro do serviço: instância inexistente é 404.
+func advancedSettingsError(c *gin.Context, err error) {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"error": "instance not found"})
+		return
+	}
+	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+}
+
 // GetAdvancedSettings retrieves advanced settings for an instance
 // @Summary Get advanced settings
 // @Description Get advanced settings for a specific instance
@@ -604,6 +636,7 @@ func (h *instanceHandler) GetLogs(c *gin.Context) {
 // @Param instanceId path string true "Instance ID"
 // @Success 200 {object} instance_model.AdvancedSettings "Advanced settings retrieved successfully"
 // @Failure 400 {object} gin.H "Invalid instance ID"
+// @Failure 403 {object} gin.H "The apikey does not belong to this instance"
 // @Failure 404 {object} gin.H "Instance not found"
 // @Failure 500 {object} gin.H "Internal server error"
 // @Router /instance/{instanceId}/advanced-settings [get]
@@ -615,9 +648,13 @@ func (h *instanceHandler) GetAdvancedSettings(c *gin.Context) {
 		return
 	}
 
+	if !authorizeInstanceParam(c, instanceId) {
+		return
+	}
+
 	settings, err := h.instanceService.GetAdvancedSettings(instanceId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		advancedSettingsError(c, err)
 		return
 	}
 
@@ -626,7 +663,7 @@ func (h *instanceHandler) GetAdvancedSettings(c *gin.Context) {
 
 // UpdateAdvancedSettings updates advanced settings for an instance
 // @Summary Update advanced settings
-// @Description Update advanced settings for a specific instance
+// @Description Update advanced settings for a specific instance. Fields that are omitted keep their current value.
 // @Tags Instance
 // @Accept json
 // @Produce json
@@ -634,6 +671,7 @@ func (h *instanceHandler) GetAdvancedSettings(c *gin.Context) {
 // @Param settings body instance_model.AdvancedSettings true "Advanced settings data"
 // @Success 200 {object} gin.H "Advanced settings updated successfully"
 // @Failure 400 {object} gin.H "Invalid request data"
+// @Failure 403 {object} gin.H "The apikey does not belong to this instance"
 // @Failure 404 {object} gin.H "Instance not found"
 // @Failure 500 {object} gin.H "Internal server error"
 // @Router /instance/{instanceId}/advanced-settings [put]
@@ -645,13 +683,26 @@ func (h *instanceHandler) UpdateAdvancedSettings(c *gin.Context) {
 		return
 	}
 
-	var settings instance_model.AdvancedSettings
-	if err := c.ShouldBindJSON(&settings); err != nil {
+	if !authorizeInstanceParam(c, instanceId) {
+		return
+	}
+
+	var patch instance_model.AdvancedSettingsPatch
+	if err := c.ShouldBindJSON(&patch); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	err := h.instanceService.UpdateAdvancedSettings(instanceId, &settings)
+	// Atualização parcial: parte das configurações atuais e aplica só o que veio.
+	current, err := h.instanceService.GetAdvancedSettings(instanceId)
+	if err != nil {
+		advancedSettingsError(c, err)
+		return
+	}
+	settings := *current
+	settings.Apply(patch)
+
+	err = h.instanceService.UpdateAdvancedSettings(instanceId, &settings)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

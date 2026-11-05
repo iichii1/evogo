@@ -25,7 +25,7 @@ Uma **instância** representa uma conexão individual com o WhatsApp. Cada inst�
 - `POST /instance/reconnect` - Reconectar
 - `DELETE /instance/logout` - Fazer logout
 
-### Gerenciamento Avançado (Administrativo - usa GLOBAL_API_KEY)
+### Gerenciamento Avançado (Administrativo - usa GLOBAL_API_KEY; as configurações avançadas também aceitam o token da própria instância)
 - `POST /instance/proxy/:instanceId` - Configurar proxy
 - `DELETE /instance/proxy/:instanceId` - Remover proxy
 - `POST /instance/forcereconnect/:instanceId` - Forçar reconexão
@@ -134,6 +134,8 @@ apikey: TOKEN-DA-INSTANCIA
 }
 ```
 
+Os campos que você não enviar (`webhookUrl`, `subscribe`, `rabbitmqEnable`, `websocketEnable`, `natsEnable`) **mantêm o valor atual da instância**; antes eles eram zerados. Para desligar um canal de propósito, envie `"disabled"`.
+
 ### Resposta Sucesso (200)
 ```json
 {
@@ -225,6 +227,15 @@ apikey: TOKEN-DA-INSTANCIA
   }
 }
 ```
+
+### Resposta quando a instância já está conectada (409)
+```json
+{
+  "error": "instance is already authenticated",
+  "code": "already_authenticated"
+}
+```
+Não há o que parear: a instância já está logada. Use `GET /instance/status` para conferir o estado.
 
 ### Como Usar
 1. Faça a requisição com seu número
@@ -684,19 +695,20 @@ GET /instance/:instanceId/advanced-settings
 
 ### Headers
 ```
-apikey: SUA-GLOBAL-API-KEY
+apikey: TOKEN-DA-INSTANCIA   (ou SUA-GLOBAL-API-KEY)
 ```
+
+O token de uma instância só acessa as configurações dela mesma (`403` para o `instanceId` de outra). A `GLOBAL_API_KEY` acessa qualquer instância. Uma instância que não existe devolve `404`.
 
 ### Resposta (200)
 ```json
 {
-  "rejectCall": false,
-  "msgCall": "Não estou disponível para chamadas",
-  "groupsIgnore": true,
   "alwaysOnline": false,
+  "rejectCall": false,
+  "msgRejectCall": "",
   "readMessages": false,
-  "readStatus": false,
-  "syncFullHistory": false
+  "ignoreGroups": false,
+  "ignoreStatus": false
 }
 ```
 
@@ -709,25 +721,27 @@ PUT /instance/:instanceId/advanced-settings
 ### Headers
 ```
 Content-Type: application/json
-apikey: SUA-GLOBAL-API-KEY
+apikey: TOKEN-DA-INSTANCIA   (ou SUA-GLOBAL-API-KEY)
 ```
 
 ### Body
+Todos os campos são opcionais. **Os campos que você não enviar mantêm o valor atual**; envie `false` ou `""` de propósito para desligar uma opção ou limpar a mensagem.
+
 ```json
 {
-  "rejectCall": true,
-  "msgCall": "Por favor, envie mensagem",
-  "groupsIgnore": false,
   "alwaysOnline": true,
+  "rejectCall": true,
+  "msgRejectCall": "Por favor, envie mensagem",
   "readMessages": true,
-  "readStatus": true,
-  "syncFullHistory": false
+  "ignoreGroups": false,
+  "ignoreStatus": false
 }
 ```
 
 ### Exemplo cURL
 ```bash
-curl -X PUT "http://localhost:4000/instance/vendas/advanced-settings" \
+# Liga só alwaysOnline e rejectCall; as outras opções ficam como estão
+curl -X PUT "http://localhost:4000/instance/ID-DA-INSTANCIA/advanced-settings" \
   -H "Content-Type: application/json" \
   -H "apikey: SUA-GLOBAL-API-KEY" \
   -d '{

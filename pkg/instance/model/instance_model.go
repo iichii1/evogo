@@ -45,6 +45,40 @@ type AdvancedSettings struct {
 	IgnoreStatus  bool   `json:"ignoreStatus"`
 }
 
+// AdvancedSettingsPatch é o corpo aceito na atualização das configurações
+// avançadas. Campo ausente significa "manter o valor atual": com os campos
+// simples, enviar só {"alwaysOnline": true} zerava todos os outros (#111).
+type AdvancedSettingsPatch struct {
+	AlwaysOnline  *bool   `json:"alwaysOnline"`
+	RejectCall    *bool   `json:"rejectCall"`
+	MsgRejectCall *string `json:"msgRejectCall"`
+	ReadMessages  *bool   `json:"readMessages"`
+	IgnoreGroups  *bool   `json:"ignoreGroups"`
+	IgnoreStatus  *bool   `json:"ignoreStatus"`
+}
+
+// Apply copia para s apenas os campos presentes no patch.
+func (s *AdvancedSettings) Apply(p AdvancedSettingsPatch) {
+	if p.AlwaysOnline != nil {
+		s.AlwaysOnline = *p.AlwaysOnline
+	}
+	if p.RejectCall != nil {
+		s.RejectCall = *p.RejectCall
+	}
+	if p.MsgRejectCall != nil {
+		s.MsgRejectCall = *p.MsgRejectCall
+	}
+	if p.ReadMessages != nil {
+		s.ReadMessages = *p.ReadMessages
+	}
+	if p.IgnoreGroups != nil {
+		s.IgnoreGroups = *p.IgnoreGroups
+	}
+	if p.IgnoreStatus != nil {
+		s.IgnoreStatus = *p.IgnoreStatus
+	}
+}
+
 func (m *Instance) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.Id == "" {
 		m.Id = uuid.New().String()

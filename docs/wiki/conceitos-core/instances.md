@@ -389,7 +389,7 @@ false = Normal (recebe tudo)
 
 ### Como Configurar
 
-**Endpoint**: `POST /instance/:id/advanced-settings`
+**Endpoint**: `PUT /instance/:id/advanced-settings` (campos omitidos mantêm o valor atual)
 
 **Exemplo**:
 ```json

@@ -210,34 +210,57 @@ func (i instances) Create(data *CreateStruct) (*instance_model.Instance, error) 
 	return createdInstance, nil
 }
 
-func (i instances) Connect(data *ConnectStruct, instance *instance_model.Instance) (*instance_model.Instance, string, string, error) {
+// applyConnectSettings aplica ao registro da instância o que veio no connect e
+// devolve a lista de eventos assinados.
+//
+// Campo omitido mantém o valor atual. Antes o connect sobrescrevia tudo com o
+// que veio no corpo, então um connect sem corpo zerava webhook, RabbitMQ, NATS e
+// WebSocket e voltava os eventos para só MESSAGE (#111). Para desligar um canal
+// de propósito, mande o valor explícito ("disabled").
+func applyConnectSettings(instance *instance_model.Instance, data *ConnectStruct, warn func(format string, args ...interface{})) []string {
 	var subscribedEvents []string
 
-	i.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Processing subscribe events: %v", instance.Id, data.Subscribe)
-
-	if len(data.Subscribe) == 0 {
-		subscribedEvents = append(subscribedEvents, event_types.MESSAGE)
-	} else if len(data.Subscribe) > 0 && data.Subscribe[0] == "ALL" {
-		for _, event := range event_types.AllEventTypes {
-			subscribedEvents = append(subscribedEvents, event)
+	switch {
+	case len(data.Subscribe) == 0:
+		if instance.Events != "" {
+			subscribedEvents = strings.Split(instance.Events, ",")
+		} else {
+			subscribedEvents = append(subscribedEvents, event_types.MESSAGE)
 		}
-	} else {
+	case data.Subscribe[0] == "ALL":
+		subscribedEvents = append(subscribedEvents, event_types.AllEventTypes...)
+	default:
 		for _, arg := range data.Subscribe {
 			if !event_types.IsEventType(arg) {
-				i.loggerWrapper.GetLogger(instance.Id).LogWarn("[%s] Message type discarded '%s'", instance.Id, arg)
+				warn("[%s] Message type discarded '%s'", instance.Id, arg)
 				continue
 			}
 			subscribedEvents = append(subscribedEvents, arg)
 		}
 	}
 
-	eventString := strings.Join(subscribedEvents, ",")
+	instance.Events = strings.Join(subscribedEvents, ",")
+	if data.WebhookUrl != "" {
+		instance.Webhook = data.WebhookUrl
+	}
+	if data.RabbitmqEnable != "" {
+		instance.RabbitmqEnable = data.RabbitmqEnable
+	}
+	if data.NatsEnable != "" {
+		instance.NatsEnable = data.NatsEnable
+	}
+	if data.WebSocketEnable != "" {
+		instance.WebSocketEnable = data.WebSocketEnable
+	}
 
-	instance.Events = eventString
-	instance.Webhook = data.WebhookUrl
-	instance.RabbitmqEnable = data.RabbitmqEnable
-	instance.NatsEnable = data.NatsEnable
-	instance.WebSocketEnable = data.WebSocketEnable
+	return subscribedEvents
+}
+
+func (i instances) Connect(data *ConnectStruct, instance *instance_model.Instance) (*instance_model.Instance, string, string, error) {
+	i.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Processing subscribe events: %v", instance.Id, data.Subscribe)
+
+	subscribedEvents := applyConnectSettings(instance, data, i.loggerWrapper.GetLogger(instance.Id).LogWarn)
+	eventString := instance.Events
 
 	err := i.instanceRepository.Update(instance)
 	if err != nil {
