@@ -195,6 +195,55 @@ definitions:
       username:
         type: string
     type: object
+  github_com_evolution-foundation_evolution-go_pkg_instance_service.ProxyStatus:
+    properties:
+      clientStarted:
+        description: |-
+          ClientStarted é true se a instância já foi iniciada neste processo. Antes
+          disso RuntimeEnabled não diz nada.
+        example: true
+        type: boolean
+      configured:
+        description: |-
+          Configured é true se há um proxy para a instância, o dela ou o global
+          (PROXY_HOST).
+        example: true
+        type: boolean
+      fallbackWithoutProxy:
+        description: |-
+          FallbackWithoutProxy é true se a conexão voltou a ser direta depois de um
+          erro de autenticação do proxy.
+        example: false
+        type: boolean
+      hasAuth:
+        description: HasAuth é true se o proxy usa usuário e senha. Os valores não
+          são devolvidos.
+        example: true
+        type: boolean
+      host:
+        example: proxy.example.com
+        type: string
+      lastAppliedAt:
+        description: LastAppliedAt é quando o proxy foi aplicado ao cliente.
+        type: string
+      lastError:
+        description: LastError é uma descrição genérica do último problema.
+        type: string
+      port:
+        example: "8080"
+        type: string
+      protocol:
+        description: |-
+          Protocol, Host e Port são os efetivos (os da instância, com o global como
+          reserva).
+        example: http
+        type: string
+      runtimeEnabled:
+        description: RuntimeEnabled é true se o cliente em execução está usando o
+          proxy.
+        example: true
+        type: boolean
+    type: object
   github_com_evolution-foundation_evolution-go_pkg_instance_service.SetProxyStruct:
     properties:
       host:
@@ -8789,6 +8838,41 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Set proxy configuration
+      tags:
+      - Instance
+  /instance/proxy/{instanceId}/status:
+    get:
+      consumes:
+      - application/json
+      description: Says whether the instance has a proxy configured and whether the
+        running client is really using it. `GET /instance/all` and `GET /instance/info`
+        always return an empty `proxy` field to avoid leaking credentials, and the
+        response of `POST /instance/proxy` only proves that the configuration was
+        saved. `runtimeEnabled` is true only if the client applied the proxy; `fallbackWithoutProxy`
+        is true if the connection went direct after a proxy authentication error.
+        Never returns the proxy username, password, full URL or API keys.
+      parameters:
+      - description: Instance Id
+        in: path
+        name: instanceId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_instance_service.ProxyStatus'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Instance not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get proxy status
       tags:
       - Instance
   /instance/qr:

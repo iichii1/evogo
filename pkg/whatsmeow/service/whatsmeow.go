@@ -71,6 +71,11 @@ type WhatsmeowService interface {
 	SubmitPasskeyResponse(instanceId string, resp *types.WebAuthnResponse) error
 	ConfirmPasskey(instanceId string) error
 
+	// ProxyRuntimeStatus diz se o cliente em execução da instância está mesmo
+	// usando o proxy configurado. O segundo valor é false se a instância ainda
+	// não foi iniciada neste processo.
+	ProxyRuntimeStatus(instanceId string) (ProxyRuntimeStatus, bool)
+
 	// StopClient desconecta o cliente da instância e espera a limpeza terminar.
 	// Não reinicia o cliente. Devolve false se não havia cliente rodando.
 	StopClient(instanceId string, reason string) bool
@@ -91,6 +96,7 @@ type whatsmeowService struct {
 	config             *config.Config
 	sessions           *runtimestate.Map[string, *runtimestate.Session]
 	reconnectBackoff   *runtimestate.Map[string, *reconnectState]
+	proxyStatus        *runtimestate.Map[string, *ProxyRuntimeStatus]
 	userInfoCache      *cache.Cache
 	clientPointer      *runtimestate.Map[string, *whatsmeow.Client]
 	myClientPointer    *runtimestate.Map[string, *MyClient]
@@ -554,6 +560,7 @@ func (w whatsmeowService) StartClient(cd *ClientData) {
 
 	w.clientPointer.Set(cd.Instance.Id, client)
 
+	proxyStatus := ProxyRuntimeStatus{}
 	if cd.IsProxy {
 		var proxyConfig ProxyConfig
 		err := json.Unmarshal([]byte(cd.Instance.Proxy), &proxyConfig)
@@ -591,15 +598,20 @@ func (w whatsmeowService) StartClient(cd *ClientData) {
 		proxyAddress, err := utils.BuildProxyAddress(proxyProtocol, proxyHost, proxyPort, proxyUsername, proxyPassword)
 		if err != nil {
 			w.loggerWrapper.GetLogger(cd.Instance.Id).LogWarn("[%s] Proxy error, continuing without proxy: %v", cd.Instance.Id, err)
+			proxyStatus.LastError = "invalid proxy configuration; connecting without proxy"
 		} else {
 			err = client.SetProxyAddress(proxyAddress)
 			if err != nil {
 				w.loggerWrapper.GetLogger(cd.Instance.Id).LogWarn("[%s] Proxy error, continuing without proxy: %v", cd.Instance.Id, err)
+				proxyStatus.LastError = "proxy rejected by the client; connecting without proxy"
 			} else {
 				w.loggerWrapper.GetLogger(cd.Instance.Id).LogInfo("[%s] Proxy enabled (%s)", cd.Instance.Id, utils.NormalizeProxyProtocol(proxyProtocol, proxyPort))
+				proxyStatus.RuntimeEnabled = true
+				proxyStatus.LastAppliedAt = time.Now()
 			}
 		}
 	}
+	w.setProxyStatus(cd.Instance.Id, proxyStatus)
 
 	client.EnableAutoReconnect = false
 	client.AutoTrustIdentity = true
@@ -657,6 +669,7 @@ func (w whatsmeowService) StartClient(cd *ClientData) {
 				}
 			} else if strings.Contains(err.Error(), "username/password authentication failed") {
 				w.loggerWrapper.GetLogger(cd.Instance.Id).LogWarn("[%s] Proxy authentication failed, attempting to connect without proxy", cd.Instance.Id)
+				w.markProxyFallback(cd.Instance.Id)
 
 				// Desabilita o proxy
 				client.SetProxy(nil)
@@ -692,6 +705,7 @@ func (w whatsmeowService) StartClient(cd *ClientData) {
 				}
 			} else if strings.Contains(err.Error(), "username/password authentication failed") {
 				w.loggerWrapper.GetLogger(cd.Instance.Id).LogWarn("[%s] Proxy authentication failed during QR connection, attempting without proxy", cd.Instance.Id)
+				w.markProxyFallback(cd.Instance.Id)
 
 				// Desabilita o proxy
 				client.SetProxy(nil)
@@ -2998,6 +3012,9 @@ func (w whatsmeowService) ClearInstanceCache(instanceId string, token string) er
 	w.clientPointer.Delete(instanceId)
 	w.sessions.Delete(instanceId)
 	w.reconnectBackoff.Delete(instanceId)
+	if w.proxyStatus != nil {
+		w.proxyStatus.Delete(instanceId)
+	}
 
 	w.loggerWrapper.GetLogger(instanceId).LogInfo("[%s] Instance cache completely cleared", instanceId)
 	return nil
@@ -3034,6 +3051,7 @@ func NewWhatsmeowService(
 		myClientPointer:    runtimestate.New[string, *MyClient](),
 		sessions:           runtimestate.New[string, *runtimestate.Session](),
 		reconnectBackoff:   runtimestate.New[string, *reconnectState](),
+		proxyStatus:        runtimestate.New[string, *ProxyRuntimeStatus](),
 		rabbitmqProducer:   rabbitmqProducer,
 		webhookProducer:    webhookProducer,
 		websocketProducer:  websocketProducer,

@@ -41,6 +41,7 @@ type InstanceService interface {
 	SetProxy(id string, proxyConfig *ProxyConfig) error
 	SetProxyFromStruct(id string, data *SetProxyStruct) error
 	RemoveProxy(id string) error
+	GetProxyStatus(id string) (*ProxyStatus, error)
 	ForceReconnect(instanceId string, number string) error
 	GetInstanceByToken(token string) (*instance_model.Instance, error)
 	GetLogs(instanceId string, startDate, endDate time.Time, level string, limit int) ([]logger_wrapper.LogEntry, error)

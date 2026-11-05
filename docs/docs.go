@@ -1591,6 +1591,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/instance/proxy/{instanceId}/status": {
+            "get": {
+                "description": "Says whether the instance has a proxy configured and whether the running client is really using it. ` + "`" + `GET /instance/all` + "`" + ` and ` + "`" + `GET /instance/info` + "`" + ` always return an empty ` + "`" + `proxy` + "`" + ` field to avoid leaking credentials, and the response of ` + "`" + `POST /instance/proxy` + "`" + ` only proves that the configuration was saved. ` + "`" + `runtimeEnabled` + "`" + ` is true only if the client applied the proxy; ` + "`" + `fallbackWithoutProxy` + "`" + ` is true if the connection went direct after a proxy authentication error. Never returns the proxy username, password, full URL or API keys.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Instance"
+                ],
+                "summary": "Get proxy status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Instance Id",
+                        "name": "instanceId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_instance_service.ProxyStatus"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Instance not found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/instance/qr": {
             "get": {
                 "description": "Get instance QR code",
@@ -4502,6 +4546,57 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_instance_service.ProxyStatus": {
+            "type": "object",
+            "properties": {
+                "clientStarted": {
+                    "description": "ClientStarted é true se a instância já foi iniciada neste processo. Antes\ndisso RuntimeEnabled não diz nada.",
+                    "type": "boolean",
+                    "example": true
+                },
+                "configured": {
+                    "description": "Configured é true se há um proxy para a instância, o dela ou o global\n(PROXY_HOST).",
+                    "type": "boolean",
+                    "example": true
+                },
+                "fallbackWithoutProxy": {
+                    "description": "FallbackWithoutProxy é true se a conexão voltou a ser direta depois de um\nerro de autenticação do proxy.",
+                    "type": "boolean",
+                    "example": false
+                },
+                "hasAuth": {
+                    "description": "HasAuth é true se o proxy usa usuário e senha. Os valores não são devolvidos.",
+                    "type": "boolean",
+                    "example": true
+                },
+                "host": {
+                    "type": "string",
+                    "example": "proxy.example.com"
+                },
+                "lastAppliedAt": {
+                    "description": "LastAppliedAt é quando o proxy foi aplicado ao cliente.",
+                    "type": "string"
+                },
+                "lastError": {
+                    "description": "LastError é uma descrição genérica do último problema.",
+                    "type": "string"
+                },
+                "port": {
+                    "type": "string",
+                    "example": "8080"
+                },
+                "protocol": {
+                    "description": "Protocol, Host e Port são os efetivos (os da instância, com o global como\nreserva).",
+                    "type": "string",
+                    "example": "http"
+                },
+                "runtimeEnabled": {
+                    "description": "RuntimeEnabled é true se o cliente em execução está usando o proxy.",
+                    "type": "boolean",
+                    "example": true
                 }
             }
         },

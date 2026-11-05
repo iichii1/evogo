@@ -24,6 +24,8 @@ type fakeService struct {
 	advanced        *instance_model.AdvancedSettings
 	advancedErr     error
 	updatedSettings *instance_model.AdvancedSettings
+	proxyStatus     *instance_service.ProxyStatus
+	proxyStatusErr  error
 }
 
 func (f *fakeService) Pair(*instance_service.PairStruct, *instance_model.Instance) (*instance_service.PairReturnStruct, error) {
@@ -221,5 +223,34 @@ func TestAdvancedSettingsUnknownInstanceIs404(t *testing.T) {
 	w := do(t, &instance_model.Instance{Id: "i1"}, http.MethodGet, advancedRoute, "/instance/i1/advanced-settings", "", h.GetAdvancedSettings)
 	if w.Code != http.StatusNotFound {
 		t.Fatalf("status = %d, want 404", w.Code)
+	}
+}
+
+func (f *fakeService) GetProxyStatus(string) (*instance_service.ProxyStatus, error) {
+	return f.proxyStatus, f.proxyStatusErr
+}
+
+func TestGetProxyStatus(t *testing.T) {
+	h := &instanceHandler{instanceService: &fakeService{proxyStatus: &instance_service.ProxyStatus{
+		Configured: true, ClientStarted: true, RuntimeEnabled: true, Host: "proxy.example.com", Port: "8080", HasAuth: true,
+	}}}
+
+	w := do(t, nil, http.MethodGet, "/instance/proxy/:instanceId/status", "/instance/proxy/abc/status", "", h.GetProxyStatus)
+	if w.Code != http.StatusOK {
+		t.Fatalf("status %d: %s", w.Code, w.Body)
+	}
+	for _, want := range []string{`"configured":true`, `"runtimeEnabled":true`, `"hasAuth":true`, `"host":"proxy.example.com"`} {
+		if !strings.Contains(w.Body.String(), want) {
+			t.Errorf("faltou %s em %s", want, w.Body)
+		}
+	}
+}
+
+func TestGetProxyStatusOfAnUnknownInstanceIs404(t *testing.T) {
+	h := &instanceHandler{instanceService: &fakeService{proxyStatusErr: errors.New("record not found")}}
+
+	w := do(t, nil, http.MethodGet, "/instance/proxy/:instanceId/status", "/instance/proxy/nope/status", "", h.GetProxyStatus)
+	if w.Code != http.StatusNotFound {
+		t.Fatalf("status %d, esperado 404", w.Code)
 	}
 }

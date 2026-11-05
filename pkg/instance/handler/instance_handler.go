@@ -29,6 +29,7 @@ type InstanceHandler interface {
 	Pair(ctx *gin.Context)
 	SetProxy(ctx *gin.Context)
 	DeleteProxy(ctx *gin.Context)
+	GetProxyStatus(ctx *gin.Context)
 	ForceReconnect(ctx *gin.Context)
 	GetLogs(ctx *gin.Context)
 	GetAdvancedSettings(ctx *gin.Context)
@@ -495,6 +496,34 @@ func (i *instanceHandler) DeleteProxy(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "success"})
+}
+
+// Get proxy status
+// @Summary Get proxy status
+// @Description Says whether the instance has a proxy configured and whether the running client is really using it. `GET /instance/all` and `GET /instance/info` always return an empty `proxy` field to avoid leaking credentials, and the response of `POST /instance/proxy` only proves that the configuration was saved. `runtimeEnabled` is true only if the client applied the proxy; `fallbackWithoutProxy` is true if the connection went direct after a proxy authentication error. Never returns the proxy username, password, full URL or API keys.
+// @Tags Instance
+// @Accept json
+// @Produce json
+// @Param instanceId path string true "Instance Id"
+// @Success 200 {object} instance_service.ProxyStatus
+// @Failure 400 {object} gin.H "Error on validation"
+// @Failure 404 {object} gin.H "Instance not found"
+// @Router /instance/proxy/{instanceId}/status [get]
+func (i *instanceHandler) GetProxyStatus(ctx *gin.Context) {
+	instanceId := ctx.Param("instanceId")
+
+	if instanceId == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "id is required"})
+		return
+	}
+
+	status, err := i.instanceService.GetProxyStatus(instanceId)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "instance not found"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, status)
 }
 
 // Force reconnect
