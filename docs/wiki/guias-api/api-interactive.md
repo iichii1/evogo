@@ -428,7 +428,7 @@ curl -X POST http://localhost:4000/send/carousel \
         "footer": "12x sem juros",
         "buttons": [
           {"type": "REPLY", "displayText": "Comprar", "id": "comprar_smartphone"},
-          {"type": "URL", "displayText": "Ver Detalhes", "id": "https://loja.com/smartphone"}
+          {"type": "URL", "displayText": "Ver Detalhes", "url": "https://loja.com/smartphone"}
         ]
       },
       {
@@ -440,7 +440,7 @@ curl -X POST http://localhost:4000/send/carousel \
         "footer": "Frete grátis",
         "buttons": [
           {"type": "REPLY", "displayText": "Comprar", "id": "comprar_notebook"},
-          {"type": "URL", "displayText": "Ver Detalhes", "id": "https://loja.com/notebook"}
+          {"type": "URL", "displayText": "Ver Detalhes", "url": "https://loja.com/notebook"}
         ]
       },
       {
@@ -452,7 +452,7 @@ curl -X POST http://localhost:4000/send/carousel \
         "footer": "Envio imediato",
         "buttons": [
           {"type": "REPLY", "displayText": "Comprar", "id": "comprar_fone"},
-          {"type": "CALL", "displayText": "Ligar p/ Comprar", "id": "+5511999999999"}
+          {"type": "CALL", "displayText": "Ligar p/ Comprar", "phoneNumber": "+5511999999999"}
         ]
       }
     ]
@@ -499,7 +499,7 @@ curl -X POST http://localhost:4000/send/carousel \
         "body": "Solução completa.\n- Mensagens ilimitadas\n- Instâncias ilimitadas\n- Suporte 24/7\n\nSob consulta",
         "buttons": [
           {"type": "REPLY", "displayText": "Solicitar Orçamento", "id": "plano_enterprise"},
-          {"type": "CALL", "displayText": "Falar com Vendas", "id": "+5511999999999"}
+          {"type": "CALL", "displayText": "Falar com Vendas", "phoneNumber": "+5511999999999"}
         ]
       }
     ]
@@ -651,7 +651,7 @@ A instância deve ter o evento `BUTTON_CLICK` ou `MESSAGE` habilitado na configu
 | Reply | `"reply"` | `"REPLY"` (padrão) | `displayText`, `id` |
 | URL | `"url"` | `"URL"` | `displayText`, `url` ou `id` |
 | Call | `"call"` | `"CALL"` | `displayText`, `phoneNumber` ou `id` |
-| Copy | `"copy"` | `"COPY"` | `displayText`, `copyCode` |
+| Copy | `"copy"` | `"COPY"` (ou `"COPY_CODE"`) | `displayText`, `copyCode` |
 | PIX | `"pix"` | N/A | `currency`, `name`, `keyType`, `key` |
 
 ### Regras de Combinação

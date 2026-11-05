@@ -284,14 +284,15 @@ type ListStruct struct {
 
 // CarouselButtonStruct is a button attached to a single carousel card.
 //
-// IMPORTANT — this struct is different from `Button` (used in /send/button):
-// it has NO dedicated `url` or `phoneNumber` fields. For URL and CALL buttons
-// you must put the link / phone number in the `id` field.
+// Fields follow `Button` (used in /send/button):
 //
 //   - REPLY (default): uses `displayText` + `id` as callback payload.
-//   - URL:   uses `displayText` + `id` (put the URL here).
-//   - CALL:  uses `displayText` + `id` (put the phone number here).
-//   - COPY:  uses `displayText` + `copyCode`.
+//   - URL:   uses `displayText` + `url`. For backward compatibility `id` is
+//     used when `url` is empty.
+//   - CALL:  uses `displayText` + `phoneNumber`. For backward compatibility
+//     `id` is used when `phoneNumber` is empty.
+//   - COPY:  uses `displayText` + `copyCode`. `COPY_CODE` is accepted as an
+//     alias.
 //
 // PIX buttons are NOT supported inside carousel cards — use /send/button instead.
 //
@@ -299,14 +300,75 @@ type ListStruct struct {
 // avoid mixing REPLY with CTA buttons (URL/CALL/COPY) in the same card —
 // mixed sets do not render on WhatsApp Web. Prefer only-REPLY or only-CTAs per card.
 type CarouselButtonStruct struct {
-	// Button kind (case-insensitive). One of: REPLY (default), URL, CALL, COPY.
-	Type string `json:"type" enums:"REPLY,URL,CALL,COPY,reply,url,call,copy" example:"REPLY"`
+	// Button kind (case-insensitive). One of: REPLY (default), URL, CALL, COPY (alias COPY_CODE).
+	Type string `json:"type" enums:"REPLY,URL,CALL,COPY,COPY_CODE,reply,url,call,copy,copy_code" example:"REPLY"`
 	// Label rendered inside the button.
 	DisplayText string `json:"displayText" example:"Quero saber mais"`
-	// Context-dependent: REPLY payload, URL target (type=URL) or phone number (type=CALL).
+	// REPLY callback payload. Also accepted as URL (type=URL) or phone number (type=CALL) when those fields are empty.
 	Id string `json:"id" example:"card1_info"`
 	// Code placed in the clipboard when type=COPY.
 	CopyCode string `json:"copyCode,omitempty" example:"PROMO2026"`
+	// Target URL when type=URL.
+	URL string `json:"url,omitempty" example:"https://evolutionapi.com"`
+	// Destination phone number when type=CALL.
+	PhoneNumber string `json:"phoneNumber,omitempty" example:"+5582988898565"`
+}
+
+// buildCarouselButton monta o nome e o JSON de parâmetros de um botão de
+// carrossel.
+//
+// Antes o carrossel lia URL e telefone só do campo `id` e não reconhecia
+// COPY_CODE (virava quick_reply), então quem mandava `url`/`phoneNumber`/
+// `COPY_CODE`, como no /send/button, recebia botões vazios (#51). O JSON era
+// montado com Sprintf, e aspas ou barras no texto quebravam a mensagem.
+func buildCarouselButton(btn CarouselButtonStruct) (string, string, error) {
+	buttonType := strings.ToUpper(strings.TrimSpace(btn.Type))
+
+	var name string
+	var params map[string]string
+
+	switch buttonType {
+	case "URL", "CTA_URL":
+		url := btn.URL
+		if url == "" {
+			url = btn.Id
+		}
+		if url == "" {
+			return "", "", errors.New("url button requires `url`")
+		}
+		name = "cta_url"
+		params = map[string]string{"display_text": btn.DisplayText, "url": url}
+	case "CALL", "CTA_CALL":
+		phone := btn.PhoneNumber
+		if phone == "" {
+			phone = btn.Id
+		}
+		if phone == "" {
+			return "", "", errors.New("call button requires `phoneNumber`")
+		}
+		name = "cta_call"
+		params = map[string]string{"display_text": btn.DisplayText, "phone_number": phone}
+	case "COPY", "COPY_CODE", "CTA_COPY":
+		if btn.CopyCode == "" {
+			return "", "", errors.New("copy button requires `copyCode`")
+		}
+		name = "cta_copy"
+		params = map[string]string{"display_text": btn.DisplayText, "copy_code": btn.CopyCode}
+	case "", "REPLY", "QUICK_REPLY":
+		name = "quick_reply"
+		params = map[string]string{"display_text": btn.DisplayText, "id": btn.Id}
+	default:
+		return "", "", fmt.Errorf("unsupported carousel button type %q (use REPLY, URL, CALL or COPY)", btn.Type)
+	}
+
+	// Sem escapar & < > para que URLs com query string fiquem legíveis.
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	if err := enc.Encode(params); err != nil {
+		return "", "", err
+	}
+	return name, strings.TrimSpace(buf.String()), nil
 }
 
 // CarouselCardHeaderStruct is the top area of a carousel card.
@@ -3016,33 +3078,9 @@ func (s *sendService) SendCarousel(data *CarouselStruct, instance *instance_mode
 		if len(card.Buttons) > 0 {
 			buttons := make([]*waE2E.InteractiveMessage_NativeFlowMessage_NativeFlowButton, len(card.Buttons))
 			for j, btn := range card.Buttons {
-				buttonType := strings.ToUpper(btn.Type)
-				if buttonType == "" {
-					buttonType = "REPLY" // Default type
-				}
-
-				var buttonName string
-				var buttonParams string
-
-				switch buttonType {
-				case "URL":
-					// URL button - opens a link
-					buttonName = "cta_url"
-					buttonParams = fmt.Sprintf(`{"display_text":"%s","url":"%s"}`, btn.DisplayText, btn.Id)
-				case "CALL":
-					// Call button - initiates a phone call
-					buttonName = "cta_call"
-					buttonParams = fmt.Sprintf(`{"display_text":"%s","phone_number":"%s"}`, btn.DisplayText, btn.Id)
-				case "COPY":
-					// Copy button - copies text to clipboard
-					buttonName = "cta_copy"
-					buttonParams = fmt.Sprintf(`{"display_text":"%s","copy_code":"%s"}`, btn.DisplayText, btn.CopyCode)
-				case "REPLY":
-					fallthrough
-				default:
-					// Quick reply button (default)
-					buttonName = "quick_reply"
-					buttonParams = fmt.Sprintf(`{"display_text":"%s","id":"%s"}`, btn.DisplayText, btn.Id)
+				buttonName, buttonParams, err := buildCarouselButton(btn)
+				if err != nil {
+					return nil, fmt.Errorf("card %d, button %d: %w", i+1, j+1, err)
 				}
 
 				buttons[j] = &waE2E.InteractiveMessage_NativeFlowMessage_NativeFlowButton{
