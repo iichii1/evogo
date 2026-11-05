@@ -22,6 +22,16 @@ make swagger                      # regenera docs/swagger.*; precisa do swag v1.
 go install github.com/swaggo/swag/cmd/swag@v1.16.3
 ```
 
+**No Windows** não há compilador C, e o `-race` e o pacote `webp` exigem cgo (sem ele, `pkg/routes` e `pkg/sendMessage` nem compilam; mais quatro testes de `pkg/whatsmeow/service` falham ao limpar arquivos abertos). Rode no Linux pelo Docker, o que também iguala o CI. Uma imagem com `ffmpeg` (os testes de áudio só rodam com ele):
+
+```bash
+printf 'FROM golang:1.26\nRUN apt-get update -qq && apt-get install -y -qq --no-install-recommends ffmpeg ca-certificates && rm -rf /var/lib/apt/lists/*\n' | docker build -t evogo-ci:1.26 -
+docker run --rm -v "$PWD:/src" -v evogo-gomod:/go/pkg/mod -v evogo-gobuild:/root/.cache/go-build -w /src evogo-ci:1.26 \
+  sh -c 'go build -buildvcs=false ./... && go vet ./... && go test -race -count=1 ./...'
+```
+
+Os volumes nomeados guardam o cache; a primeira rodada baixa os módulos (cerca de 7 minutos), as seguintes são rápidas. Para regenerar o Swagger no mesmo contêiner: `go install github.com/swaggo/swag/cmd/swag@v1.16.3` e `swag init -g cmd/evolution-go/main.go -o ./docs --parseDependency --parseInternal`. O `gofmt -l` aponta os arquivos com fim de linha CRLF do Windows; confira com `tr -d '\r' < arquivo | gofmt -l`.
+
 Os testes de integração têm a tag `integration` (por exemplo `pkg/whatsmeow/service/lifecycle_integration_test.go`) e precisam de um Postgres.
 
 **Convenções usadas até aqui**
@@ -37,7 +47,7 @@ Os testes de integração têm a tag `integration` (por exemplo `pkg/whatsmeow/s
 
 ## O que foi feito
 
-Todas as fases estão na `main`. Os branches `fix/fase*`, `feat/fase5-features` e `chore/fase7-ci-e-docs` continuam no GitHub e podem ser apagados.
+As fases 1 a 7 estão na `main`. As fases 8 a 10 (2026-11-05) estão em branches locais empilhadas (`feat/fase8-operacao-e-seguranca`, `feat/fase9-pedidos-do-upstream`, `feat/fase10-fila-de-envio`), validadas com `go build`, `go vet` e `go test -race` em Linux, mas **ainda não enviadas ao GitHub nem mergeadas na `main`**. Os branches `fix/fase*`, `feat/fase5-features` e `chore/fase7-ci-e-docs` continuam no GitHub e podem ser apagados.
 
 ### Fases 1 a 5 (PRs #1 a #5 no fork, mergeados)
 
@@ -71,6 +81,37 @@ Já resolvidos pelas fases anteriores: #20, #21, #203.
 - **Swagger:** regenerado com o swag v1.16.3. O `make swagger` estava quebrado (faltavam `--parseDependency` e `--parseInternal`) e foi corrigido. As rotas `/license/*` são documentadas por funções só de anotação em `pkg/routes/license_swagger.go`.
 - **Teste de rotas e Swagger:** `pkg/routes/swagger_consistency_test.go`.
 
+### Fase 8: operação e segurança (ponto 2)
+
+Detalhes de uso em [OPERACAO.md](OPERACAO.md).
+
+| Item | O que mudou |
+|---|---|
+| Health check | `GET /health` (público) confere cada banco (3 s no máximo) e conta os clientes em memória, conectados e logados. 503 se um banco não responde, sem repetir o erro do driver. O gate de licença já deixava `/health` passar. `/server/ok` continua só de liveness. |
+| Métricas | `GET /metrics` (chave global), formato de texto do Prometheus, **sem dependência nova** (`pkg/metrics`): clientes, pools (`sql.DB.Stats()`), reconexões, quedas inesperadas e webhooks (entregues, tentativas que falharam, descartados). |
+| Token em log | `ClearInstanceCache` e três mensagens "UserInfo cache cleared" gravavam o token da instância; o `/ws` gravava o token recebido quando a chave global estava errada (um erro de digitação registrava a chave quase inteira). Corrigidos, e o teste `TestNoSecretIsLoggedInTheSource` varre o código atrás de linhas de log que gravam token, chave ou senha. A varredura é por linha: não pega chamada de log em várias linhas. |
+| URL de webhook em log | O produtor de webhook gravava a URL inteira, e o erro do cliente HTTP repete a URL com a query. Agora o log mostra só `esquema://host/…`. |
+| Chave global | `AuthAdmin` e `/ws` passam a comparar em tempo constante (`MatchesGlobalKey`), como a `AuthInstanceOrAdmin` já fazia. Este conserto não muda comportamento visível e por isso não tem teste que falhe antes: os testes cobrem o comportamento (chave certa, errada, vazia, sem chave configurada), não o tempo. |
+| Swagger | `/server/ok`, `/health` e `/metrics` documentados; `/server/ok` saiu da lista de exceções do teste de rotas. |
+
+### Fase 9: pedidos do upstream (ponto 3)
+
+Cada item foi lido na issue **e no código** antes de mexer. O que não se confirmou no código ficou de fora e está registrado em "O que falta".
+
+| Issues | Achado | Correção |
+|---|---|---|
+| #104, #25 | A `ImageMessage` do `/send/media` já levava miniatura JPEG (desde a 0.7.0), mas não `Width`/`Height`, que o WhatsApp usa para desenhar o balão antes de baixar a mídia. | `newImageMessage` monta a mensagem (arquivo, URL, status, canal) com dimensões lidas por `image.DecodeConfig`; o cartão de imagem do carrossel também. Falta ver num aparelho se o quadrado cortado some. |
+| #114 | Documento **com legenda** vai em `DocumentWithCaptionMessage`, mas o código das menções (`mentionAll` e `mentionedJid`) lia `msg.DocumentMessage` (nulo): ponteiro nulo e 500. Para imagem e vídeo com legenda o código estava certo. | `setMentions`/`mentionContextInfo` tratam os dois formatos; os dois `switch` de 50 linhas viraram uma chamada. |
+| #92, #62, #146 (edição) | A edição chega como `secretEncryptedMessage` cifrado, com `IsEdit: false`; a exclusão, só como `protocolMessage.type: 0`. | O webhook de `Message` ganha `data.messageAction` (campo novo): `{"type":"edit","targetMessageId":"…","decrypted":true,"message":{…}}` e `{"type":"revoke","targetMessageId":"…"}`. A edição é decifrada com `DecryptSecretEncryptedMessage` e `IsEdit` vira `true`. Se não decifra (segredo da mensagem original ausente), sai `decrypted:false` com o motivo. Só foi testado com um decifrador falso: a decifragem real precisa de conta (roteiro). |
+| #146 (presença) | `SubscribePresence` nunca era chamado, então o evento `Presence` não disparava para contatos. | `POST /message/presence/subscribe` (`number` ou `numbers`, até 50): fica online, assina cada contato e devolve `subscribed`/`failed`. Com `alwaysOnline=false` a instância volta a ficar indisponível pouco depois, como depois de um "digitando"; para acompanhar mudanças seguintes é preciso `alwaysOnline=true`. |
+| #123 | `GET /instance/info` devolve `proxy` sempre vazio (de propósito) e `POST /instance/proxy` só prova que a configuração foi gravada; o cliente pode ter caído para a conexão direta. | `GET /instance/proxy/{id}/status` (chave global): `configured`, `clientStarted`, `runtimeEnabled`, `protocol`, `host`, `port`, `hasAuth`, `fallbackWithoutProxy`, `lastAppliedAt`, `lastError`. O cliente registra se aplicou o proxy, se o descartou ou se caiu para a conexão direta. Nunca devolve usuário, senha nem URL. |
+| #113, #98 | Já resolvido: `POST /group/settings` existe e aceita `announcement`, `not_announcement`, `locked` e `unlocked` (e `approval_*`, `admin_add`, `all_member_add`). As issues eram de versões anteriores. | Nada a fazer. |
+| #60 (parcial) | Não achei, só lendo o código, por que o resultado de enquete sairia sempre vazio num servidor com PostgreSQL. Achei outro defeito no mesmo caminho: sem `POSTGRES_AUTH_DB` (modo SQLite) o banco é nulo e `NewPollService` derrubava o servidor na inicialização com ponteiro nulo. | O serviço sobe sem a tabela; `GET /polls/{id}/results` responde 501 explicando o motivo, em vez de um 404 "sem votos". **O #60 continua aberto.** |
+
+### Fase 10: fila de envio por instância (ponto 4)
+
+`pkg/sendqueue` espaça as mensagens de cada instância com intervalo sorteado entre um mínimo e um máximo (#236, #50). **Desligada por padrão** (`SEND_QUEUE_MIN_INTERVAL_MS=0`). Fila cheia ou espera longa demais respondem 429 com `Retry-After`. Variáveis, comportamento e limites em [OPERACAO.md](OPERACAO.md). O limitador tem testes de ordem, isolamento entre instâncias, recusa, cancelamento e concorrência; a ligação com o `SendMessage` (o `Acquire` antes de simular a digitação e enviar) não tem teste porque o `SendMessage` exige um cliente do WhatsApp conectado. Os padrões (100 mensagens na fila, 50 s de espera) e o 429 são escolhas de implementação dentro do que o item D pedia ("limite e intervalo variável por instância"); podem ser ajustados.
+
 ### Mudanças de comportamento a conhecer
 
 - Depois de um timeout de QR, a instância fica parada até um novo `/instance/connect`. Antes gerava QR de novo para sempre.
@@ -79,6 +120,11 @@ Já resolvidos pelas fases anteriores: #20, #21, #203.
 - O token de uma instância só acessa as `advanced-settings` dela mesma (antes acessava as de qualquer uma).
 - O `PUT /instance/:id/advanced-settings` é parcial: campo omitido mantém o valor atual.
 - `ALL` passa a incluir o grupo `PASSKEY`.
+- (Fase 8) Logs de webhook mostram só `esquema://host/…`; token de instância e chave global não são mais gravados.
+- (Fase 9) O webhook de `Message` ganha `data.messageAction` em edições e exclusões, e `IsEdit` passa a `true` nas edições decifradas. Quem lia `IsEdit` ou o envelope cifrado continua vendo os mesmos campos.
+- (Fase 9) Imagens enviadas por `/send/media`, status e carrossel levam largura e altura.
+- (Fase 9) `GET /polls/{id}/results` responde 501 num servidor sem `POSTGRES_AUTH_DB`. O servidor nesse modo deixa de cair na inicialização.
+- (Fase 10) Com `SEND_QUEUE_MIN_INTERVAL_MS` maior que zero, as rotas `/send/*` podem demorar até `SEND_QUEUE_MAX_WAIT_SECONDS` e passam a responder 429 quando a fila enche.
 
 ### O que NÃO foi validado com WhatsApp real
 
@@ -86,31 +132,29 @@ Tudo passou nos testes automatizados, mas nada rodou com uma conta pareada. A AP
 
 ## O que falta
 
+Atualizado em 2026-11-05: os pontos B, C e D foram tratados nas fases 8 a 10 (acima). Ficou o que as fases não resolveram, em C e em E a F.
+
 ### A. Decisões suas
 
 1. **Workflow "Build and Publish Docker Image":** falha a cada push na `main` do fork, no passo "Login to Docker Hub", porque publica em `evoapicloud/evolution-go` e o fork não tem as credenciais. Opções: (a) desativar o workflow no fork; (b) trocar a imagem de destino para a sua conta e configurar os segredos; (c) fazer o workflow rodar só no repositório original (`if: github.repository == 'evolution-foundation/evolution-go'`).
 2. **Binário de 64 MB (`evolution-go`, na raiz):** está versionado desde os commits de sincronização com o upstream. Decidir se remove do repositório. Não mexi.
 3. **Branches antigos no GitHub:** apagar ou manter.
 
-### B. Ponto 2: operação e segurança (não dependem de conta real)
+### B. Ponto 2: operação e segurança
 
-- **Health check de verdade:** o `/server/ok` só diz que o processo está de pé. Criar um endpoint que confira o Postgres e o número de instâncias conectadas.
-- **Métricas:** instâncias online, reconexões, conexões do pool (`sql.DB.Stats()`), falhas de webhook. Os bugs mais graves do upstream (vazamento de pool, loop de reconexão) só aparecem tarde por falta disso.
-- **Token em log:** `ClearInstanceCache` grava o token da instância no log (`Clearing instance cache - Token: %s`). Mascarar, e varrer o resto do código por casos parecidos.
-- **Comparação da chave global:** o `AuthAdmin` usa `!=` comum; a nova `AuthInstanceOrAdmin` já usa comparação em tempo constante. Igualar.
-- **Documentar o `/server/ok` no Swagger** (hoje está na lista de exceções do teste de rotas).
+Feito na fase 8. Resta, se quiser: alertas e painel em cima das métricas (nada disso está no repositório), e a varredura de logs só pega chamadas de log numa linha.
 
-### C. Ponto 3: pedidos do upstream que ainda não foram tocados
+### C. Ponto 3: o que a fase 9 não resolveu
 
-Só li os títulos; ler o código e a issue antes de afirmar qualquer coisa.
+- **#60** (`/polls/{id}/results` vazio): não achei a causa no código. Para investigar: enviar uma enquete, votar do celular e olhar o log da instância (`GET /instance/logs/:id?level=ERROR`) atrás de `Failed to decrypt vote` e `Failed to save poll vote`. O voto só é guardado se `DecryptPollVote` conseguir o segredo da enquete, e as opções saem como hash SHA-256 (não como texto): `optionCounts` e `selectedOptions` são hashes, o que também é um problema de usabilidade da rota. Precisa de conta pareada.
+- **#69** (carrossel em dois balões): o servidor **não** divide a mensagem. `body` e `footer` vão no mesmo `InteractiveMessage`, desde a 0.6.1. Se o celular desenha duas partes, é o cliente do WhatsApp; só se vê no aparelho, e não há o que corrigir no código sem saber qual formato o WhatsApp espera.
+- **#103** (miniatura grande no link): `sendLinkWithRetry` coloca a imagem inteira no campo `JPEGThumbnail`, que deveria ter só uma miniatura, e não envia a imagem em alta qualidade (`MediaLinkThumbnail`, `ThumbnailDirectPath` etc.). O caminho certo é subir a imagem com `whatsmeow.MediaLinkThumbnail` e preencher esses campos, como o Baileys faz. **Não mexi:** é uma mudança no formato da mensagem e só um aparelho mostra se o cartão grande aparece. Também notei que `fetchLinkMetadata` sobrescreve `title`, `description` e `imgUrl` informados pelo chamador sempre que o texto tem uma URL.
+- **#79** (timer de mensagens temporárias): o `ContextInfo.Expiration` nunca é preenchido. O whatsmeow não guarda o timer de cada conversa; ele só aparece nas mensagens recebidas e nas mudanças de configuração. Uma solução precisa guardar o último timer visto por conversa (e sobreviver a reinício) ou receber o valor na requisição. Decisão de desenho pendente.
+- **Estado da edição de evento e de enquete:** `messageAction` já identifica `eventEdit`, `pollEdit` e `pollAddOption`, mas só a edição de mensagem foi pensada ponta a ponta.
 
-- **Bugs prováveis:** #60 (`/polls/{id}/results` sempre 404), #69 (carrossel sai em dois balões), #114 (`mentionAll` com mídia), #92 e #62 (webhook de edição e exclusão com dados faltando).
-- **Imagem e link:** #104, #25 (largura, altura e miniatura da imagem) e #103 (miniatura grande no link).
-- **Funcionalidades:** #146 (expor `SubscribePresence` e decifrar mensagens editadas), #123 (configuração de proxy e status em runtime), #113 e #98 (modo só-admins no grupo; a rota `/group/settings` já existe, falta ver se cobre isso) e #79 (respeitar o timer de mensagens temporárias).
+### D. Ponto 4: fila de envio
 
-### D. Ponto 4 (ideia, só se você quiser): fila de envio com limite por instância
-
-O #236 pede envio em lote, e o erro 463 mostra o risco de disparar rápido demais. Uma fila com limite e intervalo variável por instância protegeria a conta. É decisão de produto.
+Feito na fase 10. Falta decidir os valores para as contas reais (o código não sugere um ritmo "seguro": o WhatsApp decide o que é abuso).
 
 ### E. Achados ainda não tratados
 

@@ -62,6 +62,22 @@ Contexto do que foi mudado: [PROGRESSO.md](PROGRESSO.md).
 - [ ] Com a instância deslogada, `POST /send/text` responde em menos de 1 s com `instance is not logged in` (#77).
 - [ ] Citação (#189): `POST /send/text` com `quoted` contendo `messageId`, `participant` e `text`. O cartão da resposta mostra o texto citado e abre a mensagem ao tocar. Sem `text`, continua vazio como antes.
 
+## 6. Fases 8 a 10 (2026-11-05)
+
+Os itens de operação não precisam de conta pareada; os marcados com (conta) precisam.
+
+- [ ] `GET /health` sem `apikey`: 200 com `status: ok` e os bancos `up`. Parar o Postgres por alguns segundos: 503 com `status: unavailable` e **sem** endereço ou usuário do banco no corpo.
+- [ ] `GET /metrics` sem `apikey`: 401. Com a chave global: texto do Prometheus com `evogo_clients*`, `evogo_db_*` e os contadores. Fazer 10 vezes `POST /instance/reconnect` e conferir que `evogo_db_open_connections` não cresce e `evogo_instance_reconnects_total` sobe 10.
+- [ ] Logs: `GET /instance/logs/:id` e a pasta `LOG_DIRECTORY` não podem conter o token da instância, a chave global nem o caminho/query de uma URL de webhook. Depois de apagar uma instância, procurar o token dela nos logs.
+- [ ] Imagem (#104, #25) (conta): `POST /send/media` com uma imagem larga (por exemplo 1600x720) para o segundo número, com o celular com download automático desligado. O balão aparece já com a proporção certa, sem o quadrado cortado.
+- [ ] Menção com documento (#114) (conta): em um grupo de teste em que a conta seja admin, `POST /send/media` com `type: document`, `caption` e `mentionAll: true`. Esperado: 200 (antes, 500) e todos mencionados. Repetir com imagem e vídeo com legenda.
+- [ ] Edição (#92, #62) (conta): assinar `MESSAGE` e enviar uma mensagem do segundo número para a instância; editar a mensagem no celular. O webhook traz `data.messageAction` com `type: "edit"`, `targetMessageId` da mensagem original, `decrypted: true` e o texto novo em `message`; `data.IsEdit` é `true`. Se vier `decrypted: false`, guardar o campo `error` (provavelmente o segredo da mensagem original não estava guardado, por exemplo mensagem anterior ao pareamento).
+- [ ] Exclusão (#92) (conta): apagar uma mensagem para todos no celular do segundo número. O webhook traz `data.messageAction` com `type: "revoke"` e o `targetMessageId`.
+- [ ] Presença (#146) (conta): assinar `PRESENCE`, `POST /message/presence/subscribe` com `{"number":"…"}`. Esperado: `subscribed` com o contato e, em segundos, um evento `Presence`. Com `alwaysOnline=false` as mudanças seguintes param de chegar depois de uns 20 s; com `alwaysOnline=true` continuam chegando.
+- [ ] Proxy (#123): `GET /instance/proxy/:id/status` (chave global) numa instância sem proxy: `configured: false`. Configurar um proxy válido e reconectar: `runtimeEnabled: true` e `lastAppliedAt` preenchido. Configurar um proxy com senha errada e reconectar: `fallbackWithoutProxy: true` e `runtimeEnabled: false`. Em nenhum caso a resposta traz usuário ou senha.
+- [ ] Fila de envio (#236): com `SEND_QUEUE_MIN_INTERVAL_MS=3000`, `SEND_QUEUE_MAX_INTERVAL_MS=6000` (e **só com as duas instâncias de teste, poucas mensagens**), enviar 4 mensagens seguidas em paralelo: chegam espaçadas de 3 a 6 s e as respostas são as de sempre. Com `SEND_QUEUE_MAX_PENDING=1`, a terceira requisição simultânea responde 429 com `Retry-After`. `evogo_send_queue_*` aparecem em `/metrics`.
+- [ ] Enquete sem Postgres de autenticação: subir com `POSTGRES_AUTH_DB` vazio. O servidor sobe (antes, caía na inicialização) e `GET /polls/:id/results` responde 501.
+
 ## Fora do roteiro
 
-O passkey (#172), o nono dígito (#214), os botões e listas antigos (#170, #59, #71, #110) e o QR que não gera (#85, #148, #186) não foram corrigidos.
+O passkey (#172), o nono dígito (#214), os botões e listas antigos (#170, #59, #71, #110) e o QR que não gera (#85, #148, #186) não foram corrigidos. Também ficaram de fora o resultado vazio de enquete (#60), a miniatura grande de link (#103), o carrossel em dois balões (#69) e o timer de mensagens temporárias (#79): o motivo de cada um está em [PROGRESSO.md](PROGRESSO.md), seção "O que falta".
