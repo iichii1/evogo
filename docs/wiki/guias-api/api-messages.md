@@ -325,6 +325,55 @@ curl -X POST http://localhost:4000/send/poll \
 
 ---
 
+### Votar em Enquete
+
+Vota em uma enquete que já existe na conversa.
+
+**Endpoint**: `POST /send/pollVote`
+
+A enquete precisa ter sido enviada ou recebida por esta instância enquanto ela estava conectada. O voto é cifrado com uma chave que o WhatsApp entrega junto com a enquete, então não dá para votar em enquetes anteriores ao pareamento.
+
+**Body**:
+```json
+{
+  "number": "5511999999999",
+  "pollMessageId": "3EB0C5A277F7F9B6C599",
+  "selectedOptions": ["Tarde (13h-18h)"]
+}
+```
+
+**Parâmetros**:
+
+| Campo | Tipo | Obrigatório | Descrição |
+|-------|------|-------------|-----------|
+| `number` | string | ✅ Sim | Conversa da enquete: número, grupo (`@g.us`) ou LID (`@lid`) |
+| `pollMessageId` | string | ✅ Sim | ID da mensagem da enquete (retornado por `/send/poll` ou recebido no webhook) |
+| `selectedOptions` | array | ✅ Sim | Texto exato das opções escolhidas. Lista vazia remove o voto |
+| `fromMe` | bool | ❌ Não | `true` se a enquete foi criada por esta instância |
+| `participant` | string | ⚠️ Em grupos | Quem criou a enquete, quando ela está em um grupo e não foi criada por esta instância |
+
+**Resposta de Erro (500)**:
+```json
+{
+  "error": "could not build the vote; the poll must have been sent or received by this instance (check number, fromMe and participant): ..."
+}
+```
+
+**Exemplo cURL** (enquete criada pela própria instância):
+```bash
+curl -X POST http://localhost:4000/send/pollVote \
+  -H "Content-Type: application/json" \
+  -H "apikey: SUA-CHAVE-API" \
+  -d '{
+    "number": "5511999999999",
+    "pollMessageId": "3EB0C5A277F7F9B6C599",
+    "selectedOptions": ["Premium"],
+    "fromMe": true
+  }'
+```
+
+---
+
 ### Enviar Sticker
 
 Envia um sticker (figurinha) via URL.
