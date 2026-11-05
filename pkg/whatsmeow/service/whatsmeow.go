@@ -1006,6 +1006,16 @@ func (mycli *MyClient) teardownQR(reason string, forceLogout bool) {
 	mycli.session.Stop(stopReasonQRTimeout)
 }
 
+// archiveEventData monta o payload do webhook do evento Archive.
+func archiveEventData(evt *events.Archive) map[string]interface{} {
+	return map[string]interface{}{
+		"JID":          evt.JID,
+		"Timestamp":    evt.Timestamp,
+		"Action":       evt.Action,
+		"FromFullSync": evt.FromFullSync,
+	}
+}
+
 func (mycli *MyClient) myEventHandler(rawEvt interface{}) {
 	userID := mycli.userID
 	postMap := make(map[string]interface{})
@@ -1996,12 +2006,9 @@ func (mycli *MyClient) myEventHandler(rawEvt interface{}) {
 		doWebhook = true
 		postMap["event"] = "Archive"
 
-		dataMap := postMap["data"].(map[string]interface{})
-		dataMap["JID"] = evt.JID
-		dataMap["Timestamp"] = evt.Timestamp
-		dataMap["Action"] = evt.Action
-		dataMap["FromFullSync"] = evt.FromFullSync
-		postMap["data"] = dataMap
+		// postMap["data"] guarda o evento bruto (*events.Archive) neste ponto, não um
+		// map: o type assertion antigo dava panic e derrubava o processo (#95, #101).
+		postMap["data"] = archiveEventData(evt)
 
 		mycli.loggerWrapper.GetLogger(mycli.userID).LogInfo("[%s] Chat archived", mycli.userID)
 	case *events.HistorySync:
