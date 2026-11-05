@@ -40,6 +40,7 @@ type messageService struct {
 	messageRepository message_repository.MessageRepository
 	whatsmeowService  whatsmeow_service.WhatsmeowService
 	loggerWrapper     *logger_wrapper.LoggerManager
+	presenceRestorer  *presenceRestorer
 }
 
 type ReactStruct struct {
@@ -302,6 +303,13 @@ func (m *messageService) ChatPresence(data *ChatPresenceStruct, instance *instan
 		}
 	}
 
+	// Com alwaysOnline=false, volta a ficar indisponível depois do indicador.
+	// Antes a instância ficava online para sempre após um "digitando", e o
+	// WhatsApp deixava de mandar notificações para o celular (#55, #70).
+	if !instance.AlwaysOnline {
+		m.presenceRestorer.schedule(instance.Id, client)
+	}
+
 	m.loggerWrapper.GetLogger(instance.Id).LogInfo("Presence (%s) sent to %s", data.State, data.Number)
 
 	return ts.String(), nil
@@ -537,5 +545,6 @@ func NewMessageService(
 		messageRepository: messageRepository,
 		whatsmeowService:  whatsmeowService,
 		loggerWrapper:     loggerWrapper,
+		presenceRestorer:  newPresenceRestorer(presenceRestoreDelay, loggerWrapper),
 	}
 }
