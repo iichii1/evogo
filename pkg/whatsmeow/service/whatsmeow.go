@@ -2469,6 +2469,11 @@ func (w *whatsmeowService) CallWebhook(instance *instance_model.Instance, queueN
 			w.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Event received of type %s", instance.Id, eventType)
 			w.sendToQueueOrWebhook(instance, queueName, jsonData)
 		}
+	case "PasskeyRequest", "PasskeyConfirmation", "PasskeyError":
+		if contains(subscriptions, "PASSKEY") {
+			w.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Event received of type %s", instance.Id, eventType)
+			w.sendToQueueOrWebhook(instance, queueName, jsonData)
+		}
 	case "ButtonClick":
 		if contains(subscriptions, "BUTTON_CLICK") || contains(subscriptions, "MESSAGE") {
 			w.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Event received of type %s", instance.Id, eventType)
@@ -2699,39 +2704,8 @@ func (w *whatsmeowService) SendToGlobalQueues(eventType string, payload []byte, 
 			w.loggerWrapper.GetLogger(userId).LogInfo("[%s] Using AMQP_GLOBAL_EVENTS (fallback mode)", userId)
 
 			// Mapeia o evento do Whatsmeow para o tipo de evento global
-			var globalEventType string
-			switch eventType {
-			case "Message":
-				globalEventType = "MESSAGE"
-			case "SendMessage":
-				globalEventType = "SEND_MESSAGE"
-			case "Receipt":
-				globalEventType = "READ_RECEIPT"
-			case "Presence":
-				globalEventType = "PRESENCE"
-			case "HistorySync":
-				globalEventType = "HISTORY_SYNC"
-			case "ChatPresence", "Archive":
-				globalEventType = "CHAT_PRESENCE"
-			case "CallOffer", "CallAccept", "CallTerminate", "CallOfferNotice", "CallRelayLatency":
-				globalEventType = "CALL"
-			case "Connected", "PairSuccess", "TemporaryBan", "AccountReachoutTimelock", "LoggedOut", "ConnectFailure", "Disconnected":
-				globalEventType = "CONNECTION"
-			case "LabelEdit", "LabelAssociationChat", "LabelAssociationMessage":
-				globalEventType = "LABEL"
-			case "Contact", "PushName":
-				globalEventType = "CONTACT"
-			case "Picture":
-				globalEventType = "PICTURE"
-			case "UserAbout":
-				globalEventType = "USER_ABOUT"
-			case "GroupInfo", "JoinedGroup":
-				globalEventType = "GROUP"
-			case "NewsletterJoin", "NewsletterLeave":
-				globalEventType = "NEWSLETTER"
-			case "QRCode", "QRTimeout", "QRSuccess":
-				globalEventType = "QRCODE"
-			default:
+			globalEventType := globalEventGroup(eventType)
+			if globalEventType == "" {
 				w.loggerWrapper.GetLogger(userId).LogInfo("[%s] Event %s not mapped to global event type", userId, eventType)
 				return
 			}
@@ -2761,37 +2735,7 @@ func (w *whatsmeowService) SendToGlobalQueues(eventType string, payload []byte, 
 	// NATS: Mantém o comportamento original por enquanto (só NATS_GLOBAL_EVENTS)
 	if w.config.NatsGlobalEnabled {
 		// Mapeia o evento para grupo (necessário para NATS por enquanto)
-		var globalEventType string
-		switch eventType {
-		case "Message":
-			globalEventType = "MESSAGE"
-		case "SendMessage":
-			globalEventType = "SEND_MESSAGE"
-		case "Receipt":
-			globalEventType = "READ_RECEIPT"
-		case "Presence":
-			globalEventType = "PRESENCE"
-		case "HistorySync":
-			globalEventType = "HISTORY_SYNC"
-		case "ChatPresence", "Archive":
-			globalEventType = "CHAT_PRESENCE"
-		case "CallOffer", "CallAccept", "CallTerminate", "CallOfferNotice", "CallRelayLatency":
-			globalEventType = "CALL"
-		case "Connected", "PairSuccess", "TemporaryBan", "AccountReachoutTimelock", "LoggedOut", "ConnectFailure", "Disconnected":
-			globalEventType = "CONNECTION"
-		case "LabelEdit", "LabelAssociationChat", "LabelAssociationMessage":
-			globalEventType = "LABEL"
-		case "Contact", "PushName":
-			globalEventType = "CONTACT"
-		case "GroupInfo", "JoinedGroup":
-			globalEventType = "GROUP"
-		case "NewsletterJoin", "NewsletterLeave":
-			globalEventType = "NEWSLETTER"
-		case "QRCode", "QRTimeout", "QRSuccess":
-			globalEventType = "QRCODE"
-		default:
-			globalEventType = ""
-		}
+		globalEventType := globalEventGroup(eventType)
 
 		// Verifica se o evento está na lista de eventos globais NATS
 		if globalEventType != "" && utils.Find(w.config.NatsGlobalEvents, globalEventType) {

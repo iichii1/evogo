@@ -18,6 +18,7 @@ const (
 	BUTTON_CLICK  = "BUTTON_CLICK"
 	PICTURE       = "PICTURE"
 	USER_ABOUT    = "USER_ABOUT"
+	PASSKEY       = "PASSKEY"
 )
 
 var AllEventTypes = []string{
@@ -37,6 +38,7 @@ var AllEventTypes = []string{
 	BUTTON_CLICK,
 	PICTURE,
 	USER_ABOUT,
+	PASSKEY,
 }
 
 var validEventTypes = map[string]bool{
@@ -57,6 +59,7 @@ var validEventTypes = map[string]bool{
 	BUTTON_CLICK:  true,
 	PICTURE:       true,
 	USER_ABOUT:    true,
+	PASSKEY:       true,
 }
 
 func IsEventType(eventType string) bool {

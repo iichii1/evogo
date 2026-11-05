@@ -581,7 +581,7 @@ curl -X POST http://localhost:4000/instance/connect \
 - `websocketEnable: "disabled"` ou outro valor - Habilita/desabilita WebSocket
 - `natsEnabled: "enabled"` ou `"disabled"` - Habilita/desabilita NATS
 - `webhookUrl` - URL específica para esta instância
-- `subscribe` - Array com categorias de eventos: `MESSAGE`, `READ_RECEIPT`, `PRESENCE`, `HISTORY_SYNC`, `CHAT_PRESENCE`, `CALL`, `CONNECTION`, `QRCODE`, `LABEL`, `CONTACT`, `GROUP`, `NEWSLETTER`, ou `ALL`
+- `subscribe` - Array com categorias de eventos: `MESSAGE`, `READ_RECEIPT`, `PRESENCE`, `HISTORY_SYNC`, `CHAT_PRESENCE`, `CALL`, `CONNECTION`, `QRCODE`, `LABEL`, `CONTACT`, `GROUP`, `NEWSLETTER`, `BUTTON_CLICK`, `PICTURE`, `USER_ABOUT`, `PASSKEY`, ou `ALL`
 
 ---
 
@@ -612,6 +612,10 @@ O Evolution GO usa dois níveis de classificação de eventos:
 | `CALL` | `CallOffer`, `CallAccept`, `CallTerminate` |
 | `CONNECTION` | `Connected`, `Disconnected`, `LoggedOut` |
 | `QRCODE` | `PairSuccess`, `Disconnected` (com QR) |
+| `BUTTON_CLICK` | `ButtonClick` |
+| `PICTURE` | `Picture` |
+| `USER_ABOUT` | `UserAbout` |
+| `PASSKEY` | `PasskeyRequest`, `PasskeyConfirmation`, `PasskeyError` |
 | `ALL` | Todos os eventos |
 
 **Exemplo prático**:
