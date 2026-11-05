@@ -2320,6 +2320,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/message/presence/subscribe": {
+            "post": {
+                "description": "Asks WhatsApp to send the presence (online / last seen) of one or more contacts, so the ` + "`" + `Presence` + "`" + ` events start to arrive for instances subscribed to ` + "`" + `PRESENCE` + "`" + `. The instance goes online first, because WhatsApp only delivers presence to accounts that are online; with ` + "`" + `alwaysOnline=false` + "`" + ` it goes back to unavailable shortly after, so keep ` + "`" + `alwaysOnline=true` + "`" + ` to follow later changes. Accepts ` + "`" + `number` + "`" + ` or ` + "`" + `numbers` + "`" + ` (at most 50). A contact that cannot be subscribed does not stop the others and is listed in ` + "`" + `failed` + "`" + `.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Message"
+                ],
+                "summary": "Subscribe to contact presence",
+                "parameters": [
+                    {
+                        "description": "Contacts to follow",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.SubscribePresenceStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/message/react": {
             "post": {
                 "description": "React to a message with support for fromMe field and participant field for group messages",
@@ -4623,6 +4669,23 @@ const docTemplate = `{
                 },
                 "reaction": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.SubscribePresenceStruct": {
+            "type": "object",
+            "properties": {
+                "number": {
+                    "description": "Número do contato (ou JID).",
+                    "type": "string",
+                    "example": "5511999999999"
+                },
+                "numbers": {
+                    "description": "Vários contatos de uma vez (no máximo 50).",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },

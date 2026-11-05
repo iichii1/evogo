@@ -310,6 +310,18 @@ definitions:
       reaction:
         type: string
     type: object
+  github_com_evolution-foundation_evolution-go_pkg_message_service.SubscribePresenceStruct:
+    properties:
+      number:
+        description: Número do contato (ou JID).
+        example: "5511999999999"
+        type: string
+      numbers:
+        description: Vários contatos de uma vez (no máximo 50).
+        items:
+          type: string
+        type: array
+    type: object
   github_com_evolution-foundation_evolution-go_pkg_newsletter_service.CreateNewsletterStruct:
     properties:
       description:
@@ -9182,6 +9194,42 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Set chat presence
+      tags:
+      - Message
+  /message/presence/subscribe:
+    post:
+      consumes:
+      - application/json
+      description: Asks WhatsApp to send the presence (online / last seen) of one
+        or more contacts, so the `Presence` events start to arrive for instances subscribed
+        to `PRESENCE`. The instance goes online first, because WhatsApp only delivers
+        presence to accounts that are online; with `alwaysOnline=false` it goes back
+        to unavailable shortly after, so keep `alwaysOnline=true` to follow later
+        changes. Accepts `number` or `numbers` (at most 50). A contact that cannot
+        be subscribed does not stop the others and is listed in `failed`.
+      parameters:
+      - description: Contacts to follow
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.SubscribePresenceStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Subscribe to contact presence
       tags:
       - Message
   /message/react:

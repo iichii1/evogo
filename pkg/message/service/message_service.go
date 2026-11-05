@@ -27,6 +27,7 @@ import (
 type MessageService interface {
 	React(data *ReactStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
 	ChatPresence(data *ChatPresenceStruct, instance *instance_model.Instance) (string, error)
+	SubscribePresence(data *SubscribePresenceStruct, instance *instance_model.Instance) (*SubscribePresenceResult, error)
 	MarkRead(data *MarkReadStruct, instance *instance_model.Instance) (string, error)
 	MarkPlayed(data *MarkPlayedStruct, instance *instance_model.Instance) (string, error)
 	DownloadMedia(data *DownloadMediaStruct, instance *instance_model.Instance, request *http.Request) (*dataurl.DataURL, string, error)
@@ -313,6 +314,36 @@ func (m *messageService) ChatPresence(data *ChatPresenceStruct, instance *instan
 	m.loggerWrapper.GetLogger(instance.Id).LogInfo("Presence (%s) sent to %s", data.State, data.Number)
 
 	return ts.String(), nil
+}
+
+// SubscribePresence assina a presença (online / visto por último) dos contatos:
+// os eventos Presence passam a chegar, para quem assina PRESENCE (#146).
+func (m *messageService) SubscribePresence(data *SubscribePresenceStruct, instance *instance_model.Instance) (*SubscribePresenceResult, error) {
+	client, err := m.ensureClientConnected(instance.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	jids, invalid, err := presenceTargets(data)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := subscribePresence(context.Background(), client, jids, invalid)
+	if err != nil {
+		return nil, err
+	}
+
+	// Com alwaysOnline=false a instância volta a ficar indisponível pouco depois,
+	// como depois de um "digitando" (#55, #70). O WhatsApp responde à assinatura
+	// com a presença atual do contato na hora; para acompanhar as mudanças
+	// seguintes a instância precisa de alwaysOnline=true.
+	if !instance.AlwaysOnline && len(result.Subscribed) > 0 {
+		m.presenceRestorer.schedule(instance.Id, client)
+	}
+
+	m.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Subscribed to the presence of %d contacts (%d failed)", instance.Id, len(result.Subscribed), len(result.Failed))
+	return result, nil
 }
 
 func (m *messageService) MarkRead(data *MarkReadStruct, instance *instance_model.Instance) (string, error) {

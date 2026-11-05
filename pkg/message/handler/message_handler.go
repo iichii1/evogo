@@ -11,6 +11,7 @@ import (
 type MessageHandler interface {
 	React(ctx *gin.Context)
 	ChatPresence(ctx *gin.Context)
+	SubscribePresence(ctx *gin.Context)
 	MarkRead(ctx *gin.Context)
 	MarkPlayed(ctx *gin.Context)
 	DownloadMedia(ctx *gin.Context)
@@ -117,6 +118,45 @@ func (m *messageHandler) ChatPresence(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": responseData})
+}
+
+// SubscribePresence subscribes to the presence of contacts
+// @Summary Subscribe to contact presence
+// @Description Asks WhatsApp to send the presence (online / last seen) of one or more contacts, so the `Presence` events start to arrive for instances subscribed to `PRESENCE`. The instance goes online first, because WhatsApp only delivers presence to accounts that are online; with `alwaysOnline=false` it goes back to unavailable shortly after, so keep `alwaysOnline=true` to follow later changes. Accepts `number` or `numbers` (at most 50). A contact that cannot be subscribed does not stop the others and is listed in `failed`.
+// @Tags Message
+// @Accept json
+// @Produce json
+// @Param message body message_service.SubscribePresenceStruct true "Contacts to follow"
+// @Success 200 {object} gin.H "success"
+// @Failure 400 {object} gin.H "Error on validation"
+// @Failure 500 {object} gin.H "Internal server error"
+// @Router /message/presence/subscribe [post]
+func (m *messageHandler) SubscribePresence(ctx *gin.Context) {
+	getInstance := ctx.MustGet("instance")
+
+	instance, ok := getInstance.(*instance_model.Instance)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "instance not found"})
+		return
+	}
+
+	var data *message_service.SubscribePresenceStruct
+	if err := ctx.ShouldBindBodyWithJSON(&data); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	result, err := m.messageService.SubscribePresence(data, instance)
+	if err != nil {
+		status := http.StatusInternalServerError
+		if message_service.IsSubscribeRequestError(err) {
+			status = http.StatusBadRequest
+		}
+		ctx.JSON(status, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": result})
 }
 
 // MarkRead mark a message as read
