@@ -7,6 +7,7 @@ import (
 	"github.com/evolution-foundation/evolution-go/pkg/runtimestate"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	instance_model "github.com/evolution-foundation/evolution-go/pkg/instance/model"
@@ -14,6 +15,7 @@ import (
 	"github.com/evolution-foundation/evolution-go/pkg/utils"
 	whatsmeow_service "github.com/evolution-foundation/evolution-go/pkg/whatsmeow/service"
 	"go.mau.fi/whatsmeow"
+	"go.mau.fi/whatsmeow/appstate"
 	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
 )
@@ -520,14 +522,38 @@ func (u *userService) SetProfilePicture(data *SetProfilePictureStruct, instance 
 	return true, nil
 }
 
+// profileNameTimeout limita a atualização do nome, para a requisição nunca
+// ficar pendurada indefinidamente.
+const profileNameTimeout = 30 * time.Second
+
+// buildProfileNamePatch monta o patch de app state que troca o nome de perfil
+// (push name) da própria conta.
+func buildProfileNamePatch(name string) (appstate.PatchInfo, error) {
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return appstate.PatchInfo{}, errors.New("name is required")
+	}
+	return appstate.BuildSettingPushName(name), nil
+}
+
 func (u *userService) SetProfileName(data *SetProfileNameStruct, instance *instance_model.Instance) (bool, error) {
+	patch, err := buildProfileNamePatch(data.Name)
+	if err != nil {
+		return false, err
+	}
+
 	client, err := u.ensureClientConnected(instance.Id)
 	if err != nil {
 		return false, err
 	}
 
-	err = client.SetGroupName(context.Background(), types.EmptyJID, data.Name)
-	if err != nil {
+	// O nome do perfil é uma configuração da conta, enviada por app state. A
+	// versão anterior chamava SetGroupName com um JID vazio, que não é um grupo:
+	// o servidor nunca respondia e a requisição travava (#176).
+	ctx, cancel := context.WithTimeout(context.Background(), profileNameTimeout)
+	defer cancel()
+
+	if err := client.SendAppState(ctx, patch); err != nil {
 		return false, err
 	}
 

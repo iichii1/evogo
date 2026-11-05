@@ -485,7 +485,7 @@ func (u *userHandler) SetProfileName(ctx *gin.Context) {
 	}
 
 	if !resp {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to set profile picture"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to set profile name"})
 		return
 	}
 
