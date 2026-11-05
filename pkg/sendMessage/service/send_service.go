@@ -1159,32 +1159,7 @@ func (s *sendService) sendMediaFileWithRetry(data *MediaStruct, fileData []byte,
 			// Generate a JPEG preview thumbnail for better client UX (iOS in
 			// particular). On failure jpegThumb is nil and the message is sent
 			// without a preview rather than failing the request.
-			jpegThumb := makeJPEGThumbnail(fileData, 72)
-			if isNewsletter {
-				// Newsletter: SEM MediaKey e FileEncSHA256
-				media = &waE2E.Message{ImageMessage: &waE2E.ImageMessage{
-					Caption:       proto.String(data.Caption),
-					URL:           &uploaded.URL,
-					DirectPath:    &uploaded.DirectPath,
-					Mimetype:      proto.String(mimeType),
-					FileSHA256:    uploaded.FileSHA256,
-					FileLength:    &uploaded.FileLength,
-					JPEGThumbnail: jpegThumb,
-				}}
-			} else {
-				// Normal: COM MediaKey e FileEncSHA256
-				media = &waE2E.Message{ImageMessage: &waE2E.ImageMessage{
-					Caption:       proto.String(data.Caption),
-					URL:           proto.String(uploaded.URL),
-					DirectPath:    proto.String(uploaded.DirectPath),
-					MediaKey:      uploaded.MediaKey,
-					Mimetype:      proto.String(mimeType),
-					FileEncSHA256: uploaded.FileEncSHA256,
-					FileSHA256:    uploaded.FileSHA256,
-					FileLength:    proto.Uint64(uint64(len(fileData))),
-					JPEGThumbnail: jpegThumb,
-				}}
-			}
+			media = &waE2E.Message{ImageMessage: newImageMessage(fileData, uploaded, mimeType, data.Caption, isNewsletter)}
 			mediaType = "ImageMessage"
 		case "video":
 			if isNewsletter {
@@ -1459,32 +1434,7 @@ func (s *sendService) sendMediaUrlWithRetry(data *MediaStruct, instance *instanc
 			// Generate a JPEG preview thumbnail for better client UX (iOS in
 			// particular). On failure jpegThumb is nil and the message is sent
 			// without a preview rather than failing the request.
-			jpegThumb := makeJPEGThumbnail(fileData, 72)
-			if isNewsletter {
-				// Newsletter: sem criptografia (sem MediaKey e FileEncSHA256)
-				media = &waE2E.Message{ImageMessage: &waE2E.ImageMessage{
-					Caption:       proto.String(data.Caption),
-					URL:           &uploaded.URL,
-					DirectPath:    &uploaded.DirectPath,
-					Mimetype:      proto.String(mimeType),
-					FileSHA256:    uploaded.FileSHA256,
-					FileLength:    &uploaded.FileLength,
-					JPEGThumbnail: jpegThumb,
-				}}
-			} else {
-				// Normal: com criptografia
-				media = &waE2E.Message{ImageMessage: &waE2E.ImageMessage{
-					Caption:       proto.String(data.Caption),
-					URL:           proto.String(uploaded.URL),
-					DirectPath:    proto.String(uploaded.DirectPath),
-					MediaKey:      uploaded.MediaKey,
-					Mimetype:      proto.String(mimeType),
-					FileEncSHA256: uploaded.FileEncSHA256,
-					FileSHA256:    uploaded.FileSHA256,
-					FileLength:    proto.Uint64(uint64(len(fileData))),
-					JPEGThumbnail: jpegThumb,
-				}}
-			}
+			media = &waE2E.Message{ImageMessage: newImageMessage(fileData, uploaded, mimeType, data.Caption, isNewsletter)}
 			mediaType = "ImageMessage"
 		case "video":
 			if isNewsletter {
@@ -2903,6 +2853,7 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 				err = png.Encode(&pngBuffer, img)
 				if err == nil {
 					data = pngBuffer.Bytes()
+							cardWidth, cardHeight := imageDimensions(fileData)
 				}
 			}
 		}
@@ -2915,6 +2866,8 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 			}
 
 			encodeData := base64.StdEncoding.EncodeToString(data)
+									Width:         optionalUint32(cardWidth),
+									Height:        optionalUint32(cardHeight),
 			messageMap["base64"] = encodeData
 
 			messageData["Message"] = messageMap
@@ -3292,18 +3245,7 @@ func (s *sendService) sendStatusMedia(client *whatsmeow.Client, data *StatusMedi
 		// Generate a JPEG preview thumbnail so status/story images render an
 		// inline preview instead of the gray camera placeholder. On failure
 		// jpegThumb is nil and the status is posted without a preview.
-		jpegThumb := makeJPEGThumbnail(fileData, 72)
-		media = &waE2E.Message{ImageMessage: &waE2E.ImageMessage{
-			Caption:       proto.String(data.Caption),
-			URL:           proto.String(uploaded.URL),
-			DirectPath:    proto.String(uploaded.DirectPath),
-			MediaKey:      uploaded.MediaKey,
-			Mimetype:      proto.String(mimeType),
-			FileEncSHA256: uploaded.FileEncSHA256,
-			FileSHA256:    uploaded.FileSHA256,
-			FileLength:    proto.Uint64(uint64(len(fileData))),
-			JPEGThumbnail: jpegThumb,
-		}}
+		media = &waE2E.Message{ImageMessage: newImageMessage(fileData, uploaded, mimeType, data.Caption, false)}
 		mediaType = "ImageMessage"
 	case "video":
 		media = &waE2E.Message{VideoMessage: &waE2E.VideoMessage{
