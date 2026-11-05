@@ -74,6 +74,18 @@ func (m *Map[K, V]) Len() int {
 	return len(m.values)
 }
 
+// Values devolve uma cópia dos valores no momento da chamada. Como é uma cópia,
+// quem a recebe pode percorrê-la, e chamar o próprio Map, sem segurar a trava.
+func (m *Map[K, V]) Values() []V {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	values := make([]V, 0, len(m.values))
+	for _, value := range m.values {
+		values = append(values, value)
+	}
+	return values
+}
+
 type keyGuard struct {
 	mu    sync.Mutex
 	users int

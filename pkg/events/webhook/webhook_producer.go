@@ -6,11 +6,14 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	neturl "net/url"
 	"strings"
 	"time"
 
 	producer_interfaces "github.com/evolution-foundation/evolution-go/pkg/events/interfaces"
 	logger_wrapper "github.com/evolution-foundation/evolution-go/pkg/logger"
+	"github.com/evolution-foundation/evolution-go/pkg/metrics"
+	"github.com/evolution-foundation/evolution-go/pkg/utils"
 )
 
 type webhookProducer struct {
@@ -54,14 +57,17 @@ func (p *webhookProducer) sendWebhookWithRetry(url string, body []byte, maxRetri
 	for i := 0; i < maxRetries; i++ {
 		err, responseBody, statusCode := p.sendWebhook(url, body, userID)
 		if err == nil {
-			p.loggerWrapper.GetLogger(userID).LogInfo("[%s] webhook sent successfully - url: %s, status: %d, response: %s", userID, url, statusCode, string(responseBody))
+			metrics.WebhookDelivered.Inc()
+			p.loggerWrapper.GetLogger(userID).LogInfo("[%s] webhook sent successfully - url: %s, status: %d, response: %s", userID, utils.RedactURL(url), statusCode, string(responseBody))
 			return
 		}
-		p.loggerWrapper.GetLogger(userID).LogWarn("[%s] webhook failed - url: %s, attempt: %d, error: %v", userID, url, i+1, err)
+		metrics.WebhookAttemptFailures.Inc()
+		p.loggerWrapper.GetLogger(userID).LogWarn("[%s] webhook failed - url: %s, attempt: %d, error: %v", userID, utils.RedactURL(url), i+1, redactErrorURL(err))
 
 		time.Sleep(retryInterval)
 	}
-	p.loggerWrapper.GetLogger(userID).LogError("[%s] webhook failed after maximum retries - url: %s", userID, url)
+	metrics.WebhookGivenUp.Inc()
+	p.loggerWrapper.GetLogger(userID).LogError("[%s] webhook failed after maximum retries - url: %s", userID, utils.RedactURL(url))
 }
 
 func (p *webhookProducer) sendWebhook(url string, body []byte, userID string) (error, []byte, int) {
@@ -89,6 +95,16 @@ func (p *webhookProducer) sendWebhook(url string, body []byte, userID string) (e
 	}
 
 	return nil, responseBody, resp.StatusCode
+}
+
+// redactErrorURL tira a URL do erro. Os erros do cliente HTTP repetem a URL
+// inteira, com a query, e ela pode trazer um token.
+func redactErrorURL(err error) error {
+	var urlErr *neturl.Error
+	if errors.As(err, &urlErr) {
+		return urlErr.Err
+	}
+	return err
 }
 
 // CreateGlobalQueues não faz nada para webhook producer

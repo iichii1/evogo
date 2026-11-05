@@ -22,7 +22,6 @@ var undocumentedByDesign = map[string]bool{
 	"get /favicon.ico":  true,
 	"get /manager":      true,
 	"get /manager/*any": true,
-	"get /server/ok":    true,
 	"get /swagger/*any": true,
 }
 

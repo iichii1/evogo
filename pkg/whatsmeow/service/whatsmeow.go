@@ -45,6 +45,7 @@ import (
 	logger_wrapper "github.com/evolution-foundation/evolution-go/pkg/logger"
 	message_model "github.com/evolution-foundation/evolution-go/pkg/message/model"
 	message_repository "github.com/evolution-foundation/evolution-go/pkg/message/repository"
+	"github.com/evolution-foundation/evolution-go/pkg/metrics"
 	"github.com/evolution-foundation/evolution-go/pkg/passkey/ceremony"
 	poll_service "github.com/evolution-foundation/evolution-go/pkg/poll/service"
 	storage_interfaces "github.com/evolution-foundation/evolution-go/pkg/storage/interfaces"
@@ -261,6 +262,7 @@ func (w *whatsmeowService) StopClient(instanceId string, reason string) bool {
 }
 
 func (w whatsmeowService) ReconnectClient(instanceId string) error {
+	metrics.InstanceReconnects.Inc()
 	w.loggerWrapper.GetLogger(instanceId).LogInfo("[%s] Starting reconnection process", instanceId)
 
 	// Para o cliente atual e espera a limpeza terminar. Antes o sinal de parada
@@ -2157,6 +2159,7 @@ func (mycli *MyClient) myEventHandler(rawEvt interface{}) {
 	case *events.Disconnected:
 		doWebhook = true
 		postMap["event"] = "Disconnected"
+		metrics.InstanceDisconnects.Inc()
 
 		// Limpar cache de userInfo para esta instância (mas não para reconexão automática)
 		mycli.userInfoCache.Delete(mycli.Instance.Token)

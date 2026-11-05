@@ -77,6 +77,11 @@ func (r *Routes) AssignRoutes(eng *gin.Engine) {
 
 	eng.GET("/server/ok", r.serverHandler.ServerOk)
 
+	// /health confere os bancos; o gate de licença o deixa passar mesmo sem
+	// licença, para um orquestrador não reiniciar um processo saudável.
+	eng.GET("/health", r.serverHandler.Health)
+	eng.GET("/metrics", r.authMiddleware.AuthAdmin, r.serverHandler.Metrics)
+
 	routes := eng.Group("/instance")
 	{
 		routes.Use(r.authMiddleware.AuthAdmin)

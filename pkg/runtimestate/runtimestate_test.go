@@ -186,3 +186,29 @@ func TestNilSessionIsSafe(t *testing.T) {
 		t.Fatal("nil session should not block")
 	}
 }
+
+func TestValuesReturnsASnapshot(t *testing.T) {
+	m := New[string, int]()
+	if got := m.Values(); len(got) != 0 {
+		t.Fatalf("mapa vazio devolveu %v", got)
+	}
+
+	m.Set("a", 1)
+	m.Set("b", 2)
+	snapshot := m.Values()
+
+	// Mexer no mapa depois não altera a cópia, e usar o mapa enquanto se
+	// percorre a cópia não trava.
+	for _, v := range snapshot {
+		m.Set("c", v)
+		m.Delete("a")
+	}
+
+	sum := 0
+	for _, v := range snapshot {
+		sum += v
+	}
+	if len(snapshot) != 2 || sum != 3 {
+		t.Fatalf("cópia = %v, esperado os valores 1 e 2", snapshot)
+	}
+}

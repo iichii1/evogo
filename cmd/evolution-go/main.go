@@ -236,7 +236,7 @@ func setupRouter(db *gorm.DB, authDB *sql.DB, sqliteDB *sql.DB, config *config.C
 		label_handler.NewLabelHandler(labelService),
 		newsletter_handler.NewNewsletterHandler(newsletterService),
 		pollHandler,
-		server_handler.NewServerHandler(),
+		server_handler.NewServerHandler(serverDependencies(db, authDB, clientPointer)),
 	).AssignRoutes(r)
 
 	if config.ConnectOnStartup {
@@ -259,6 +259,45 @@ func setupRouter(db *gorm.DB, authDB *sql.DB, sqliteDB *sql.DB, config *config.C
 	})
 
 	return r
+}
+
+// serverDependencies liga o health check e as métricas aos bancos e aos clientes
+// do WhatsApp em memória.
+func serverDependencies(db *gorm.DB, authDB *sql.DB, clients *runtimestate.Map[string, *whatsmeow.Client]) server_handler.Dependencies {
+	deps := server_handler.Dependencies{
+		Clients: func() server_handler.ClientCounts {
+			var counts server_handler.ClientCounts
+			for _, client := range clients.Values() {
+				if client == nil {
+					continue
+				}
+				counts.Total++
+				if client.IsConnected() {
+					counts.Connected++
+				}
+				if client.IsLoggedIn() {
+					counts.LoggedIn++
+				}
+			}
+			return counts
+		},
+	}
+
+	addPool := func(name string, pool *sql.DB) {
+		deps.Checks = append(deps.Checks, server_handler.Check{Name: name, Ping: pool.PingContext})
+		deps.Pools = append(deps.Pools, server_handler.Pool{Name: name, Stats: pool.Stats})
+	}
+
+	if sqlDB, err := db.DB(); err == nil {
+		addPool("database", sqlDB)
+	} else {
+		logger.LogWarn("health check sem o banco de usuários: %v", err)
+	}
+	if authDB != nil {
+		addPool("authDatabase", authDB)
+	}
+
+	return deps
 }
 
 func migrate(db *gorm.DB) {

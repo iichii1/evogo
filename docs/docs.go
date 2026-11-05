@@ -1033,6 +1033,32 @@ const docTemplate = `{
                 }
             }
         },
+        "/health": {
+            "get": {
+                "description": "Confere se os bancos de dados respondem e informa quantos clientes do WhatsApp estão em memória, conectados e logados. Responde 503 se algum banco não responde. Não exige apikey; não devolve detalhes dos erros.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Server"
+                ],
+                "summary": "Server health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/pkg_server_handler.HealthResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/pkg_server_handler.HealthResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/instance/all": {
             "get": {
                 "description": "Get all instances",
@@ -2386,6 +2412,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/metrics": {
+            "get": {
+                "description": "Instâncias conectadas, conexões dos pools do banco, reconexões, quedas e falhas de webhook, no formato de texto do Prometheus. Exige a chave global no header apikey.",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Server"
+                ],
+                "summary": "Prometheus metrics",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Chave global (GLOBAL_API_KEY)",
+                        "name": "apikey",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "métricas em texto",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/newsletter/create": {
             "post": {
                 "description": "Create newsletter",
@@ -3476,6 +3537,26 @@ const docTemplate = `{
                         "description": "Internal server error",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/server/ok": {
+            "get": {
+                "description": "Responde 200 se o processo está de pé. Não consulta o banco nem as instâncias; para isso use /health.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Server"
+                ],
+                "summary": "Server liveness",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/pkg_server_handler.ServerOkResponse"
                         }
                     }
                 }
@@ -5504,6 +5585,76 @@ const docTemplate = `{
                 },
                 "phone": {
                     "type": "string"
+                }
+            }
+        },
+        "pkg_server_handler.HealthCheckResult": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "description": "Error é uma descrição genérica; o motivo detalhado fica só no log do servidor.",
+                    "type": "string",
+                    "example": "ping failed"
+                },
+                "latencyMs": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "up",
+                        "down"
+                    ],
+                    "example": "up"
+                }
+            }
+        },
+        "pkg_server_handler.HealthClients": {
+            "type": "object",
+            "properties": {
+                "connected": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "loggedIn": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "total": {
+                    "type": "integer",
+                    "example": 3
+                }
+            }
+        },
+        "pkg_server_handler.HealthResponse": {
+            "type": "object",
+            "properties": {
+                "checks": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/pkg_server_handler.HealthCheckResult"
+                    }
+                },
+                "clients": {
+                    "$ref": "#/definitions/pkg_server_handler.HealthClients"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "ok",
+                        "unavailable"
+                    ],
+                    "example": "ok"
+                }
+            }
+        },
+        "pkg_server_handler.ServerOkResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "ok"
                 }
             }
         },
