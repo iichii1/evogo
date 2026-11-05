@@ -2963,6 +2963,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
+                    },
+                    "501": {
+                        "description": "Server without POSTGRES_AUTH_DB: votes are not stored",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
                     }
                 }
             }

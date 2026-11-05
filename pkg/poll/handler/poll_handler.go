@@ -2,6 +2,7 @@ package poll_handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	logger_wrapper "github.com/evolution-foundation/evolution-go/pkg/logger"
@@ -38,6 +39,7 @@ func NewPollHandler(pollService poll_service.PollService, loggerWrapper *logger_
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
+// @Failure 501 {object} gin.H "Server without POSTGRES_AUTH_DB: votes are not stored"
 // @Router /polls/{pollMessageId}/results [get]
 func (h *PollHandler) GetPollResults(c *gin.Context) {
 	pollMessageID := c.Param("pollMessageId")
@@ -81,6 +83,13 @@ func (h *PollHandler) GetPollResults(c *gin.Context) {
 
 	// Buscar resultados do banco
 	results, err := h.pollService.GetPollResults(c.Request.Context(), pollMessageID, instanceID)
+	if errors.Is(err, poll_service.ErrPollStorageUnavailable) {
+		c.JSON(http.StatusNotImplemented, gin.H{
+			"error":   "Poll results are not available",
+			"message": "This server runs without POSTGRES_AUTH_DB, which is where poll votes are stored",
+		})
+		return
+	}
 	if err != nil {
 		h.loggerWrapper.GetLogger("poll-handler").LogError("[POLL] Error fetching results: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{

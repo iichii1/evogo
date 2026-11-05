@@ -3,6 +3,7 @@ package poll_service
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -13,6 +14,11 @@ import (
 	waProto "go.mau.fi/whatsmeow/proto/waE2E"
 	"go.mau.fi/whatsmeow/types"
 )
+
+// ErrPollStorageUnavailable é devolvido quando o servidor roda sem PostgreSQL de
+// autenticação (POSTGRES_AUTH_DB vazio, modo SQLite): os votos de enquete ficam
+// numa tabela PostgreSQL e não há onde guardá-los.
+var ErrPollStorageUnavailable = errors.New("poll votes require POSTGRES_AUTH_DB")
 
 // PollService define a interface para gerenciamento de votos de enquetes
 type PollService interface {
@@ -33,6 +39,14 @@ func NewPollService(db *sql.DB, loggerWrapper *logger_wrapper.LoggerManager) Pol
 	service := &pollService{
 		db:            db,
 		loggerWrapper: loggerWrapper,
+	}
+
+	// Sem PostgreSQL de autenticação (modo SQLite) o banco é nulo: antes a
+	// migração abaixo derrubava o servidor inteiro na inicialização com um
+	// ponteiro nulo. Agora só os votos de enquete ficam indisponíveis.
+	if db == nil {
+		loggerWrapper.GetLogger("poll-service").LogWarn("[POLL] POSTGRES_AUTH_DB is empty: poll votes will not be stored")
+		return service
 	}
 
 	// Auto-migration: criar tabela se não existir
@@ -81,6 +95,10 @@ func (s *pollService) autoMigrate() error {
 
 // SavePollVote salva um voto de enquete no banco de dados (NÃO-INVASIVO)
 func (s *pollService) SavePollVote(ctx context.Context, vote *model.PollVote) error {
+	if s.db == nil {
+		return ErrPollStorageUnavailable
+	}
+
 	// Log seguro - não expõe dados sensíveis
 	s.loggerWrapper.GetLogger("poll-service").LogInfo("[POLL] Saving vote for poll %s from %s", vote.PollMessageID, vote.VoterJid)
 
@@ -139,6 +157,10 @@ func (s *pollService) SavePollVote(ctx context.Context, vote *model.PollVote) er
 
 // GetPollResults retorna os resultados agregados de uma enquete
 func (s *pollService) GetPollResults(ctx context.Context, pollMessageID string, instanceID string) (*model.PollResults, error) {
+	if s.db == nil {
+		return nil, ErrPollStorageUnavailable
+	}
+
 	s.loggerWrapper.GetLogger("poll-service").LogInfo("[POLL] Fetching results for poll %s", pollMessageID)
 
 	query := `
