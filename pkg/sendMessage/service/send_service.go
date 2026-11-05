@@ -2640,114 +2640,12 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 				mentionedJIDs = append(mentionedJIDs, participant.JID.String())
 			}
 
-			switch messageType {
-			case "ExtendedTextMessage":
-				if msg.ExtendedTextMessage.ContextInfo == nil {
-					msg.ExtendedTextMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.ExtendedTextMessage.ContextInfo.MentionedJID = mentionedJIDs
-			case "ImageMessage":
-				if msg.ImageMessage.ContextInfo == nil {
-					msg.ImageMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.ImageMessage.ContextInfo.MentionedJID = mentionedJIDs
-			case "VideoMessage":
-				if msg.VideoMessage.ContextInfo == nil {
-					msg.VideoMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.VideoMessage.ContextInfo.MentionedJID = mentionedJIDs
-			case "PtvMessage":
-				if msg.PtvMessage.ContextInfo == nil {
-					msg.PtvMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.PtvMessage.ContextInfo.MentionedJID = mentionedJIDs
-			case "AudioMessage":
-				if msg.AudioMessage.ContextInfo == nil {
-					msg.AudioMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.AudioMessage.ContextInfo.MentionedJID = mentionedJIDs
-			case "DocumentMessage":
-				if msg.DocumentMessage.ContextInfo == nil {
-					msg.DocumentMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.DocumentMessage.ContextInfo.MentionedJID = mentionedJIDs
-			case "PollCreationMessage":
-				if msg.PollCreationMessage.ContextInfo == nil {
-					msg.PollCreationMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.PollCreationMessage.ContextInfo.MentionedJID = mentionedJIDs
-			case "StickerMessage":
-				if msg.StickerMessage.ContextInfo == nil {
-					msg.StickerMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.StickerMessage.ContextInfo.MentionedJID = mentionedJIDs
-			case "LocationMessage":
-				if msg.LocationMessage.ContextInfo == nil {
-					msg.LocationMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.LocationMessage.ContextInfo.MentionedJID = mentionedJIDs
-			case "ContactMessage":
-				if msg.ContactMessage.ContextInfo == nil {
-					msg.ContactMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.ContactMessage.ContextInfo.MentionedJID = mentionedJIDs
-			}
+			setMentions(msg, messageType, mentionedJIDs)
 
 		}
 
 		if len(data.MentionedJID) > 0 {
-			switch messageType {
-			case "ExtendedTextMessage":
-				if msg.ExtendedTextMessage.ContextInfo == nil {
-					msg.ExtendedTextMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.ExtendedTextMessage.ContextInfo.MentionedJID = data.MentionedJID
-			case "ImageMessage":
-				if msg.ImageMessage.ContextInfo == nil {
-					msg.ImageMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.ImageMessage.ContextInfo.MentionedJID = data.MentionedJID
-			case "VideoMessage":
-				if msg.VideoMessage.ContextInfo == nil {
-					msg.VideoMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.VideoMessage.ContextInfo.MentionedJID = data.MentionedJID
-			case "PtvMessage":
-				if msg.PtvMessage.ContextInfo == nil {
-					msg.PtvMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.PtvMessage.ContextInfo.MentionedJID = data.MentionedJID
-			case "AudioMessage":
-				if msg.AudioMessage.ContextInfo == nil {
-					msg.AudioMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.AudioMessage.ContextInfo.MentionedJID = data.MentionedJID
-			case "DocumentMessage":
-				if msg.DocumentMessage.ContextInfo == nil {
-					msg.DocumentMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.DocumentMessage.ContextInfo.MentionedJID = data.MentionedJID
-			case "PollCreationMessage":
-				if msg.PollCreationMessage.ContextInfo == nil {
-					msg.PollCreationMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.PollCreationMessage.ContextInfo.MentionedJID = data.MentionedJID
-			case "StickerMessage":
-				if msg.StickerMessage.ContextInfo == nil {
-					msg.StickerMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.StickerMessage.ContextInfo.MentionedJID = data.MentionedJID
-			case "LocationMessage":
-				if msg.LocationMessage.ContextInfo == nil {
-					msg.LocationMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.LocationMessage.ContextInfo.MentionedJID = data.MentionedJID
-			case "ContactMessage":
-				if msg.ContactMessage.ContextInfo == nil {
-					msg.ContactMessage.ContextInfo = &waE2E.ContextInfo{}
-				}
-				msg.ContactMessage.ContextInfo.MentionedJID = data.MentionedJID
-			}
+			setMentions(msg, messageType, data.MentionedJID)
 		}
 	}
 
@@ -2853,7 +2751,6 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 				err = png.Encode(&pngBuffer, img)
 				if err == nil {
 					data = pngBuffer.Bytes()
-							cardWidth, cardHeight := imageDimensions(fileData)
 				}
 			}
 		}
@@ -2866,8 +2763,6 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 			}
 
 			encodeData := base64.StdEncoding.EncodeToString(data)
-									Width:         optionalUint32(cardWidth),
-									Height:        optionalUint32(cardHeight),
 			messageMap["base64"] = encodeData
 
 			messageData["Message"] = messageMap
@@ -2958,6 +2853,7 @@ func (s *sendService) SendCarousel(data *CarouselStruct, instance *instance_mode
 						if err == nil {
 							// Generate JPEG thumbnail for iOS compatibility
 							jpegThumb := makeJPEGThumbnail(fileData, 72)
+							cardWidth, cardHeight := imageDimensions(fileData)
 
 							header.HasMediaAttachment = proto.Bool(true)
 							header.Media = &waE2E.InteractiveMessage_Header_ImageMessage{
@@ -2970,6 +2866,8 @@ func (s *sendService) SendCarousel(data *CarouselStruct, instance *instance_mode
 									FileSHA256:    uploaded.FileSHA256,
 									FileLength:    proto.Uint64(uint64(len(fileData))),
 									JPEGThumbnail: jpegThumb,
+									Width:         optionalUint32(cardWidth),
+									Height:        optionalUint32(cardHeight),
 								},
 							}
 						}
