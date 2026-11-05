@@ -97,6 +97,16 @@ type whatsmeowService struct {
 	natsProducer       producer_interfaces.Producer
 	loggerWrapper      *logger_wrapper.LoggerManager
 	passkeyCeremony    *ceremony.Store
+	// storeContainer é um ponteiro para que os métodos com receiver por valor
+	// (como StartClient) compartilhem o mesmo container.
+	storeContainer *storeContainerHolder
+}
+
+// storeContainerHolder guarda o sqlstore.Container do whatsmeow, criado uma
+// única vez por processo e compartilhado por todas as instâncias.
+type storeContainerHolder struct {
+	mu        sync.Mutex
+	container *sqlstore.Container
 }
 
 type MyClient struct {
@@ -301,6 +311,57 @@ func (w whatsmeowService) ForceUpdateJid(instanceId string, number string) error
 	return nil
 }
 
+// getStoreContainer devolve o sqlstore.Container compartilhado, criando-o na
+// primeira chamada.
+//
+// Antes, StartClient chamava sqlstore.New a cada conexão/reconexão. Cada
+// chamada abria um *sql.DB novo que nunca era fechado, então uma instância
+// presa no ciclo reconectar -> QR -> logout -> reconectar esgotava o
+// max_connections do Postgres (issues #106, #109, #112, #118, #175).
+//
+// Com Postgres, o container reutiliza o pool authDB aberto no main.go, que já
+// tem limites de conexões configurados. Com SQLite, o arquivo main.db é aberto
+// uma única vez.
+//
+// O erro não é memorizado: se o banco estiver fora do ar na primeira tentativa,
+// a próxima chamada tenta de novo.
+func (w *whatsmeowService) getStoreContainer() (*sqlstore.Container, error) {
+	holder := w.storeContainer
+	if holder == nil {
+		return nil, fmt.Errorf("store container holder not initialized")
+	}
+
+	holder.mu.Lock()
+	defer holder.mu.Unlock()
+
+	if holder.container != nil {
+		return holder.container, nil
+	}
+
+	var dbLog waLog.Logger
+	if w.config.WaDebug != "" {
+		dbLog = waLog.Stdout("Database", w.config.WaDebug, true)
+	}
+
+	var container *sqlstore.Container
+	var err error
+	if w.config.PostgresAuthDB != "" && w.authDB != nil {
+		container = sqlstore.NewWithDB(w.authDB, "postgres", dbLog)
+		err = container.Upgrade(context.Background())
+	} else if w.config.PostgresAuthDB != "" {
+		container, err = sqlstore.New(context.Background(), "postgres", w.config.PostgresAuthDB, dbLog)
+	} else {
+		dsn := fmt.Sprintf("file:%s/dbdata/main.db?_pragma=foreign_keys(1)&_busy_timeout=5000&cache=shared&mode=rwc&_journal_mode=WAL", w.exPath)
+		container, err = sqlstore.New(context.Background(), "sqlite", dsn, dbLog)
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	holder.container = container
+	return container, nil
+}
+
 func (w whatsmeowService) StartClient(cd *ClientData) {
 
 	w.loggerWrapper.GetLogger(cd.Instance.Id).LogInfo("Starting websocket connection to Whatsapp for user '%s'", cd.Instance.Id)
@@ -314,25 +375,7 @@ func (w whatsmeowService) StartClient(cd *ClientData) {
 		}
 	}
 
-	var container *sqlstore.Container
-
-	if w.config.WaDebug != "" {
-		dbLog := waLog.Stdout("Database", w.config.WaDebug, true)
-		if w.config.PostgresAuthDB != "" {
-			container, err = sqlstore.New(context.Background(), "postgres", w.config.PostgresAuthDB, dbLog)
-		} else {
-			dsn := fmt.Sprintf("file:%s/dbdata/main.db?_pragma=foreign_keys(1)&_busy_timeout=5000&cache=shared&mode=rwc&_journal_mode=WAL", w.exPath)
-			container, err = sqlstore.New(context.Background(), "sqlite", dsn, dbLog)
-		}
-	} else {
-		if w.config.PostgresAuthDB != "" {
-			container, err = sqlstore.New(context.Background(), "postgres", w.config.PostgresAuthDB, nil)
-		} else {
-			dsn := fmt.Sprintf("file:%s/dbdata/main.db?_pragma=foreign_keys(1)&_busy_timeout=5000&cache=shared&mode=rwc&_journal_mode=WAL", w.exPath)
-			container, err = sqlstore.New(context.Background(), "sqlite", dsn, nil)
-		}
-	}
-
+	container, err := w.getStoreContainer()
 	if err != nil {
 		w.loggerWrapper.GetLogger(cd.Instance.Id).LogError("[%s] Failed to create container: %v", cd.Instance.Id, err)
 		return
@@ -2831,6 +2874,7 @@ func NewWhatsmeowService(
 		natsProducer:       natsProducer,
 		loggerWrapper:      loggerWrapper,
 		passkeyCeremony:    ceremony.NewStore(),
+		storeContainer:     &storeContainerHolder{},
 	}
 }
 
