@@ -47,7 +47,7 @@ Os testes de integração têm a tag `integration` (por exemplo `pkg/whatsmeow/s
 
 ## O que foi feito
 
-As fases 1 a 7 estão na `main`. As fases 8 a 10 (2026-11-05) estão em branches locais empilhadas (`feat/fase8-operacao-e-seguranca`, `feat/fase9-pedidos-do-upstream`, `feat/fase10-fila-de-envio`), validadas com `go build`, `go vet` e `go test -race` em Linux, mas **ainda não enviadas ao GitHub nem mergeadas na `main`**. Os branches `fix/fase*`, `feat/fase5-features` e `chore/fase7-ci-e-docs` continuam no GitHub e podem ser apagados.
+Todas as fases estão na `main`. As fases 8 a 10 (2026-11-05) foram validadas com `go build`, `go vet` e `go test -race` em Linux (não no CI do GitHub) e entraram na `main` por fast-forward, a partir das branches empilhadas `feat/fase8-operacao-e-seguranca`, `feat/fase9-pedidos-do-upstream` e `feat/fase10-fila-de-envio`. Os branches `fix/fase*`, `feat/fase5-features`, `chore/fase7-ci-e-docs` e `feat/fase8…10` continuam no GitHub e podem ser apagados.
 
 ### Fases 1 a 5 (PRs #1 a #5 no fork, mergeados)
 
