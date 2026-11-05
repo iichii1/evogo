@@ -160,7 +160,8 @@ func (u *userService) GetUser(data *CheckUserStruct, instance *instance_model.In
 		if !ok {
 			return nil, errors.New("invalid phone number")
 		}
-		jids = append(jids, jid)
+		// O WhatsApp identifica usuários sem o "+" que ParseJID coloca.
+		jids = append(jids, utils.CanonicalJID(jid))
 	}
 	resp, err := client.GetUserInfo(context.Background(), jids)
 	if err != nil {
@@ -336,6 +337,10 @@ func (u *userService) GetAvatar(data *GetAvatarStruct, instance *instance_model.
 	if !ok {
 		return nil, errors.New("invalid phone number")
 	}
+	// A consulta de foto de perfil é um nó IQ bruto (Target=jid). Com o "+"
+	// que ParseJID coloca, o WhatsApp não responde e a requisição esperava os
+	// 75s do timeout do IQ até falhar com "info query timed out" (#76, #223).
+	jid = utils.CanonicalJID(jid).ToNonAD()
 
 	u.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Requesting avatar for JID: %s, Preview: %v", instance.Id, jid, data.Preview)
 
@@ -444,6 +449,7 @@ func (u *userService) BlockContact(data *BlockStruct, instance *instance_model.I
 	if !ok {
 		return nil, errors.New("invalid phone number")
 	}
+	jid = utils.CanonicalJID(jid)
 
 	resp, err := client.UpdateBlocklist(context.Background(), jid, events.BlocklistChangeActionBlock, "")
 	if err != nil {
@@ -463,6 +469,7 @@ func (u *userService) UnlockContact(data *BlockStruct, instance *instance_model.
 	if !ok {
 		return nil, errors.New("invalid phone number")
 	}
+	jid = utils.CanonicalJID(jid)
 
 	resp, err := client.UpdateBlocklist(context.Background(), jid, events.BlocklistChangeActionUnblock, "")
 	if err != nil {
