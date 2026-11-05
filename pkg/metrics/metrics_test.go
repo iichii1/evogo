@@ -106,9 +106,16 @@ func TestProcessExposesTheProcessCounters(t *testing.T) {
 		"evogo_webhook_delivered_total",
 		"evogo_webhook_attempt_failures_total",
 		"evogo_webhook_given_up_total",
+		"evogo_send_queue_delayed_total",
+		"evogo_send_queue_wait_milliseconds_total",
+		"evogo_send_queue_rejected_full_total",
+		"evogo_send_queue_rejected_timeout_total",
 	} {
 		if !strings.Contains(out.String(), "# TYPE "+name+" counter") {
 			t.Errorf("métrica %s ausente:\n%s", name, out.String())
 		}
+	}
+	if !strings.Contains(out.String(), "# TYPE evogo_send_queue_waiting gauge") {
+		t.Errorf("gauge da fila ausente:\n%s", out.String())
 	}
 }

@@ -3054,6 +3054,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/gin.H"
                         }
                     },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
@@ -3096,6 +3102,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -3146,6 +3158,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/gin.H"
                         }
                     },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
@@ -3188,6 +3206,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -3238,6 +3262,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/gin.H"
                         }
                     },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
@@ -3280,6 +3310,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -3330,6 +3366,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/gin.H"
                         }
                     },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
@@ -3376,6 +3418,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/gin.H"
                         }
                     },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
@@ -3418,6 +3466,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -3491,6 +3545,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/gin.H"
                         }
                     },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
@@ -3533,6 +3593,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -3583,6 +3649,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/gin.H"
                         }
                     },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
@@ -3625,6 +3697,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }

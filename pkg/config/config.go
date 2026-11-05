@@ -66,6 +66,11 @@ type Config struct {
 	LogMaxSize    int
 	LogMaxBackups int
 	LogMaxAge     int
+	// Fila de envio (pkg/sendqueue). SendQueueMinInterval zero = desligada.
+	SendQueueMinInterval time.Duration
+	SendQueueMaxInterval time.Duration
+	SendQueueMaxPending  int
+	SendQueueMaxWait     time.Duration
 	LogDirectory  string
 	LogCompress   bool
 }
@@ -332,6 +337,12 @@ func Load() *Config {
 		logMaxAge = 30 // Default 30 days
 	}
 
+	// Fila de envio. Os valores inválidos ou negativos viram o padrão (desligada).
+	sendQueueMinMs := envInt(config_env.SEND_QUEUE_MIN_INTERVAL_MS, 0)
+	sendQueueMaxMs := envInt(config_env.SEND_QUEUE_MAX_INTERVAL_MS, 0)
+	sendQueueMaxPending := envInt(config_env.SEND_QUEUE_MAX_PENDING, 100)
+	sendQueueMaxWaitSeconds := envInt(config_env.SEND_QUEUE_MAX_WAIT_SECONDS, 50)
+
 	logDirectory := os.Getenv(config_env.LOG_DIRECTORY)
 	if logDirectory == "" {
 		logDirectory = "./logs" // Default logs directory
@@ -383,6 +394,10 @@ func Load() *Config {
 		LogMaxSize:           logMaxSize,
 		LogMaxBackups:        logMaxBackups,
 		LogMaxAge:            logMaxAge,
+		SendQueueMinInterval: time.Duration(sendQueueMinMs) * time.Millisecond,
+		SendQueueMaxInterval: time.Duration(sendQueueMaxMs) * time.Millisecond,
+		SendQueueMaxPending:  sendQueueMaxPending,
+		SendQueueMaxWait:     time.Duration(sendQueueMaxWaitSeconds) * time.Second,
 		LogDirectory:         logDirectory,
 		LogCompress:          logCompress,
 	}
@@ -394,6 +409,21 @@ func Load() *Config {
 	}
 
 	return config
+}
+
+// envInt lê um inteiro não negativo do ambiente; vazio, inválido ou negativo
+// devolve o padrão.
+func envInt(key string, fallback int) int {
+	value := os.Getenv(key)
+	if value == "" {
+		return fallback
+	}
+	n, err := strconv.Atoi(value)
+	if err != nil || n < 0 {
+		logger.LogWarn("[CONFIG] %s=%q ignored: expected a non-negative integer", key, value)
+		return fallback
+	}
+	return n
 }
 
 func loadMinioConfig(config *Config) {

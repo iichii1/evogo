@@ -26,6 +26,7 @@ import (
 	instance_model "github.com/evolution-foundation/evolution-go/pkg/instance/model"
 	logger_wrapper "github.com/evolution-foundation/evolution-go/pkg/logger"
 	"github.com/evolution-foundation/evolution-go/pkg/utils"
+	"github.com/evolution-foundation/evolution-go/pkg/sendqueue"
 	whatsmeow_service "github.com/evolution-foundation/evolution-go/pkg/whatsmeow/service"
 	"github.com/gabriel-vasile/mimetype"
 	"go.mau.fi/whatsmeow"
@@ -59,6 +60,9 @@ type sendService struct {
 	whatsmeowService whatsmeow_service.WhatsmeowService
 	config           *config.Config
 	loggerWrapper    *logger_wrapper.LoggerManager
+	// sendQueue espaça as mensagens de cada instância (SEND_QUEUE_*). Nulo ou
+	// desligado, não faz nada.
+	sendQueue *sendqueue.Limiter
 }
 
 type SendDataStruct struct {
@@ -2432,6 +2436,17 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 		message = data.Id
 	}
 
+	// Fila de envio: espera a vez da instância antes de simular a digitação e
+	// enviar. Desligada por padrão (SEND_QUEUE_MIN_INTERVAL_MS=0).
+	waited, err := s.sendQueue.Acquire(context.Background(), instance.Id)
+	if err != nil {
+		s.loggerWrapper.GetLogger(instance.Id).LogWarn("[%s] Message not queued: %v", instance.Id, err)
+		return nil, err
+	}
+	if waited > 0 {
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Message waited %s in the send queue", instance.Id, waited.Round(time.Millisecond))
+	}
+
 	if data.Delay > 0 {
 		media := ""
 		if messageType == "AudioMessage" {
@@ -3243,5 +3258,11 @@ func NewSendService(
 		whatsmeowService: whatsmeowService,
 		config:           config,
 		loggerWrapper:    loggerWrapper,
+		sendQueue: sendqueue.New(sendqueue.Config{
+			MinInterval: config.SendQueueMinInterval,
+			MaxInterval: config.SendQueueMaxInterval,
+			MaxPending:  config.SendQueueMaxPending,
+			MaxWait:     config.SendQueueMaxWait,
+		}),
 	}
 }

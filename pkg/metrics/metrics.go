@@ -45,6 +45,19 @@ var (
 	WebhookAttemptFailures Counter
 	// WebhookGivenUp conta os webhooks descartados depois da última tentativa.
 	WebhookGivenUp Counter
+
+	// SendQueueDelayed conta as mensagens que esperaram a vez na fila de envio.
+	SendQueueDelayed Counter
+	// SendQueueWaitMilliseconds soma o tempo que as mensagens esperaram na fila.
+	SendQueueWaitMilliseconds Counter
+	// SendQueueRejectedFull conta as mensagens recusadas porque a fila da
+	// instância estava cheia.
+	SendQueueRejectedFull Counter
+	// SendQueueRejectedTimeout conta as mensagens recusadas porque a vez delas só
+	// chegaria depois do tempo máximo de espera.
+	SendQueueRejectedTimeout Counter
+	// SendQueueWaiting é quantas mensagens esperam a vez agora (sobe e desce).
+	SendQueueWaiting atomic.Int64
 )
 
 // Kind é o tipo da métrica no formato Prometheus.
@@ -79,12 +92,21 @@ func Process() []Metric {
 	counter := func(name, help string, c *Counter) Metric {
 		return Metric{Name: name, Help: help, Kind: KindCounter, Samples: []Sample{{Value: float64(c.Value())}}}
 	}
+	waiting := SendQueueWaiting.Load()
+	if waiting < 0 {
+		waiting = 0
+	}
 	return []Metric{
 		counter("evogo_instance_reconnects_total", "Reconexões de cliente iniciadas, automáticas ou pedidas pela API.", &InstanceReconnects),
 		counter("evogo_instance_disconnects_total", "Quedas inesperadas de conexão com o WhatsApp.", &InstanceDisconnects),
 		counter("evogo_webhook_delivered_total", "Webhooks entregues com resposta 2xx.", &WebhookDelivered),
 		counter("evogo_webhook_attempt_failures_total", "Tentativas de webhook que falharam.", &WebhookAttemptFailures),
 		counter("evogo_webhook_given_up_total", "Webhooks descartados depois da última tentativa.", &WebhookGivenUp),
+		counter("evogo_send_queue_delayed_total", "Mensagens que esperaram a vez na fila de envio.", &SendQueueDelayed),
+		counter("evogo_send_queue_wait_milliseconds_total", "Tempo total que as mensagens esperaram na fila de envio.", &SendQueueWaitMilliseconds),
+		counter("evogo_send_queue_rejected_full_total", "Mensagens recusadas porque a fila da instância estava cheia.", &SendQueueRejectedFull),
+		counter("evogo_send_queue_rejected_timeout_total", "Mensagens recusadas porque a vez delas passaria do tempo máximo de espera.", &SendQueueRejectedTimeout),
+		Gauge("evogo_send_queue_waiting", "Mensagens esperando a vez na fila de envio agora.", float64(waiting)),
 	}
 }
 
