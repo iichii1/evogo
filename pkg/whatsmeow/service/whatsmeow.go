@@ -1524,6 +1524,16 @@ func (mycli *MyClient) myEventHandler(rawEvt interface{}) {
 			}
 		}
 
+		// Edição e exclusão chegam como mensagens sem conteúdo legível; o webhook
+		// ganha `messageAction` com o tipo, a mensagem alvo e, na edição, o texto
+		// novo decifrado (#92, #62, #146).
+		if action := buildMessageAction(context.Background(), mycli.WAClient, evt); action != nil {
+			dataMap["messageAction"] = action
+			if action.isEdit() {
+				dataMap["IsEdit"] = true
+			}
+		}
+
 		var quotedMessage *waE2E.Message
 		var stanzaID string
 
