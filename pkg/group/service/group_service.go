@@ -338,14 +338,10 @@ func (g *groupService) CreateGroup(data *CreateGroupStruct, instance *instance_m
 		return nil, err
 	}
 
-	var participants []types.JID
-	for _, participant := range data.Participants {
-		recipient, ok := utils.ParseJID(participant)
-		participants = append(participants, recipient)
-		if !ok {
-			g.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields", instance.Id)
-			return nil, errors.New("invalid phone number")
-		}
+	participants, err := parseRequestParticipants(data.Participants)
+	if err != nil {
+		g.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields", instance.Id)
+		return nil, errors.New("invalid phone number")
 	}
 
 	resp, err := client.CreateGroup(context.Background(), whatsmeow.ReqCreateGroup{
@@ -391,14 +387,10 @@ func (g *groupService) UpdateParticipant(data *AddParticipantStruct, instance *i
 		return err
 	}
 
-	var participants []types.JID
-	for _, participant := range data.Participants {
-		recipient, ok := utils.ParseJID(participant)
-		participants = append(participants, recipient)
-		if !ok {
-			g.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields", instance.Id)
-			return errors.New("invalid phone number")
-		}
+	participants, err := parseRequestParticipants(data.Participants)
+	if err != nil {
+		g.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields", instance.Id)
+		return errors.New("invalid phone number")
 	}
 
 	_, err = client.UpdateGroupParticipants(context.Background(), data.GroupJID, participants, data.Action)

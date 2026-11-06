@@ -80,8 +80,9 @@ func (g *groupService) JoinGroupWithInvite(data *GroupInviteStruct, instance *in
 	return client.JoinGroupWithInvite(context.Background(), group, inviter, data.Code, data.Expiration)
 }
 
-// parseRequestParticipants lê as pessoas de um pedido de entrada. O pedido vai como
-// nó bruto, sem resolução de aparelhos: o "+" de um número solto chegaria ao servidor.
+// parseRequestParticipants lê as pessoas de uma operação de grupo. Elas vão em nó
+// bruto, sem resolução de aparelhos: o "+" de um número solto chegaria ao servidor,
+// que não responde, e a chamada expira.
 func parseRequestParticipants(participants []string) ([]types.JID, error) {
 	result := make([]types.JID, 0, len(participants))
 	for _, participant := range participants {
