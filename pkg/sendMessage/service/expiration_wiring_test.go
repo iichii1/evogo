@@ -20,7 +20,8 @@ func TestEverySendPassesExpirationAlong(t *testing.T) {
 	expected := map[string]bool{
 		"sendTextWithRetry": true, "sendLinkWithRetry": true, "sendMediaFileWithRetry": true,
 		"sendMediaUrlWithRetry": true, "sendPollWithRetry": true, "SendSticker": true,
-		"SendLocation": true, "SendContact": true,
+		"SendLocation": true, "SendContact": true, "SendContacts": true,
+		"SendGroupInvite": true, "SendRequestPhone": true,
 	}
 	funcs := regexp.MustCompile(`(?m)^func \(s \*sendService\) (\w+)\(`)
 	matches := funcs.FindAllStringSubmatchIndex(text, -1)
@@ -41,5 +42,19 @@ func TestEverySendPassesExpirationAlong(t *testing.T) {
 	}
 	if found != len(expected) {
 		t.Fatalf("achei %d de %d funções de envio: alguma mudou de nome", found, len(expected))
+	}
+}
+
+// Um tipo novo fora dos dois switch de SendMessage (com e sem citação) responde
+// "invalid messageType" só na hora de enviar.
+func TestSendMessageKnowsTheNewTypes(t *testing.T) {
+	src, err := os.ReadFile("send_service.go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, kind := range []string{"ContactsArrayMessage", "GroupInviteMessage", "RequestPhoneNumberMessage"} {
+		if got := strings.Count(string(src), `case "`+kind+`":`); got != 2 {
+			t.Errorf("%s aparece em %d switch, esperava 2", kind, got)
+		}
 	}
 }

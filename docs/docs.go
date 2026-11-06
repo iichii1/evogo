@@ -2882,6 +2882,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/message/pin": {
+            "post": {
+                "description": "Pins a message for everyone in the chat. ` + "`" + `duration` + "`" + ` is 86400, 604800 (default) or 2592000 seconds. In groups, ` + "`" + `participant` + "`" + ` is the author of the message.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Message"
+                ],
+                "summary": "Pin a message in a chat",
+                "parameters": [
+                    {
+                        "description": "Message",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.PinStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/message/presence": {
             "post": {
                 "description": "Set chat presence",
@@ -3041,6 +3087,52 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.MessageStatusStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/message/unpin": {
+            "post": {
+                "description": "Unpins a message for everyone in the chat.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Message"
+                ],
+                "summary": "Unpin a message in a chat",
+                "parameters": [
+                    {
+                        "description": "Message",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.PinStruct"
                         }
                     }
                 ],
@@ -3737,6 +3829,110 @@ const docTemplate = `{
                 }
             }
         },
+        "/send/contacts": {
+            "post": {
+                "description": "Sends up to 50 contacts in a single card. ` + "`" + `displayName` + "`" + ` defaults to \"\u003cn\u003e contatos\".",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Send Message"
+                ],
+                "summary": "Send several contacts in one card",
+                "parameters": [
+                    {
+                        "description": "Contacts",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.ContactsStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/send/groupInvite": {
+            "post": {
+                "description": "Sends the invite card of a group. ` + "`" + `code` + "`" + ` and ` + "`" + `inviteExpiration` + "`" + ` come from the AddRequest field of the /group/participant response, when the privacy of the person prevents adding them directly.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Send Message"
+                ],
+                "summary": "Send a group invite card",
+                "parameters": [
+                    {
+                        "description": "Group invite",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.GroupInviteCardStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/send/link": {
             "post": {
                 "description": "Send a link message",
@@ -4049,6 +4245,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/send/requestPhone": {
+            "post": {
+                "description": "Shows the contact a request to share their phone number. Useful for contacts known only by LID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Send Message"
+                ],
+                "summary": "Ask a contact to share their phone number",
+                "parameters": [
+                    {
+                        "description": "Contact",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.RequestPhoneStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "429": {
+                        "description": "Send queue full or wait too long (see the Retry-After header)",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/send/status/media": {
             "post": {
                 "description": "Send an image or video status to status@broadcast. Supports JSON (URL) or multipart/form-data (file upload)",
@@ -4126,7 +4374,7 @@ const docTemplate = `{
         },
         "/send/status/text": {
             "post": {
-                "description": "Send a WhatsApp text status to status@broadcast",
+                "description": "Send a WhatsApp text status to status@broadcast. ` + "`" + `backgroundColor` + "`" + ` and ` + "`" + `textColor` + "`" + ` are #RRGGBB or #AARRGGBB; ` + "`" + `font` + "`" + ` is the WhatsApp font number.",
                 "consumes": [
                     "application/json"
                 ],
@@ -5632,6 +5880,28 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.PinStruct": {
+            "type": "object",
+            "properties": {
+                "duration": {
+                    "description": "segundos: 86400, 604800 (padrão) ou 2592000",
+                    "type": "integer"
+                },
+                "fromMe": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "string"
+                },
+                "participant": {
+                    "description": "autor da mensagem, em grupos",
+                    "type": "string"
+                }
+            }
+        },
         "github_com_evolution-foundation_evolution-go_pkg_message_service.ReactStruct": {
             "type": "object",
             "properties": {
@@ -6141,6 +6411,77 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.ContactsStruct": {
+            "type": "object",
+            "properties": {
+                "contacts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_utils.VCardStruct"
+                    }
+                },
+                "delay": {
+                    "type": "integer"
+                },
+                "displayName": {
+                    "description": "padrão: \"\u003cn\u003e contatos\"",
+                    "type": "string"
+                },
+                "expiration": {
+                    "type": "integer"
+                },
+                "formatJid": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "string"
+                },
+                "quoted": {
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.GroupInviteCardStruct": {
+            "type": "object",
+            "properties": {
+                "caption": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "delay": {
+                    "type": "integer"
+                },
+                "expiration": {
+                    "type": "integer"
+                },
+                "formatJid": {
+                    "type": "boolean"
+                },
+                "groupJid": {
+                    "type": "string"
+                },
+                "groupName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "inviteExpiration": {
+                    "type": "integer"
+                },
+                "number": {
+                    "type": "string"
+                },
+                "quoted": {
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                }
+            }
+        },
         "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.LinkStruct": {
             "type": "object",
             "properties": {
@@ -6442,6 +6783,29 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.RequestPhoneStruct": {
+            "type": "object",
+            "properties": {
+                "delay": {
+                    "type": "integer"
+                },
+                "expiration": {
+                    "type": "integer"
+                },
+                "formatJid": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "string"
+                },
+                "quoted": {
+                    "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct"
+                }
+            }
+        },
         "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.Row": {
             "type": "object",
             "properties": {
@@ -6482,10 +6846,21 @@ const docTemplate = `{
         "github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.StatusTextStruct": {
             "type": "object",
             "properties": {
+                "backgroundColor": {
+                    "description": "BackgroundColor e TextColor são #RRGGBB ou #AARRGGBB.",
+                    "type": "string"
+                },
+                "font": {
+                    "description": "Font: 0 SYSTEM, 1 SYSTEM_TEXT, 2 FB_SCRIPT, 6 SYSTEM_BOLD, 7 MORNINGBREEZE, 8 CALISTOGA, 9 EXO2, 10 COURIERPRIME.",
+                    "type": "integer"
+                },
                 "id": {
                     "type": "string"
                 },
                 "text": {
+                    "type": "string"
+                },
+                "textColor": {
                     "type": "string"
                 }
             }

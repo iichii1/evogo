@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	send_service "github.com/evolution-foundation/evolution-go/pkg/sendMessage/service"
 	"github.com/evolution-foundation/evolution-go/pkg/sendqueue"
 )
 
@@ -15,6 +16,10 @@ import (
 // 429 com o cabeçalho Retry-After (em segundos), para quem envia em lote saber
 // quando tentar de novo; todo o resto segue como antes, 500.
 func respondSendError(ctx *gin.Context, err error) {
+	if errors.Is(err, send_service.ErrInvalidSendInput) {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	var rejected *sendqueue.RejectedError
 	if errors.As(err, &rejected) {
 		seconds := int(math.Ceil(rejected.RetryAfter.Seconds()))

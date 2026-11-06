@@ -146,6 +146,20 @@ Os testes falham ao desfazer cada correção (conferido à mão: a opção do cl
 
 **Conserto durante a fase:** o `expiration` chegou primeiro a 3 dos 8 envios, porque os outros passam por funções `...WithRetry`, e nenhum teste acusou. `TestEverySendPassesExpirationAlong` confere a ligação no código e falhou antes do conserto.
 
+### Fase 13: tipos de mensagem novos (2026-11-05)
+
+| Rota | O que faz |
+|---|---|
+| `POST /send/contacts` | Até 50 contatos num só cartão. O limite é uma trava nossa, não do WhatsApp. Recusa quebra de linha nos campos, que acrescentaria linhas ao vCard. |
+| `POST /send/status/text` | Passa a aceitar `backgroundColor`, `textColor` (`#RRGGBB` ou `#AARRGGBB`) e `font`. Sem eles, sai como antes. |
+| `POST /message/pin`, `/message/unpin` | Fixa e solta uma mensagem para todos: 24 h, 7 dias (padrão) ou 30 dias. |
+| `POST /send/groupInvite` | Cartão de convite. `code` e `inviteExpiration` vêm do `AddRequest` da resposta de `/group/participant`. Se o código de um link comum também funciona aqui, só o aparelho diz. |
+| `POST /send/requestPhone` | Pede ao contato que compartilhe o telefone. |
+
+Os novos envios aceitam `expiration` e `quoted`. O `SendContact` deixou de imprimir o vCard (nome e telefone) na saída padrão. Entrada inválida nas rotas de envio com `ErrInvalidSendInput` responde 400.
+
+Estes formatos foram montados a partir do protobuf da whatsmeow, sem helper dela: só o aparelho prova que aparecem certo (seção 9 do roteiro). O que for recusado ou aparecer errado volta para "O que falta".
+
 ### Mudanças de comportamento a conhecer
 
 - Depois de um timeout de QR, a instância fica parada até um novo `/instance/connect`. Antes gerava QR de novo para sempre.
@@ -158,6 +172,7 @@ Os testes falham ao desfazer cada correção (conferido à mão: a opção do cl
 - (Fase 9) O webhook de `Message` ganha `data.messageAction` em edições e exclusões, e `IsEdit` passa a `true` nas edições decifradas. Quem lia `IsEdit` ou o envelope cifrado continua vendo os mesmos campos.
 - (Fase 9) Imagens enviadas por `/send/media`, status e carrossel levam largura e altura.
 - (Fase 9) `GET /polls/{id}/results` responde 501 num servidor sem `POSTGRES_AUTH_DB`. O servidor nesse modo deixa de cair na inicialização.
+- (Fase 13) `/send/contact` não imprime mais o vCard na saída padrão.
 - (Fase 12) `/chat/pin`, `unpin`, `archive`, `unarchive`, `mute` e `unmute` com número solto passam a gravar o JID sem o `+`.
 - (Fase 11) Quem assina `CONNECTION`, `MESSAGE`, `CALL` ou `CONTACT` passa a receber os eventos novos dessas categorias e precisa ignorar o que não conhece. O Whatsflow já ignora.
 - (Fase 11) Uma mensagem que não decifra gera um pedido ao celular da própria conta.

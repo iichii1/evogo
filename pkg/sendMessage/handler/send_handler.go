@@ -37,6 +37,9 @@ type SendHandler interface {
 	SendButton(ctx *gin.Context)
 	SendList(ctx *gin.Context)
 	SendCarousel(ctx *gin.Context)
+	SendContacts(ctx *gin.Context)
+	SendGroupInvite(ctx *gin.Context)
+	SendRequestPhone(ctx *gin.Context)
 	SendStatusText(ctx *gin.Context)
 	SendStatusMedia(ctx *gin.Context)
 }
@@ -732,7 +735,7 @@ func (s *sendHandler) SendCarousel(ctx *gin.Context) {
 
 // Send a text status message
 // @Summary Send a WhatsApp text status
-// @Description Send a WhatsApp text status to status@broadcast
+// @Description Send a WhatsApp text status to status@broadcast. `backgroundColor` and `textColor` are #RRGGBB or #AARRGGBB; `font` is the WhatsApp font number.
 // @Tags Send Message
 // @Accept json
 // @Produce json

@@ -443,6 +443,21 @@ definitions:
       token:
         type: string
     type: object
+  github_com_evolution-foundation_evolution-go_pkg_message_service.PinStruct:
+    properties:
+      duration:
+        description: 'segundos: 86400, 604800 (padrão) ou 2592000'
+        type: integer
+      fromMe:
+        type: boolean
+      id:
+        type: string
+      number:
+        type: string
+      participant:
+        description: autor da mensagem, em grupos
+        type: string
+    type: object
   github_com_evolution-foundation_evolution-go_pkg_message_service.ReactStruct:
     properties:
       fromMe:
@@ -810,6 +825,53 @@ definitions:
       vcard:
         $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_utils.VCardStruct'
     type: object
+  github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.ContactsStruct:
+    properties:
+      contacts:
+        items:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_utils.VCardStruct'
+        type: array
+      delay:
+        type: integer
+      displayName:
+        description: 'padrão: "<n> contatos"'
+        type: string
+      expiration:
+        type: integer
+      formatJid:
+        type: boolean
+      id:
+        type: string
+      number:
+        type: string
+      quoted:
+        $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct'
+    type: object
+  github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.GroupInviteCardStruct:
+    properties:
+      caption:
+        type: string
+      code:
+        type: string
+      delay:
+        type: integer
+      expiration:
+        type: integer
+      formatJid:
+        type: boolean
+      groupJid:
+        type: string
+      groupName:
+        type: string
+      id:
+        type: string
+      inviteExpiration:
+        type: integer
+      number:
+        type: string
+      quoted:
+        $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct'
+    type: object
   github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.LinkStruct:
     properties:
       delay:
@@ -1026,6 +1088,21 @@ definitions:
           API não guarda o corpo das mensagens para buscá-lo pelo messageId (#189).
         type: string
     type: object
+  github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.RequestPhoneStruct:
+    properties:
+      delay:
+        type: integer
+      expiration:
+        type: integer
+      formatJid:
+        type: boolean
+      id:
+        type: string
+      number:
+        type: string
+      quoted:
+        $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.QuotedStruct'
+    type: object
   github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.Row:
     properties:
       description:
@@ -1056,9 +1133,18 @@ definitions:
     type: object
   github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.StatusTextStruct:
     properties:
+      backgroundColor:
+        description: 'BackgroundColor e TextColor são #RRGGBB ou #AARRGGBB.'
+        type: string
+      font:
+        description: 'Font: 0 SYSTEM, 1 SYSTEM_TEXT, 2 FB_SCRIPT, 6 SYSTEM_BOLD, 7
+          MORNINGBREEZE, 8 CALISTOGA, 9 EXO2, 10 COURIERPRIME.'
+        type: integer
       id:
         type: string
       text:
+        type: string
+      textColor:
         type: string
     type: object
   github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.StickerStruct:
@@ -9750,6 +9836,38 @@ paths:
       summary: Get the items of a received order
       tags:
       - Message
+  /message/pin:
+    post:
+      consumes:
+      - application/json
+      description: Pins a message for everyone in the chat. `duration` is 86400, 604800
+        (default) or 2592000 seconds. In groups, `participant` is the author of the
+        message.
+      parameters:
+      - description: Message
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.PinStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Pin a message in a chat
+      tags:
+      - Message
   /message/presence:
     post:
       consumes:
@@ -9875,6 +9993,36 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get message status
+      tags:
+      - Message
+  /message/unpin:
+    post:
+      consumes:
+      - application/json
+      description: Unpins a message for everyone in the chat.
+      parameters:
+      - description: Message
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.PinStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Unpin a message in a chat
       tags:
       - Message
   /metrics:
@@ -10353,6 +10501,77 @@ paths:
       summary: Send a contact message
       tags:
       - Send Message
+  /send/contacts:
+    post:
+      consumes:
+      - application/json
+      description: Sends up to 50 contacts in a single card. `displayName` defaults
+        to "<n> contatos".
+      parameters:
+      - description: Contacts
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.ContactsStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "429":
+          description: Send queue full or wait too long (see the Retry-After header)
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Send several contacts in one card
+      tags:
+      - Send Message
+  /send/groupInvite:
+    post:
+      consumes:
+      - application/json
+      description: Sends the invite card of a group. `code` and `inviteExpiration`
+        come from the AddRequest field of the /group/participant response, when the
+        privacy of the person prevents adding them directly.
+      parameters:
+      - description: Group invite
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.GroupInviteCardStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "429":
+          description: Send queue full or wait too long (see the Retry-After header)
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Send a group invite card
+      tags:
+      - Send Message
   /send/link:
     post:
       consumes:
@@ -10565,6 +10784,41 @@ paths:
       summary: Vote on a poll
       tags:
       - Send Message
+  /send/requestPhone:
+    post:
+      consumes:
+      - application/json
+      description: Shows the contact a request to share their phone number. Useful
+        for contacts known only by LID.
+      parameters:
+      - description: Contact
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.RequestPhoneStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "429":
+          description: Send queue full or wait too long (see the Retry-After header)
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Ask a contact to share their phone number
+      tags:
+      - Send Message
   /send/status/media:
     post:
       consumes:
@@ -10620,7 +10874,8 @@ paths:
     post:
       consumes:
       - application/json
-      description: Send a WhatsApp text status to status@broadcast
+      description: 'Send a WhatsApp text status to status@broadcast. `backgroundColor`
+        and `textColor` are #RRGGBB or #AARRGGBB; `font` is the WhatsApp font number.'
       parameters:
       - description: Status text data
         in: body

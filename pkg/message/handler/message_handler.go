@@ -20,6 +20,8 @@ type MessageHandler interface {
 	DeleteMessageEveryone(ctx *gin.Context)
 	EditMessage(ctx *gin.Context)
 	GetOrder(ctx *gin.Context)
+	PinMessage(ctx *gin.Context)
+	UnpinMessage(ctx *gin.Context)
 }
 
 type messageHandler struct {
@@ -348,6 +350,61 @@ func (m *messageHandler) GetOrder(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": order})
+}
+
+func (m *messageHandler) runPin(ctx *gin.Context, action func(*message_service.PinStruct, *instance_model.Instance) error) {
+	instance, ok := ctx.MustGet("instance").(*instance_model.Instance)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "instance not found"})
+		return
+	}
+
+	var data message_service.PinStruct
+	if err := ctx.ShouldBindBodyWithJSON(&data); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := action(&data, instance); err != nil {
+		if errors.Is(err, message_service.ErrInvalidPin) {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "success"})
+}
+
+// PinMessage pin a message in a chat
+// @Summary Pin a message in a chat
+// @Description Pins a message for everyone in the chat. `duration` is 86400, 604800 (default) or 2592000 seconds. In groups, `participant` is the author of the message.
+// @Tags Message
+// @Accept json
+// @Produce json
+// @Param message body message_service.PinStruct true "Message"
+// @Success 200 {object} gin.H "success"
+// @Failure 400 {object} gin.H "Error on validation"
+// @Failure 500 {object} gin.H "Internal server error"
+// @Router /message/pin [post]
+func (m *messageHandler) PinMessage(ctx *gin.Context) {
+	m.runPin(ctx, m.messageService.PinMessage)
+}
+
+// UnpinMessage unpin a message in a chat
+// @Summary Unpin a message in a chat
+// @Description Unpins a message for everyone in the chat.
+// @Tags Message
+// @Accept json
+// @Produce json
+// @Param message body message_service.PinStruct true "Message"
+// @Success 200 {object} gin.H "success"
+// @Failure 400 {object} gin.H "Error on validation"
+// @Failure 500 {object} gin.H "Internal server error"
+// @Router /message/unpin [post]
+func (m *messageHandler) UnpinMessage(ctx *gin.Context) {
+	m.runPin(ctx, m.messageService.UnpinMessage)
 }
 
 // GetMessageStatus get message status

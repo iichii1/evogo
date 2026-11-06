@@ -50,6 +50,9 @@ type SendService interface {
 	SendButton(data *ButtonStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
 	SendList(data *ListStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
 	SendCarousel(data *CarouselStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
+	SendContacts(data *ContactsStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
+	SendGroupInvite(data *GroupInviteCardStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
+	SendRequestPhone(data *RequestPhoneStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
 	SendStatusText(data *StatusTextStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
 	SendStatusMediaUrl(data *StatusMediaStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
 	SendStatusMediaFile(data *StatusMediaStruct, fileData []byte, instance *instance_model.Instance) (*MessageSendStruct, error)
@@ -462,6 +465,11 @@ type CarouselStruct struct {
 type StatusTextStruct struct {
 	Text string `json:"text"`
 	Id   string `json:"id"`
+	// BackgroundColor e TextColor são #RRGGBB ou #AARRGGBB.
+	BackgroundColor string `json:"backgroundColor,omitempty"`
+	TextColor       string `json:"textColor,omitempty"`
+	// Font: 0 SYSTEM, 1 SYSTEM_TEXT, 2 FB_SCRIPT, 6 SYSTEM_BOLD, 7 MORNINGBREEZE, 8 CALISTOGA, 9 EXO2, 10 COURIERPRIME.
+	Font *int32 `json:"font,omitempty"`
 }
 
 type StatusMediaStruct struct {
@@ -1780,8 +1788,6 @@ func (s *sendService) SendContact(data *ContactStruct, instance *instance_model.
 		Organization: data.Vcard.Organization,
 	})
 
-	fmt.Println(VCstring)
-
 	msg := &waE2E.Message{ContactMessage: &waE2E.ContactMessage{
 		DisplayName: &data.Vcard.FullName,
 		Vcard:       &VCstring,
@@ -2517,6 +2523,12 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 			msg.LocationMessage.ContextInfo = quotedContextInfo(data.Quoted)
 		case "ContactMessage":
 			msg.ContactMessage.ContextInfo = quotedContextInfo(data.Quoted)
+		case "ContactsArrayMessage":
+			msg.ContactsArrayMessage.ContextInfo = quotedContextInfo(data.Quoted)
+		case "GroupInviteMessage":
+			msg.GroupInviteMessage.ContextInfo = quotedContextInfo(data.Quoted)
+		case "RequestPhoneNumberMessage":
+			msg.RequestPhoneNumberMessage.ContextInfo = quotedContextInfo(data.Quoted)
 		case "InteractiveMessage":
 			if msg.InteractiveMessage != nil {
 				msg.InteractiveMessage.ContextInfo = quotedContextInfo(data.Quoted)
@@ -2575,6 +2587,12 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 			msg.LocationMessage.ContextInfo = &waE2E.ContextInfo{}
 		case "ContactMessage":
 			msg.ContactMessage.ContextInfo = &waE2E.ContextInfo{}
+		case "ContactsArrayMessage":
+			msg.ContactsArrayMessage.ContextInfo = &waE2E.ContextInfo{}
+		case "GroupInviteMessage":
+			msg.GroupInviteMessage.ContextInfo = &waE2E.ContextInfo{}
+		case "RequestPhoneNumberMessage":
+			msg.RequestPhoneNumberMessage.ContextInfo = &waE2E.ContextInfo{}
 		case "InteractiveMessage":
 			// ContextInfo already set in SendCarousel/SendButton/SendList
 		case "ListMessage":
@@ -3042,10 +3060,9 @@ func (s *sendService) SendStatusText(data *StatusTextStruct, instance *instance_
 		return nil, errors.New("text is required")
 	}
 
-	msg := &waE2E.Message{
-		ExtendedTextMessage: &waE2E.ExtendedTextMessage{
-			Text: &data.Text,
-		},
+	msg, err := buildStatusTextMessage(data)
+	if err != nil {
+		return nil, err
 	}
 
 	messageID := data.Id

@@ -135,10 +135,13 @@ func (r *Routes) AssignRoutes(eng *gin.Engine) {
 			routes.POST("/pollVote", r.jidValidationMiddleware.ValidateNumberField(), r.sendHandler.SendPollVote)
 			routes.POST("/sticker", r.jidValidationMiddleware.ValidateNumberFieldWithFormatJid(), r.sendHandler.SendSticker)
 			routes.POST("/location", r.jidValidationMiddleware.ValidateNumberFieldWithFormatJid(), r.sendHandler.SendLocation)
-			routes.POST("/contact", r.jidValidationMiddleware.ValidateContactFields(), r.sendHandler.SendContact) // TODO: send multiple contacts
+			routes.POST("/contact", r.jidValidationMiddleware.ValidateContactFields(), r.sendHandler.SendContact)
 			routes.POST("/button", r.jidValidationMiddleware.ValidateNumberFieldWithFormatJid(), r.sendHandler.SendButton)
 			routes.POST("/list", r.jidValidationMiddleware.ValidateNumberFieldWithFormatJid(), r.sendHandler.SendList)
 			routes.POST("/carousel", r.jidValidationMiddleware.ValidateNumberFieldWithFormatJid(), r.sendHandler.SendCarousel)
+			routes.POST("/contacts", r.jidValidationMiddleware.ValidateNumberFieldWithFormatJid(), r.sendHandler.SendContacts)
+			routes.POST("/groupInvite", r.jidValidationMiddleware.ValidateNumberFieldWithFormatJid(), r.sendHandler.SendGroupInvite)
+			routes.POST("/requestPhone", r.jidValidationMiddleware.ValidateNumberFieldWithFormatJid(), r.sendHandler.SendRequestPhone)
 			routes.POST("/status/text", r.sendHandler.SendStatusText)
 			routes.POST("/status/media", r.sendHandler.SendStatusMedia)
 		}
@@ -177,6 +180,8 @@ func (r *Routes) AssignRoutes(eng *gin.Engine) {
 			routes.POST("/delete", r.jidValidationMiddleware.ValidateNumberField(), r.messageHandler.DeleteMessageEveryone)
 			routes.POST("/edit", r.jidValidationMiddleware.ValidateNumberField(), r.messageHandler.EditMessage) // TODO: edit MediaMessage too
 			routes.POST("/order", r.messageHandler.GetOrder)
+			routes.POST("/pin", r.jidValidationMiddleware.ValidateNumberField(), r.messageHandler.PinMessage)
+			routes.POST("/unpin", r.jidValidationMiddleware.ValidateNumberField(), r.messageHandler.UnpinMessage)
 		}
 	}
 	routes = eng.Group("/chat")

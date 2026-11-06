@@ -43,6 +43,10 @@ func messageContextInfo(msg *waE2E.Message) *waE2E.ContextInfo {
 		return msg.ContactMessage.ContextInfo
 	case msg.ContactsArrayMessage != nil:
 		return msg.ContactsArrayMessage.ContextInfo
+	case msg.GroupInviteMessage != nil:
+		return msg.GroupInviteMessage.ContextInfo
+	case msg.RequestPhoneNumberMessage != nil:
+		return msg.RequestPhoneNumberMessage.ContextInfo
 	}
 	return nil
 }
