@@ -154,6 +154,8 @@ Os testes falham ao desfazer cada correção (conferido à mão: a opção do cl
 
 **App state fora de sincronia:** depois de alguns patches, a coleção `regular_high` passou a falhar em todo patch com `failed to verify patch v28: mismatching LTHash`, e o que o celular fazia (favoritar numa conversa) nunca chegava. O whatsmeow só avisa. Agora o `AppStateSyncError` de hash diferente numa sincronização incremental baixa a coleção inteira de novo, no máximo uma vez a cada 10 minutos por coleção (`app_state_resync.go`). **Só o aparelho prova:** o teste cobre a decisão e o intervalo, não o efeito.
 
+**Instâncias paradas depois de reiniciar:** não é versão nem sessão perdida. A sessão fica no banco, e um `/instance/connect` depois do reinício conectou em 1 segundo, sem QR e sem 405. Com `CONNECT_ON_STARTUP=false`, ninguém inicia os clientes ao subir. Com `true`, voltam as instâncias com `connected = true` e o `CLIENT_NAME` do processo; o desligamento (SIGTERM) não muda esse valor. `TestConnectOnStartupBringsBackWhatWasConnected` (tag `integration`) cobre esse caminho. **Limite:** se `client.Connect()` falhar ao subir (rede fora), nada tenta de novo até alguém conectar.
+
 ### Fase 13: tipos de mensagem novos (2026-11-05)
 
 | Rota | O que faz |
