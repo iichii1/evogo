@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	instance_model "github.com/evolution-foundation/evolution-go/pkg/instance/model"
 	"github.com/evolution-foundation/evolution-go/pkg/utils"
@@ -42,7 +43,18 @@ func (u *userService) GetBusinessProfile(data *BusinessProfileStruct, instance *
 	if err != nil {
 		return nil, err
 	}
-	return client.GetBusinessProfile(context.Background(), jid)
+	profile, err := client.GetBusinessProfile(context.Background(), jid)
+	if isNoBusinessProfile(err) {
+		return nil, nil
+	}
+	return profile, err
+}
+
+// isNoBusinessProfile reconhece a resposta a um contato sem conta comercial. A whatsmeow
+// devolve erro nesse caso, sem tipo próprio, e isso não é uma falha da consulta.
+func isNoBusinessProfile(err error) bool {
+	var missing *whatsmeow.ElementMissingError
+	return err != nil && (errors.As(err, &missing) || strings.Contains(err.Error(), "missing jid in business profile"))
 }
 
 // SetDefaultDisappearing define o tempo das mensagens temporárias das conversas novas.

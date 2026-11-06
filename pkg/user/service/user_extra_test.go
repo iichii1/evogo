@@ -41,3 +41,13 @@ func TestBusinessJIDHasNoPlusSign(t *testing.T) {
 		t.Fatalf("jid %q", jid.String())
 	}
 }
+
+// Num contato comum, a whatsmeow responde com erro (ensaio de 2026-11-06).
+func TestAContactWithoutBusinessProfileIsNotAFailure(t *testing.T) {
+	if !isNoBusinessProfile(errors.New("missing jid in business profile")) {
+		t.Error("contato sem conta comercial deveria ser reconhecido")
+	}
+	if isNoBusinessProfile(nil) || isNoBusinessProfile(errors.New("info query timed out")) {
+		t.Error("outras falhas continuam sendo falhas")
+	}
+}
