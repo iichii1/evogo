@@ -146,6 +146,10 @@ Os testes falham ao desfazer cada correção (conferido à mão: a opção do cl
 
 **Conserto durante a fase:** o `expiration` chegou primeiro a 3 dos 8 envios, porque os outros passam por funções `...WithRetry`, e nenhum teste acusou. `TestEverySendPassesExpirationAlong` confere a ligação no código e falhou antes do conserto.
 
+### Correção do ensaio de 2026-11-06
+
+`/group/create` e `/group/participant` expiravam com `info query timed out`: o "+" de `utils.ParseJID` chegava ao servidor em nó bruto. As duas passam a ler as pessoas com `parseRequestParticipants`. Teste de ligação em `group_participants_wiring_test.go`; o comportamento real ainda não foi conferido com conta.
+
 ### Fase 13: tipos de mensagem novos (2026-11-05)
 
 | Rota | O que faz |
