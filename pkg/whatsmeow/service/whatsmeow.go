@@ -152,6 +152,7 @@ type MyClient struct {
 	// e todas as goroutines ligadas a este cliente.
 	session           *runtimestate.Session
 	presenceOnce      sync.Once
+	appStateResync    appStateResync
 	reconnectBackoff  *runtimestate.Map[string, *reconnectState]
 	userInfoCache     *cache.Cache
 	config            *config.Config
@@ -2327,6 +2328,9 @@ func (mycli *MyClient) myEventHandler(rawEvt interface{}) {
 		mycli.service.DeliverMediaRetry(mycli.userID, evt)
 		return
 	default:
+		if syncErr, ok := rawEvt.(*events.AppStateSyncError); ok {
+			mycli.resyncAppState(syncErr)
+		}
 		name, data := forwardedEvent(rawEvt)
 		if name == "" {
 			mycli.loggerWrapper.GetLogger(mycli.userID).LogWarn("[%s] Unhandled event %s: %+v", mycli.userID, fmt.Sprintf("%T", evt), evt)
