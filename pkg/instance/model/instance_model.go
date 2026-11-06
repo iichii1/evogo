@@ -1,6 +1,7 @@
 package instance_model
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -33,6 +34,12 @@ type Instance struct {
 	ReadMessages  bool   `json:"readMessages" gorm:"default:false"`
 	IgnoreGroups  bool   `json:"ignoreGroups" gorm:"default:false"`
 	IgnoreStatus  bool   `json:"ignoreStatus" gorm:"default:false"`
+}
+
+// String identifica a instância em logs sem os segredos: token, QR, webhook, proxy e número
+// ficam de fora, inclusive em quem imprimir a estrutura inteira com %v ou %+v.
+func (i Instance) String() string {
+	return fmt.Sprintf("Instance{Id:%s Name:%s Connected:%t}", i.Id, i.Name, i.Connected)
 }
 
 // AdvancedSettings representa as configurações avançadas de uma instância

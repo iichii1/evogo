@@ -150,6 +150,8 @@ Os testes falham ao desfazer cada correção (conferido à mão: a opção do cl
 
 `/group/create` e `/group/participant` expiravam com `info query timed out`: o "+" de `utils.ParseJID` chegava ao servidor em nó bruto. As duas passam a ler as pessoas com `parseRequestParticipants`. Teste de ligação em `group_participants_wiring_test.go`; o comportamento real ainda não foi conferido com conta.
 
+**Token no log:** a conexão da instância registrava a estrutura inteira (`%+v`), com token, QR, webhook e proxy. `Instance` ganhou `String()` que só mostra id, nome e conexão, e `TestPrintingAnInstanceHidesItsSecrets` falhou antes do conserto. Logs já gravados continuam com o token; só recriar a instância o troca.
+
 ### Fase 13: tipos de mensagem novos (2026-11-05)
 
 | Rota | O que faz |
