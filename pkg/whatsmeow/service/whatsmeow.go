@@ -103,6 +103,7 @@ type whatsmeowService struct {
 	config             *config.Config
 	sessions           *runtimestate.Map[string, *runtimestate.Session]
 	reconnectBackoff   *runtimestate.Map[string, *reconnectState]
+	connectRetrying    *runtimestate.Map[string, bool]
 	proxyStatus        *runtimestate.Map[string, *ProxyRuntimeStatus]
 	userInfoCache      *cache.Cache
 	clientPointer      *runtimestate.Map[string, *whatsmeow.Client]
@@ -448,6 +449,13 @@ func (w whatsmeowService) StartClient(cd *ClientData) {
 	instanceID := cd.Instance.Id
 	w.loggerWrapper.GetLogger(instanceID).LogInfo("Starting websocket connection to Whatsapp for user '%s'", instanceID)
 
+	// A instância já está na fila de tentativas de conexão (connect_retry.go): outro pedido para iniciá-la
+	// não espera a trava nem abre uma segunda fila.
+	if w.connectingWithRetry(instanceID) {
+		w.loggerWrapper.GetLogger(instanceID).LogInfo("[%s] Already retrying the connection, nothing to start", instanceID)
+		return
+	}
+
 	// Uma inicialização por vez para a mesma instância. Duas chamadas
 	// simultâneas (dois workflows chamando /instance/connect, por exemplo)
 	// criavam dois clientes e um deles ficava órfão (#75).
@@ -665,7 +673,7 @@ func (w whatsmeowService) StartClient(cd *ClientData) {
 
 	if client.Store.ID != nil {
 		w.loggerWrapper.GetLogger(cd.Instance.Id).LogInfo("[%s] Already logged in with JID: %s", cd.Instance.Id, client.Store.ID.String())
-		err = client.Connect()
+		err = w.connectPaired(cd.Instance.Id, session, client)
 		if err != nil {
 			if strings.Contains(err.Error(), "EOF") {
 				w.loggerWrapper.GetLogger(cd.Instance.Id).LogError("[%s] Erro de conexão WebSocket (EOF). Tentando reconectar em 5 segundos...", cd.Instance.Id)
@@ -3093,6 +3101,7 @@ func NewWhatsmeowService(
 		myClientPointer:    runtimestate.New[string, *MyClient](),
 		sessions:           runtimestate.New[string, *runtimestate.Session](),
 		reconnectBackoff:   runtimestate.New[string, *reconnectState](),
+		connectRetrying:    runtimestate.New[string, bool](),
 		proxyStatus:        runtimestate.New[string, *ProxyRuntimeStatus](),
 		rabbitmqProducer:   rabbitmqProducer,
 		webhookProducer:    webhookProducer,
