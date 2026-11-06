@@ -11,11 +11,14 @@ import (
 // toda chamada de um envio que aceita `expiration` precisa repassar o campo. Uma
 // chamada esquecida faria a mensagem sair sem prazo, sem erro nenhum.
 func TestEverySendPassesExpirationAlong(t *testing.T) {
-	src, err := os.ReadFile("send_service.go")
-	if err != nil {
-		t.Fatal(err)
+	var text string
+	for _, file := range []string{"send_service.go", "send_new_types.go"} {
+		src, err := os.ReadFile(file)
+		if err != nil {
+			t.Fatal(err)
+		}
+		text += strings.ReplaceAll(string(src), "\r\n", "\n") + "\n"
 	}
-	text := strings.ReplaceAll(string(src), "\r\n", "\n")
 
 	expected := map[string]bool{
 		"sendTextWithRetry": true, "sendLinkWithRetry": true, "sendMediaFileWithRetry": true,
