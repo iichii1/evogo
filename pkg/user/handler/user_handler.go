@@ -21,6 +21,8 @@ type UserHandler interface {
 	SetProfilePicture(ctx *gin.Context)
 	SetProfileName(ctx *gin.Context)
 	SetProfileStatus(ctx *gin.Context)
+	GetBusinessProfile(ctx *gin.Context)
+	SetDefaultDisappearing(ctx *gin.Context)
 }
 
 type userHandler struct {

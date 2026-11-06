@@ -25,8 +25,8 @@ import (
 	config "github.com/evolution-foundation/evolution-go/pkg/config"
 	instance_model "github.com/evolution-foundation/evolution-go/pkg/instance/model"
 	logger_wrapper "github.com/evolution-foundation/evolution-go/pkg/logger"
-	"github.com/evolution-foundation/evolution-go/pkg/utils"
 	"github.com/evolution-foundation/evolution-go/pkg/sendqueue"
+	"github.com/evolution-foundation/evolution-go/pkg/utils"
 	whatsmeow_service "github.com/evolution-foundation/evolution-go/pkg/whatsmeow/service"
 	"github.com/gabriel-vasile/mimetype"
 	"go.mau.fi/whatsmeow"
@@ -76,6 +76,8 @@ type SendDataStruct struct {
 	MediaHandle     string
 	AdditionalNodes *[]waBinary.Node
 	ForwardingScore *uint32
+	// Expiration é o tempo, em segundos, das mensagens temporárias da conversa.
+	Expiration *uint32
 }
 
 type QuotedStruct struct {
@@ -105,6 +107,7 @@ type TextStruct struct {
 	MentionAll      bool         `json:"mentionAll"`
 	FormatJid       *bool        `json:"formatJid,omitempty"`
 	Quoted          QuotedStruct `json:"quoted"`
+	Expiration      *uint32      `json:"expiration,omitempty"`
 	ForwardingScore *uint32      `json:"forwardingScore,omitempty"`
 }
 
@@ -121,6 +124,7 @@ type LinkStruct struct {
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
+	Expiration   *uint32      `json:"expiration,omitempty"`
 }
 
 type MediaStruct struct {
@@ -135,6 +139,7 @@ type MediaStruct struct {
 	MentionAll      bool         `json:"mentionAll"`
 	FormatJid       *bool        `json:"formatJid,omitempty"`
 	Quoted          QuotedStruct `json:"quoted"`
+	Expiration      *uint32      `json:"expiration,omitempty"`
 	ForwardingScore *uint32      `json:"forwardingScore,omitempty"`
 	// Only for type=audio. true (default) sends a voice note; false sends a regular audio file with a player.
 	Ptt *bool `json:"ptt,omitempty"`
@@ -157,6 +162,7 @@ type PollStruct struct {
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
+	Expiration   *uint32      `json:"expiration,omitempty"`
 }
 
 type StickerStruct struct {
@@ -168,6 +174,7 @@ type StickerStruct struct {
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
+	Expiration   *uint32      `json:"expiration,omitempty"`
 }
 
 type LocationStruct struct {
@@ -182,6 +189,7 @@ type LocationStruct struct {
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
+	Expiration   *uint32      `json:"expiration,omitempty"`
 }
 
 type ContactStruct struct {
@@ -193,6 +201,7 @@ type ContactStruct struct {
 	MentionAll   bool              `json:"mentionAll"`
 	FormatJid    *bool             `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct      `json:"quoted"`
+	Expiration   *uint32           `json:"expiration,omitempty"`
 }
 
 // Button represents a single interactive button for /send/button.
@@ -737,6 +746,7 @@ func (s *sendService) sendTextWithRetry(data *TextStruct, instance *instance_mod
 			Id:              data.Id,
 			Number:          data.Number,
 			Quoted:          data.Quoted,
+			Expiration:      data.Expiration,
 			Delay:           data.Delay,
 			MentionAll:      data.MentionAll,
 			MentionedJID:    data.MentionedJID,
@@ -877,6 +887,7 @@ func (s *sendService) sendLinkWithRetry(data *LinkStruct, instance *instance_mod
 			Id:           data.Id,
 			Number:       data.Number,
 			Quoted:       data.Quoted,
+			Expiration:   data.Expiration,
 			Delay:        data.Delay,
 			MentionAll:   data.MentionAll,
 			MentionedJID: data.MentionedJID,
@@ -1286,6 +1297,7 @@ func (s *sendService) sendMediaFileWithRetry(data *MediaStruct, fileData []byte,
 			Id:              data.Id,
 			Number:          data.Number,
 			Quoted:          data.Quoted,
+			Expiration:      data.Expiration,
 			Delay:           data.Delay,
 			MentionAll:      data.MentionAll,
 			MentionedJID:    data.MentionedJID,
@@ -1566,6 +1578,7 @@ func (s *sendService) sendMediaUrlWithRetry(data *MediaStruct, instance *instanc
 			Id:              data.Id,
 			Number:          data.Number,
 			Quoted:          data.Quoted,
+			Expiration:      data.Expiration,
 			Delay:           data.Delay,
 			MentionAll:      data.MentionAll,
 			MentionedJID:    data.MentionedJID,
@@ -1621,6 +1634,7 @@ func (s *sendService) sendPollWithRetry(data *PollStruct, instance *instance_mod
 			Id:           data.Id,
 			Number:       data.Number,
 			Quoted:       data.Quoted,
+			Expiration:   data.Expiration,
 			Delay:        data.Delay,
 			MentionAll:   data.MentionAll,
 			MentionedJID: data.MentionedJID,
@@ -1711,6 +1725,7 @@ func (s *sendService) SendSticker(data *StickerStruct, instance *instance_model.
 		Id:           data.Id,
 		Number:       data.Number,
 		Quoted:       data.Quoted,
+		Expiration:   data.Expiration,
 		Delay:        data.Delay,
 		MentionAll:   data.MentionAll,
 		MentionedJID: data.MentionedJID,
@@ -1740,6 +1755,7 @@ func (s *sendService) SendLocation(data *LocationStruct, instance *instance_mode
 		Id:           data.Id,
 		Number:       data.Number,
 		Quoted:       data.Quoted,
+		Expiration:   data.Expiration,
 		Delay:        data.Delay,
 		MentionAll:   data.MentionAll,
 		MentionedJID: data.MentionedJID,
@@ -1775,6 +1791,7 @@ func (s *sendService) SendContact(data *ContactStruct, instance *instance_model.
 		Id:           data.Id,
 		Number:       data.Number,
 		Quoted:       data.Quoted,
+		Expiration:   data.Expiration,
 		Delay:        data.Delay,
 		MentionAll:   data.MentionAll,
 		MentionedJID: data.MentionedJID,
@@ -2568,6 +2585,8 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 			return nil, fmt.Errorf("invalid messageType: %s", messageType)
 		}
 	}
+
+	applyExpiration(msg, data.Expiration)
 
 	// Apply ForwardingScore to whichever ContextInfo was set above.
 	// WhatsApp renders "Encaminhada" when ContextInfo.ForwardingScore > 0.

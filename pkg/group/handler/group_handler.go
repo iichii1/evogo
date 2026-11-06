@@ -21,6 +21,11 @@ type GroupHandler interface {
 	JoinGroupLink(ctx *gin.Context)
 	LeaveGroup(ctx *gin.Context)
 	UpdateGroupSettings(ctx *gin.Context)
+	GetGroupRequests(ctx *gin.Context)
+	UpdateGroupRequests(ctx *gin.Context)
+	GetGroupInfoFromLink(ctx *gin.Context)
+	GetGroupInfoFromInvite(ctx *gin.Context)
+	JoinGroupWithInvite(ctx *gin.Context)
 }
 
 type groupHandler struct {

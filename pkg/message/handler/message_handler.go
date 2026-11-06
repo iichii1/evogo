@@ -19,6 +19,7 @@ type MessageHandler interface {
 	GetMessageStatus(ctx *gin.Context)
 	DeleteMessageEveryone(ctx *gin.Context)
 	EditMessage(ctx *gin.Context)
+	GetOrder(ctx *gin.Context)
 }
 
 type messageHandler struct {
@@ -310,6 +311,43 @@ func (m *messageHandler) DownloadMedia(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": responseData})
+}
+
+// GetOrder get the items of a received order
+// @Summary Get the items of a received order
+// @Description Returns the items of an order received in a chat. `orderId` and `token` come from the orderMessage.
+// @Tags Message
+// @Accept json
+// @Produce json
+// @Param message body message_service.OrderStruct true "Order"
+// @Success 200 {object} gin.H "success"
+// @Failure 400 {object} gin.H "Error on validation"
+// @Failure 500 {object} gin.H "Internal server error"
+// @Router /message/order [post]
+func (m *messageHandler) GetOrder(ctx *gin.Context) {
+	instance, ok := ctx.MustGet("instance").(*instance_model.Instance)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "instance not found"})
+		return
+	}
+
+	var data message_service.OrderStruct
+	if err := ctx.ShouldBindBodyWithJSON(&data); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if data.OrderId == "" || data.Token == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "orderId and token are required"})
+		return
+	}
+
+	order, err := m.messageService.GetOrder(&data, instance)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": order})
 }
 
 // GetMessageStatus get message status

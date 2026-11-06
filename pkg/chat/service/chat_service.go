@@ -8,7 +8,6 @@ import (
 
 	instance_model "github.com/evolution-foundation/evolution-go/pkg/instance/model"
 	logger_wrapper "github.com/evolution-foundation/evolution-go/pkg/logger"
-	"github.com/evolution-foundation/evolution-go/pkg/utils"
 	whatsmeow_service "github.com/evolution-foundation/evolution-go/pkg/whatsmeow/service"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/appstate"
@@ -23,6 +22,12 @@ type ChatService interface {
 	ChatMute(data *BodyStruct, instance *instance_model.Instance) (string, error)
 	ChatUnmute(data *BodyStruct, instance *instance_model.Instance) (string, error)
 	HistorySyncRequest(data *HistorySyncRequestStruct, instance *instance_model.Instance) (*whatsmeow.SendResponse, error)
+	ChatMarkRead(data *ChatRangeStruct, instance *instance_model.Instance) error
+	ChatMarkUnread(data *ChatRangeStruct, instance *instance_model.Instance) error
+	ChatDelete(data *ChatRangeStruct, instance *instance_model.Instance) error
+	MessageStar(data *StarStruct, instance *instance_model.Instance) error
+	MessageUnstar(data *StarStruct, instance *instance_model.Instance) error
+	SetDisappearing(data *DisappearingStruct, instance *instance_model.Instance) error
 }
 
 type chatService struct {
@@ -87,7 +92,7 @@ func (c *chatService) ChatPin(data *BodyStruct, instance *instance_model.Instanc
 
 	var ts time.Time
 
-	recipient, ok := utils.ParseJID(data.Chat)
+	recipient, ok := canonicalJID(data.Chat)
 	if !ok {
 		c.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields", instance.Id)
 		return "", errors.New("invalid phone number")
@@ -110,7 +115,7 @@ func (c *chatService) ChatUnpin(data *BodyStruct, instance *instance_model.Insta
 
 	var ts time.Time
 
-	recipient, ok := utils.ParseJID(data.Chat)
+	recipient, ok := canonicalJID(data.Chat)
 	if !ok {
 		c.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields", instance.Id)
 		return "", errors.New("invalid phone number")
@@ -133,7 +138,7 @@ func (c *chatService) ChatArchive(data *BodyStruct, instance *instance_model.Ins
 
 	var ts time.Time
 
-	recipient, ok := utils.ParseJID(data.Chat)
+	recipient, ok := canonicalJID(data.Chat)
 	if !ok {
 		c.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields", instance.Id)
 		return "", errors.New("invalid phone number")
@@ -156,7 +161,7 @@ func (c *chatService) ChatUnarchive(data *BodyStruct, instance *instance_model.I
 
 	var ts time.Time
 
-	recipient, ok := utils.ParseJID(data.Chat)
+	recipient, ok := canonicalJID(data.Chat)
 	if !ok {
 		c.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields", instance.Id)
 		return "", errors.New("invalid phone number")
@@ -179,7 +184,7 @@ func (c *chatService) ChatMute(data *BodyStruct, instance *instance_model.Instan
 
 	var ts time.Time
 
-	recipient, ok := utils.ParseJID(data.Chat)
+	recipient, ok := canonicalJID(data.Chat)
 	if !ok {
 		c.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields", instance.Id)
 		return "", errors.New("invalid phone number")
@@ -202,7 +207,7 @@ func (c *chatService) ChatUnmute(data *BodyStruct, instance *instance_model.Inst
 
 	var ts time.Time
 
-	recipient, ok := utils.ParseJID(data.Chat)
+	recipient, ok := canonicalJID(data.Chat)
 	if !ok {
 		c.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields", instance.Id)
 		return "", errors.New("invalid phone number")

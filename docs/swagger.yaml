@@ -14,12 +14,50 @@ definitions:
       chat:
         type: string
     type: object
+  github_com_evolution-foundation_evolution-go_pkg_chat_service.ChatRangeStruct:
+    properties:
+      chat:
+        type: string
+      deleteMedia:
+        description: só em /chat/delete
+        type: boolean
+      lastMessageFromMe:
+        type: boolean
+      lastMessageId:
+        type: string
+      lastMessageSender:
+        description: obrigatório em grupos, se a mensagem não for sua
+        type: string
+      lastMessageTimestamp:
+        description: segundos desde 1970
+        type: integer
+    type: object
+  github_com_evolution-foundation_evolution-go_pkg_chat_service.DisappearingStruct:
+    properties:
+      chat:
+        type: string
+      timer:
+        description: off, 24h, 7d ou 90d
+        type: string
+    type: object
   github_com_evolution-foundation_evolution-go_pkg_chat_service.HistorySyncRequestStruct:
     properties:
       count:
         type: integer
       messageInfo:
         $ref: '#/definitions/types.MessageInfo'
+    type: object
+  github_com_evolution-foundation_evolution-go_pkg_chat_service.StarStruct:
+    properties:
+      chat:
+        type: string
+      fromMe:
+        type: boolean
+      id:
+        type: string
+      sender:
+        description: autor da mensagem, em grupos
+        type: string
     type: object
   github_com_evolution-foundation_evolution-go_pkg_community_service.AddParticipantStruct:
     properties:
@@ -67,6 +105,28 @@ definitions:
       reset:
         type: boolean
     type: object
+  github_com_evolution-foundation_evolution-go_pkg_group_service.GetGroupRequestParticipantsStruct:
+    properties:
+      groupJid:
+        type: string
+    type: object
+  github_com_evolution-foundation_evolution-go_pkg_group_service.GroupInviteStruct:
+    properties:
+      code:
+        type: string
+      expiration:
+        type: integer
+      groupJid:
+        type: string
+      inviter:
+        type: string
+    type: object
+  github_com_evolution-foundation_evolution-go_pkg_group_service.GroupLinkInfoStruct:
+    properties:
+      code:
+        description: o link inteiro ou só o código
+        type: string
+    type: object
   github_com_evolution-foundation_evolution-go_pkg_group_service.JoinGroupStruct:
     properties:
       code:
@@ -97,6 +157,18 @@ definitions:
         type: string
       image:
         type: string
+    type: object
+  github_com_evolution-foundation_evolution-go_pkg_group_service.UpdateGroupRequestParticipantsStruct:
+    properties:
+      action:
+        description: approve, reject
+        type: string
+      groupJid:
+        type: string
+      participants:
+        items:
+          type: string
+        type: array
     type: object
   github_com_evolution-foundation_evolution-go_pkg_group_service.UpdateGroupSettingsStruct:
     properties:
@@ -362,6 +434,13 @@ definitions:
       chat:
         type: string
       messageId:
+        type: string
+    type: object
+  github_com_evolution-foundation_evolution-go_pkg_message_service.OrderStruct:
+    properties:
+      orderId:
+        type: string
+      token:
         type: string
     type: object
   github_com_evolution-foundation_evolution-go_pkg_message_service.ReactStruct:
@@ -712,6 +791,8 @@ definitions:
     properties:
       delay:
         type: integer
+      expiration:
+        type: integer
       formatJid:
         type: boolean
       id:
@@ -735,6 +816,8 @@ definitions:
         type: integer
       description:
         type: string
+      expiration:
+        type: integer
       formatJid:
         type: boolean
       id:
@@ -813,6 +896,8 @@ definitions:
         type: string
       delay:
         type: integer
+      expiration:
+        type: integer
       formatJid:
         type: boolean
       id:
@@ -839,6 +924,8 @@ definitions:
       caption:
         type: string
       delay:
+        type: integer
+      expiration:
         type: integer
       filename:
         type: string
@@ -870,6 +957,8 @@ definitions:
   github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.PollStruct:
     properties:
       delay:
+        type: integer
+      expiration:
         type: integer
       formatJid:
         type: boolean
@@ -976,6 +1065,8 @@ definitions:
     properties:
       delay:
         type: integer
+      expiration:
+        type: integer
       formatJid:
         type: boolean
       id:
@@ -996,6 +1087,8 @@ definitions:
   github_com_evolution-foundation_evolution-go_pkg_sendMessage_service.TextStruct:
     properties:
       delay:
+        type: integer
+      expiration:
         type: integer
       formatJid:
         type: boolean
@@ -1021,6 +1114,11 @@ definitions:
       number:
         type: string
     type: object
+  github_com_evolution-foundation_evolution-go_pkg_user_service.BusinessProfileStruct:
+    properties:
+      number:
+        type: string
+    type: object
   github_com_evolution-foundation_evolution-go_pkg_user_service.CheckUserStruct:
     properties:
       formatJid:
@@ -1029,6 +1127,12 @@ definitions:
         items:
           type: string
         type: array
+    type: object
+  github_com_evolution-foundation_evolution-go_pkg_user_service.DefaultDisappearingStruct:
+    properties:
+      timer:
+        description: off, 24h, 7d ou 90d
+        type: string
     type: object
   github_com_evolution-foundation_evolution-go_pkg_user_service.GetAvatarStruct:
     properties:
@@ -7800,6 +7904,68 @@ paths:
       summary: Archive a chat
       tags:
       - Chat
+  /chat/delete:
+    post:
+      consumes:
+      - application/json
+      description: Deletes the chat from every device of the account. `deleteMedia`
+        also removes its media from the phone.
+      parameters:
+      - description: Chat
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.ChatRangeStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a chat
+      tags:
+      - Chat
+  /chat/disappearing:
+    post:
+      consumes:
+      - application/json
+      description: Sets the disappearing messages timer of a direct chat or group.
+        `timer` is off, 24h, 7d or 90d.
+      parameters:
+      - description: Chat and timer
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.DisappearingStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Set disappearing messages of a chat
+      tags:
+      - Chat
   /chat/history-sync:
     post:
       consumes:
@@ -7828,6 +7994,67 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: HistorySyncRequest a chat
+      tags:
+      - Chat
+  /chat/markread:
+    post:
+      consumes:
+      - application/json
+      description: Marks the whole chat as read on every device of the account. To
+        mark specific messages, use /message/markread.
+      parameters:
+      - description: Chat
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.ChatRangeStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Mark a chat as read
+      tags:
+      - Chat
+  /chat/markunread:
+    post:
+      consumes:
+      - application/json
+      description: Marks the whole chat as unread on every device of the account.
+      parameters:
+      - description: Chat
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.ChatRangeStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Mark a chat as unread
       tags:
       - Chat
   /chat/mute:
@@ -7888,6 +8115,36 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Pin a chat
+      tags:
+      - Chat
+  /chat/star:
+    post:
+      consumes:
+      - application/json
+      description: Stars a message on every device of the account.
+      parameters:
+      - description: Message
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.StarStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Star a message
       tags:
       - Chat
   /chat/unarchive:
@@ -7978,6 +8235,36 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Unpin a chat
+      tags:
+      - Chat
+  /chat/unstar:
+    post:
+      consumes:
+      - application/json
+      description: Removes the star of a message on every device of the account.
+      parameters:
+      - description: Message
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.StarStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Unstar a message
       tags:
       - Chat
   /community/add:
@@ -8158,6 +8445,98 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get group info
+      tags:
+      - Group
+  /group/invite/info:
+    post:
+      consumes:
+      - application/json
+      description: Returns the group of an invite card received in a chat (groupInviteMessage)
+        without joining it.
+      parameters:
+      - description: Invite card
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.GroupInviteStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Preview a group from an invite card
+      tags:
+      - Group
+  /group/invite/join:
+    post:
+      consumes:
+      - application/json
+      description: Joins the group of an invite card received in a chat (groupInviteMessage).
+      parameters:
+      - description: Invite card
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.GroupInviteStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Accept an invite card
+      tags:
+      - Group
+  /group/invite/link:
+    post:
+      consumes:
+      - application/json
+      description: Returns the group of an invite link without joining it. `code`
+        is the whole link or only its code.
+      parameters:
+      - description: Invite link
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.GroupLinkInfoStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Preview a group from its invite link
       tags:
       - Group
   /group/invitelink:
@@ -8376,6 +8755,68 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Set group photo
+      tags:
+      - Group
+  /group/requests:
+    post:
+      consumes:
+      - application/json
+      description: Lists who asked to join a group that requires admin approval. The
+        account must be an admin of the group.
+      parameters:
+      - description: Group
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.GetGroupRequestParticipantsStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List requests to join a group
+      tags:
+      - Group
+  /group/requests/update:
+    post:
+      consumes:
+      - application/json
+      description: Approves or rejects requests to join a group. `action` is approve
+        or reject.
+      parameters:
+      - description: Group, action and participants
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.UpdateGroupRequestParticipantsStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Approve or reject requests to join a group
       tags:
       - Group
   /group/settings:
@@ -9276,6 +9717,37 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Mark a message as read
+      tags:
+      - Message
+  /message/order:
+    post:
+      consumes:
+      - application/json
+      description: Returns the items of an order received in a chat. `orderId` and
+        `token` come from the orderMessage.
+      parameters:
+      - description: Order
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.OrderStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get the items of a received order
       tags:
       - Message
   /message/presence:
@@ -10399,6 +10871,37 @@ paths:
       summary: Get a user's block list
       tags:
       - User
+  /user/business:
+    post:
+      consumes:
+      - application/json
+      description: Returns the address, e-mail, categories and business hours of a
+        WhatsApp Business contact.
+      parameters:
+      - description: Contact
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.BusinessProfileStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a business profile
+      tags:
+      - User
   /user/check:
     post:
       consumes:
@@ -10446,6 +10949,37 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a user's contacts
+      tags:
+      - User
+  /user/disappearing:
+    post:
+      consumes:
+      - application/json
+      description: Sets the timer applied to new chats of the account. `timer` is
+        off, 24h, 7d or 90d.
+      parameters:
+      - description: Timer
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.DefaultDisappearingStruct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Error on validation
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Set the default disappearing messages timer
       tags:
       - User
   /user/info:

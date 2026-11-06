@@ -101,6 +101,98 @@ const docTemplate = `{
                 }
             }
         },
+        "/chat/delete": {
+            "post": {
+                "description": "Deletes the chat from every device of the account. ` + "`" + `deleteMedia` + "`" + ` also removes its media from the phone.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Delete a chat",
+                "parameters": [
+                    {
+                        "description": "Chat",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.ChatRangeStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/chat/disappearing": {
+            "post": {
+                "description": "Sets the disappearing messages timer of a direct chat or group. ` + "`" + `timer` + "`" + ` is off, 24h, 7d or 90d.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Set disappearing messages of a chat",
+                "parameters": [
+                    {
+                        "description": "Chat and timer",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.DisappearingStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/chat/history-sync": {
             "post": {
                 "description": "HistorySyncRequest a chat",
@@ -122,6 +214,98 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.HistorySyncRequestStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/chat/markread": {
+            "post": {
+                "description": "Marks the whole chat as read on every device of the account. To mark specific messages, use /message/markread.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Mark a chat as read",
+                "parameters": [
+                    {
+                        "description": "Chat",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.ChatRangeStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/chat/markunread": {
+            "post": {
+                "description": "Marks the whole chat as unread on every device of the account.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Mark a chat as unread",
+                "parameters": [
+                    {
+                        "description": "Chat",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.ChatRangeStruct"
                         }
                     }
                 ],
@@ -214,6 +398,52 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.BodyStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/chat/star": {
+            "post": {
+                "description": "Stars a message on every device of the account.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Star a message",
+                "parameters": [
+                    {
+                        "description": "Message",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.StarStruct"
                         }
                     }
                 ],
@@ -352,6 +582,52 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.BodyStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/chat/unstar": {
+            "post": {
+                "description": "Removes the star of a message on every device of the account.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Unstar a message",
+                "parameters": [
+                    {
+                        "description": "Message",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_chat_service.StarStruct"
                         }
                     }
                 ],
@@ -628,6 +904,144 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.GetGroupInfoStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/invite/info": {
+            "post": {
+                "description": "Returns the group of an invite card received in a chat (groupInviteMessage) without joining it.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Group"
+                ],
+                "summary": "Preview a group from an invite card",
+                "parameters": [
+                    {
+                        "description": "Invite card",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.GroupInviteStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/invite/join": {
+            "post": {
+                "description": "Joins the group of an invite card received in a chat (groupInviteMessage).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Group"
+                ],
+                "summary": "Accept an invite card",
+                "parameters": [
+                    {
+                        "description": "Invite card",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.GroupInviteStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/invite/link": {
+            "post": {
+                "description": "Returns the group of an invite link without joining it. ` + "`" + `code` + "`" + ` is the whole link or only its code.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Group"
+                ],
+                "summary": "Preview a group from its invite link",
+                "parameters": [
+                    {
+                        "description": "Invite link",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.GroupLinkInfoStruct"
                         }
                     }
                 ],
@@ -962,6 +1376,98 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.SetGroupPhotoStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/requests": {
+            "post": {
+                "description": "Lists who asked to join a group that requires admin approval. The account must be an admin of the group.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Group"
+                ],
+                "summary": "List requests to join a group",
+                "parameters": [
+                    {
+                        "description": "Group",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.GetGroupRequestParticipantsStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/requests/update": {
+            "post": {
+                "description": "Approves or rejects requests to join a group. ` + "`" + `action` + "`" + ` is approve or reject.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Group"
+                ],
+                "summary": "Approve or reject requests to join a group",
+                "parameters": [
+                    {
+                        "description": "Group, action and participants",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_group_service.UpdateGroupRequestParticipantsStruct"
                         }
                     }
                 ],
@@ -2305,6 +2811,52 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.MarkReadStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/message/order": {
+            "post": {
+                "description": "Returns the items of an order received in a chat. ` + "`" + `orderId` + "`" + ` and ` + "`" + `token` + "`" + ` come from the orderMessage.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Message"
+                ],
+                "summary": "Get the items of a received order",
+                "parameters": [
+                    {
+                        "description": "Order",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.OrderStruct"
                         }
                     }
                 ],
@@ -3961,6 +4513,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/business": {
+            "post": {
+                "description": "Returns the address, e-mail, categories and business hours of a WhatsApp Business contact.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get a business profile",
+                "parameters": [
+                    {
+                        "description": "Contact",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.BusinessProfileStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/user/check": {
             "post": {
                 "description": "Check a user",
@@ -4023,6 +4621,52 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/disappearing": {
+            "post": {
+                "description": "Sets the timer applied to new chats of the account. ` + "`" + `timer` + "`" + ` is off, 24h, 7d or 90d.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Set the default disappearing messages timer",
+                "parameters": [
+                    {
+                        "description": "Timer",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_user_service.DefaultDisappearingStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Error on validation",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -4358,6 +5002,44 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_evolution-foundation_evolution-go_pkg_chat_service.ChatRangeStruct": {
+            "type": "object",
+            "properties": {
+                "chat": {
+                    "type": "string"
+                },
+                "deleteMedia": {
+                    "description": "só em /chat/delete",
+                    "type": "boolean"
+                },
+                "lastMessageFromMe": {
+                    "type": "boolean"
+                },
+                "lastMessageId": {
+                    "type": "string"
+                },
+                "lastMessageSender": {
+                    "description": "obrigatório em grupos, se a mensagem não for sua",
+                    "type": "string"
+                },
+                "lastMessageTimestamp": {
+                    "description": "segundos desde 1970",
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_chat_service.DisappearingStruct": {
+            "type": "object",
+            "properties": {
+                "chat": {
+                    "type": "string"
+                },
+                "timer": {
+                    "description": "off, 24h, 7d ou 90d",
+                    "type": "string"
+                }
+            }
+        },
         "github_com_evolution-foundation_evolution-go_pkg_chat_service.HistorySyncRequestStruct": {
             "type": "object",
             "properties": {
@@ -4366,6 +5048,24 @@ const docTemplate = `{
                 },
                 "messageInfo": {
                     "$ref": "#/definitions/types.MessageInfo"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_chat_service.StarStruct": {
+            "type": "object",
+            "properties": {
+                "chat": {
+                    "type": "string"
+                },
+                "fromMe": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "sender": {
+                    "description": "autor da mensagem, em grupos",
+                    "type": "string"
                 }
             }
         },
@@ -4441,6 +5141,40 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.GetGroupRequestParticipantsStruct": {
+            "type": "object",
+            "properties": {
+                "groupJid": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.GroupInviteStruct": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "expiration": {
+                    "type": "integer"
+                },
+                "groupJid": {
+                    "type": "string"
+                },
+                "inviter": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.GroupLinkInfoStruct": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "o link inteiro ou só o código",
+                    "type": "string"
+                }
+            }
+        },
         "github_com_evolution-foundation_evolution-go_pkg_group_service.JoinGroupStruct": {
             "type": "object",
             "properties": {
@@ -4487,6 +5221,24 @@ const docTemplate = `{
                 },
                 "image": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_group_service.UpdateGroupRequestParticipantsStruct": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "description": "approve, reject",
+                    "type": "string"
+                },
+                "groupJid": {
+                    "type": "string"
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -4865,6 +5617,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "messageId": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.OrderStruct": {
+            "type": "object",
+            "properties": {
+                "orderId": {
+                    "type": "string"
+                },
+                "token": {
                     "type": "string"
                 }
             }
@@ -5349,6 +6112,9 @@ const docTemplate = `{
                 "delay": {
                     "type": "integer"
                 },
+                "expiration": {
+                    "type": "integer"
+                },
                 "formatJid": {
                     "type": "boolean"
                 },
@@ -5383,6 +6149,9 @@ const docTemplate = `{
                 },
                 "description": {
                     "type": "string"
+                },
+                "expiration": {
+                    "type": "integer"
                 },
                 "formatJid": {
                     "type": "boolean"
@@ -5493,6 +6262,9 @@ const docTemplate = `{
                 "delay": {
                     "type": "integer"
                 },
+                "expiration": {
+                    "type": "integer"
+                },
                 "formatJid": {
                     "type": "boolean"
                 },
@@ -5532,6 +6304,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "delay": {
+                    "type": "integer"
+                },
+                "expiration": {
                     "type": "integer"
                 },
                 "filename": {
@@ -5577,6 +6352,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "delay": {
+                    "type": "integer"
+                },
+                "expiration": {
                     "type": "integer"
                 },
                 "formatJid": {
@@ -5718,6 +6496,9 @@ const docTemplate = `{
                 "delay": {
                     "type": "integer"
                 },
+                "expiration": {
+                    "type": "integer"
+                },
                 "formatJid": {
                     "type": "boolean"
                 },
@@ -5748,6 +6529,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "delay": {
+                    "type": "integer"
+                },
+                "expiration": {
                     "type": "integer"
                 },
                 "formatJid": {
@@ -5787,6 +6571,14 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_evolution-foundation_evolution-go_pkg_user_service.BusinessProfileStruct": {
+            "type": "object",
+            "properties": {
+                "number": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_evolution-foundation_evolution-go_pkg_user_service.CheckUserStruct": {
             "type": "object",
             "properties": {
@@ -5798,6 +6590,15 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_user_service.DefaultDisappearingStruct": {
+            "type": "object",
+            "properties": {
+                "timer": {
+                    "description": "off, 24h, 7d ou 90d",
+                    "type": "string"
                 }
             }
         },

@@ -35,6 +35,7 @@ type MessageService interface {
 	GetMessageStatus(data *MessageStatusStruct, instance *instance_model.Instance) (*message_model.Message, string, error)
 	DeleteMessageEveryone(data *MessageStruct, instance *instance_model.Instance) (string, string, error)
 	EditMessage(data *EditMessageStruct, instance *instance_model.Instance) (string, string, error)
+	GetOrder(data *OrderStruct, instance *instance_model.Instance) (*types.OrderDetails, error)
 }
 
 type messageService struct {
@@ -457,6 +458,22 @@ func (m *messageService) DownloadMedia(data *DownloadMediaStruct, instance *inst
 	dataURL := dataurl.New(mediaData, mimetype)
 
 	return dataURL, ts.String(), nil
+}
+
+// OrderStruct identifica um pedido recebido: os campos orderId e token da
+// orderMessage que chegou na conversa.
+type OrderStruct struct {
+	OrderId string `json:"orderId"`
+	Token   string `json:"token"`
+}
+
+// GetOrder consulta os itens de um pedido recebido.
+func (m *messageService) GetOrder(data *OrderStruct, instance *instance_model.Instance) (*types.OrderDetails, error) {
+	client, err := m.ensureClientConnected(instance.Id)
+	if err != nil {
+		return nil, err
+	}
+	return client.GetOrderDetails(context.Background(), data.OrderId, data.Token)
 }
 
 func (m *messageService) GetMessageStatus(data *MessageStatusStruct, instance *instance_model.Instance) (*message_model.Message, string, error) {

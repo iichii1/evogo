@@ -60,3 +60,18 @@ func TestRespondSendErrorKeepsTheOtherErrorsAs500(t *testing.T) {
 		t.Errorf("corpo = %s", w.Body)
 	}
 }
+
+func TestParseExpirationForm(t *testing.T) {
+	if got, err := parseExpirationForm(""); got != nil || err != nil {
+		t.Fatalf("vazio: %v, %v", got, err)
+	}
+	got, err := parseExpirationForm("604800")
+	if err != nil || got == nil || *got != 604800 {
+		t.Fatalf("número: %v, %v", got, err)
+	}
+	for _, bad := range []string{"-1", "abc", "99999999999"} {
+		if _, err := parseExpirationForm(bad); err == nil {
+			t.Errorf("%q deveria dar erro", bad)
+		}
+	}
+}

@@ -128,6 +128,24 @@ Pedido do proprietário: implementar os recursos do WhatsApp que a análise cont
 
 Os testes falham ao desfazer cada correção (conferido à mão: a opção do cliente, o filtro do webhook e a condição do reenvio). A resposta do celular é testada com a cifra real da whatsmeow, mas o pedido em si só um aparelho prova: seção 7 do roteiro.
 
+### Fase 12: consultas e ações prontas na whatsmeow (2026-11-05)
+
+| Rota | O que faz |
+|---|---|
+| `POST /group/requests`, `/group/requests/update` | Lista, aprova e recusa pedidos de entrada. O serviço existia sem rota. |
+| `POST /group/invite/link`, `/group/invite/info`, `/group/invite/join` | Prévia pelo link, prévia e aceite do cartão de convite recebido. |
+| `POST /user/business` | Perfil comercial do contato. |
+| `POST /chat/markread`, `/chat/markunread`, `/chat/delete` | Marca a conversa inteira e apaga, em todos os aparelhos. A última mensagem é opcional. |
+| `POST /chat/star`, `/chat/unstar` | Favorita e desfavorita uma mensagem. |
+| `POST /chat/disappearing`, `/user/disappearing` | Mensagens temporárias da conversa e padrão da conta: `off`, `24h`, `7d` ou `90d`. |
+| `POST /message/order` | Itens de um pedido recebido. |
+
+**#79:** `/send/text`, `link`, `media` (JSON e multipart), `poll`, `sticker`, `location` e `contact` aceitam `expiration`, em segundos. A whatsmeow não guarda o tempo de cada conversa, então a escolha de desenho foi o chamador informar: ele já recebe esse valor em `contextInfo.expiration` e em `/group/info`. Botão, lista e carrossel continuam sem o campo.
+
+**`/chat/pin`, `archive`, `mute` com número solto:** `utils.ParseJID` acrescenta um `+` ao número, e esse JID ia direto para o índice do app state. Pode ser a causa do "TODO: not working" em `routes.go`, mas só o ensaio confirma; com JID completo o problema não existia. Agora as rotas de `/chat` usam `canonicalJID`, e um teste impede a volta de `utils.ParseJID` nesse arquivo.
+
+**Conserto durante a fase:** o `expiration` chegou primeiro a 3 dos 8 envios, porque os outros passam por funções `...WithRetry`, e nenhum teste acusou. `TestEverySendPassesExpirationAlong` confere a ligação no código e falhou antes do conserto.
+
 ### Mudanças de comportamento a conhecer
 
 - Depois de um timeout de QR, a instância fica parada até um novo `/instance/connect`. Antes gerava QR de novo para sempre.
@@ -140,6 +158,7 @@ Os testes falham ao desfazer cada correção (conferido à mão: a opção do cl
 - (Fase 9) O webhook de `Message` ganha `data.messageAction` em edições e exclusões, e `IsEdit` passa a `true` nas edições decifradas. Quem lia `IsEdit` ou o envelope cifrado continua vendo os mesmos campos.
 - (Fase 9) Imagens enviadas por `/send/media`, status e carrossel levam largura e altura.
 - (Fase 9) `GET /polls/{id}/results` responde 501 num servidor sem `POSTGRES_AUTH_DB`. O servidor nesse modo deixa de cair na inicialização.
+- (Fase 12) `/chat/pin`, `unpin`, `archive`, `unarchive`, `mute` e `unmute` com número solto passam a gravar o JID sem o `+`.
 - (Fase 11) Quem assina `CONNECTION`, `MESSAGE`, `CALL` ou `CONTACT` passa a receber os eventos novos dessas categorias e precisa ignorar o que não conhece. O Whatsflow já ignora.
 - (Fase 11) Uma mensagem que não decifra gera um pedido ao celular da própria conta.
 - (Fase 10) Com `SEND_QUEUE_MIN_INTERVAL_MS` maior que zero, as rotas `/send/*` podem demorar até `SEND_QUEUE_MAX_WAIT_SECONDS` e passam a responder 429 quando a fila enche.
@@ -167,7 +186,6 @@ Feito na fase 8. Resta, se quiser: alertas e painel em cima das métricas (nada 
 - **#60** (`/polls/{id}/results` vazio): não achei a causa no código. Para investigar: enviar uma enquete, votar do celular e olhar o log da instância (`GET /instance/logs/:id?level=ERROR`) atrás de `Failed to decrypt vote` e `Failed to save poll vote`. O voto só é guardado se `DecryptPollVote` conseguir o segredo da enquete, e as opções saem como hash SHA-256 (não como texto): `optionCounts` e `selectedOptions` são hashes, o que também é um problema de usabilidade da rota. Precisa de conta pareada.
 - **#69** (carrossel em dois balões): o servidor **não** divide a mensagem. `body` e `footer` vão no mesmo `InteractiveMessage`, desde a 0.6.1. Se o celular desenha duas partes, é o cliente do WhatsApp; só se vê no aparelho, e não há o que corrigir no código sem saber qual formato o WhatsApp espera.
 - **#103** (miniatura grande no link): `sendLinkWithRetry` coloca a imagem inteira no campo `JPEGThumbnail`, que deveria ter só uma miniatura, e não envia a imagem em alta qualidade (`MediaLinkThumbnail`, `ThumbnailDirectPath` etc.). O caminho certo é subir a imagem com `whatsmeow.MediaLinkThumbnail` e preencher esses campos, como o Baileys faz. **Não mexi:** é uma mudança no formato da mensagem e só um aparelho mostra se o cartão grande aparece. Também notei que `fetchLinkMetadata` sobrescreve `title`, `description` e `imgUrl` informados pelo chamador sempre que o texto tem uma URL.
-- **#79** (timer de mensagens temporárias): o `ContextInfo.Expiration` nunca é preenchido. O whatsmeow não guarda o timer de cada conversa; ele só aparece nas mensagens recebidas e nas mudanças de configuração. Uma solução precisa guardar o último timer visto por conversa (e sobreviver a reinício) ou receber o valor na requisição. Decisão de desenho pendente.
 - **Estado da edição de evento e de enquete:** `messageAction` já identifica `eventEdit`, `pollEdit` e `pollAddOption`, mas só a edição de mensagem foi pensada ponta a ponta.
 
 ### D. Ponto 4: fila de envio

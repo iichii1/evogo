@@ -33,6 +33,8 @@ type UserService interface {
 	SetProfilePicture(data *SetProfilePictureStruct, instance *instance_model.Instance) (bool, error)
 	SetProfileName(data *SetProfileNameStruct, instance *instance_model.Instance) (bool, error)
 	SetProfileStatus(data *SetProfileStatusStruct, instance *instance_model.Instance) (bool, error)
+	GetBusinessProfile(data *BusinessProfileStruct, instance *instance_model.Instance) (*types.BusinessProfile, error)
+	SetDefaultDisappearing(data *DefaultDisappearingStruct, instance *instance_model.Instance) error
 }
 
 type userService struct {

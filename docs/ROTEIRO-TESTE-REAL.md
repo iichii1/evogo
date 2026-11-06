@@ -88,6 +88,21 @@ Só com as instâncias de teste, poucas mensagens.
 - [ ] Reenvio (conta): difícil de provocar de propósito. Com `UndecryptableMessage` no log do webhook, conferir se o `Message` com o mesmo ID chega depois e se a instância segue estável.
 - [ ] `CONNECTION`: derrubar a rede por alguns minutos e conferir `KeepAliveTimeout` e `KeepAliveRestored`.
 
+## 8. Fase 12: consultas e ações (2026-11-05)
+
+Só com as instâncias de teste e num grupo de teste.
+
+- [ ] `/group/requests`: num grupo com aprovação de entrada em que a conta é admin, pedir para entrar com o segundo número. O pedido aparece; `/group/requests/update` com `approve` coloca a pessoa no grupo.
+- [ ] `/group/invite/link` com um link válido devolve o grupo sem entrar nele. Com um link revogado, responde erro.
+- [ ] `/group/invite/info` e `/group/invite/join` com os campos de um `groupInviteMessage` recebido.
+- [ ] `/user/business` num contato comercial devolve os dados; num contato comum, conferir o que volta.
+- [ ] `/chat/markunread` e `/chat/markread`: a conversa muda no celular e o evento `MarkChatAsRead` chega.
+- [ ] `/chat/star` e `/chat/unstar`: a estrela aparece e some no celular.
+- [ ] `/chat/delete` numa conversa de teste some do celular.
+- [ ] `/chat/pin`, `archive` e `mute` com número solto e com JID completo, para decidir se o "TODO: not working" de `routes.go` pode sair.
+- [ ] `/chat/disappearing` com `7d` numa conversa de teste. Depois `/send/text` com `expiration: 604800`: a mensagem mostra o relógio e não vira aviso de "desatualizada" (#79). Sem o campo, conferir como aparece.
+- [ ] `/message/order` com um pedido recebido, se houver um contato de teste com catálogo.
+
 ## Fora do roteiro
 
 O passkey (#172), o nono dígito (#214), os botões e listas antigos (#170, #59, #71, #110) e o QR que não gera (#85, #148, #186) não foram corrigidos. Também ficaram de fora o resultado vazio de enquete (#60), a miniatura grande de link (#103), o carrossel em dois balões (#69) e o timer de mensagens temporárias (#79): o motivo de cada um está em [PROGRESSO.md](PROGRESSO.md), seção "O que falta".

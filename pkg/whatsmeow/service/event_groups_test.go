@@ -36,9 +36,7 @@ func TestGlobalEventGroup(t *testing.T) {
 }
 
 // Eventos que o handler emite de propósito sem pertencer a nenhum grupo.
-var ungroupedEvents = map[string]bool{
-
-}
+var ungroupedEvents = map[string]bool{}
 
 // Trava o problema de fundo de #105 e #193: um evento novo emitido em
 // whatsmeow.go sem grupo, ou um grupo sem nenhum evento, era descartado em

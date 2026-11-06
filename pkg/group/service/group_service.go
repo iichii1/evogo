@@ -32,6 +32,9 @@ type GroupService interface {
 	UpdateGroupSettings(data *UpdateGroupSettingsStruct, instance *instance_model.Instance) error
 	GetGroupRequestParticipants(data *GetGroupRequestParticipantsStruct, instance *instance_model.Instance) ([]EnrichedGroupParticipantRequest, error)
 	UpdateGroupRequestParticipants(data *UpdateGroupRequestParticipantsStruct, instance *instance_model.Instance) ([]types.GroupParticipant, error)
+	GetGroupInfoFromLink(data *GroupLinkInfoStruct, instance *instance_model.Instance) (*types.GroupInfo, error)
+	GetGroupInfoFromInvite(data *GroupInviteStruct, instance *instance_model.Instance) (*types.GroupInfo, error)
+	JoinGroupWithInvite(data *GroupInviteStruct, instance *instance_model.Instance) error
 	GetMyGroups(instance *instance_model.Instance) ([]types.GroupInfo, error)
 	JoinGroupLink(data *JoinGroupStruct, instance *instance_model.Instance) error
 	LeaveGroup(data *LeaveGroupStruct, instance *instance_model.Instance) error
@@ -620,15 +623,10 @@ func (g *groupService) UpdateGroupRequestParticipants(data *UpdateGroupRequestPa
 		return nil, errors.New("invalid action. Valid actions: approve, reject")
 	}
 
-	// Parse participants JIDs
-	var participants []types.JID
-	for _, participant := range data.Participants {
-		participantJID, ok := utils.ParseJID(participant)
-		if !ok {
-			g.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating participant jid: %s", instance.Id, participant)
-			return nil, errors.New("invalid participant jid: " + participant)
-		}
-		participants = append(participants, participantJID)
+	participants, err := parseRequestParticipants(data.Participants)
+	if err != nil {
+		g.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating participant jid", instance.Id)
+		return nil, err
 	}
 
 	results, err := client.UpdateGroupRequestParticipants(context.Background(), recipient, participants, action)

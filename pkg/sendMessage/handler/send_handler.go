@@ -12,6 +12,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// parseExpirationForm lê o campo expiration do envio multipart; vazio é sem prazo.
+func parseExpirationForm(raw string) (*uint32, error) {
+	if raw == "" {
+		return nil, nil
+	}
+	value, err := strconv.ParseUint(raw, 10, 32)
+	if err != nil {
+		return nil, err
+	}
+	expiration := uint32(value)
+	return &expiration, nil
+}
+
 type SendHandler interface {
 	SendText(ctx *gin.Context)
 	SendLink(ctx *gin.Context)
@@ -227,6 +240,12 @@ func (s *sendHandler) SendMedia(ctx *gin.Context) {
 			ptt = &value
 		}
 
+		expiration, err := parseExpirationForm(ctx.PostForm("expiration"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "expiration must be a number of seconds"})
+			return
+		}
+
 		// Create MediaStruct
 		data = &send_service.MediaStruct{
 			Number:       number,
@@ -239,6 +258,7 @@ func (s *sendHandler) SendMedia(ctx *gin.Context) {
 			MentionedJID: mentionedJID,
 			Quoted:       quoted,
 			Ptt:          ptt,
+			Expiration:   expiration,
 		}
 
 		// Pass fileBytes to the send service

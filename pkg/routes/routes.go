@@ -159,6 +159,8 @@ func (r *Routes) AssignRoutes(eng *gin.Engine) {
 			routes.POST("/profilePicture", r.userHandler.SetProfilePicture)
 			routes.POST("/profileName", r.userHandler.SetProfileName)
 			routes.POST("/profileStatus", r.userHandler.SetProfileStatus)
+			routes.POST("/business", r.jidValidationMiddleware.ValidateNumberField(), r.userHandler.GetBusinessProfile)
+			routes.POST("/disappearing", r.userHandler.SetDefaultDisappearing)
 		}
 	}
 	routes = eng.Group("/message")
@@ -174,6 +176,7 @@ func (r *Routes) AssignRoutes(eng *gin.Engine) {
 			routes.POST("/status", r.messageHandler.GetMessageStatus)
 			routes.POST("/delete", r.jidValidationMiddleware.ValidateNumberField(), r.messageHandler.DeleteMessageEveryone)
 			routes.POST("/edit", r.jidValidationMiddleware.ValidateNumberField(), r.messageHandler.EditMessage) // TODO: edit MediaMessage too
+			routes.POST("/order", r.messageHandler.GetOrder)
 		}
 	}
 	routes = eng.Group("/chat")
@@ -187,6 +190,12 @@ func (r *Routes) AssignRoutes(eng *gin.Engine) {
 			routes.POST("/mute", r.jidValidationMiddleware.ValidateNumberField(), r.chatHandler.ChatMute)           // TODO: not working
 			routes.POST("/unmute", r.jidValidationMiddleware.ValidateNumberField(), r.chatHandler.ChatUnmute)       // TODO: not working
 			routes.POST("/history-sync", r.chatHandler.HistorySyncRequest)
+			routes.POST("/markread", r.chatHandler.ChatMarkRead)
+			routes.POST("/markunread", r.chatHandler.ChatMarkUnread)
+			routes.POST("/delete", r.chatHandler.ChatDelete)
+			routes.POST("/star", r.chatHandler.MessageStar)
+			routes.POST("/unstar", r.chatHandler.MessageUnstar)
+			routes.POST("/disappearing", r.chatHandler.SetDisappearing)
 		}
 	}
 	routes = eng.Group("/group")
@@ -205,6 +214,11 @@ func (r *Routes) AssignRoutes(eng *gin.Engine) {
 			routes.POST("/join", r.groupHandler.JoinGroupLink)
 			routes.POST("/leave", r.jidValidationMiddleware.ValidateNumberField(), r.groupHandler.LeaveGroup)
 			routes.POST("/settings", r.jidValidationMiddleware.ValidateNumberField(), r.groupHandler.UpdateGroupSettings)
+			routes.POST("/requests", r.groupHandler.GetGroupRequests)
+			routes.POST("/requests/update", r.groupHandler.UpdateGroupRequests)
+			routes.POST("/invite/link", r.groupHandler.GetGroupInfoFromLink)
+			routes.POST("/invite/info", r.groupHandler.GetGroupInfoFromInvite)
+			routes.POST("/invite/join", r.groupHandler.JoinGroupWithInvite)
 		}
 	}
 	routes = eng.Group("/call")

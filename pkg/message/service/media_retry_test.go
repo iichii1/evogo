@@ -174,11 +174,11 @@ func TestSendFailureIsReported(t *testing.T) {
 
 func TestMediaMessageInfoValidation(t *testing.T) {
 	bad := map[string]MediaMessageInfo{
-		"sem id":            {Chat: "5511999999999@s.whatsapp.net"},
-		"chat inválido":     {Id: "A", Chat: "@@"},
-		"grupo sem autor":   {Id: "A", Chat: "123@g.us"},
-		"grupo autor ruim":  {Id: "A", Chat: "123@g.us", Sender: "@@"},
-		"sem chat nenhum":   {Id: "A"},
+		"sem id":           {Chat: "5511999999999@s.whatsapp.net"},
+		"chat inválido":    {Id: "A", Chat: "@@"},
+		"grupo sem autor":  {Id: "A", Chat: "123@g.us"},
+		"grupo autor ruim": {Id: "A", Chat: "123@g.us", Sender: "@@"},
+		"sem chat nenhum":  {Id: "A"},
 	}
 	for name, info := range bad {
 		if _, err := info.toMessageInfo(); !errors.Is(err, ErrInvalidMediaInfo) {
