@@ -21,6 +21,7 @@ import (
 	"go.mau.fi/whatsmeow/proto/waCommon"
 	"go.mau.fi/whatsmeow/proto/waE2E"
 	"go.mau.fi/whatsmeow/types"
+	"go.mau.fi/whatsmeow/types/events"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -74,6 +75,9 @@ type MarkPlayedStruct struct {
 
 type DownloadMediaStruct struct {
 	Message *waE2E.Message `json:"message"`
+	// Info é opcional. Com ela, a mídia que o WhatsApp já apagou (404 ou 410) é
+	// pedida de novo ao aparelho que a tem; sem ela, o erro volta como antes.
+	Info *MediaMessageInfo `json:"info,omitempty"`
 }
 
 type MessageStatusStruct struct {
@@ -410,17 +414,17 @@ func (m *messageService) DownloadMedia(data *DownloadMediaStruct, instance *inst
 
 	msg := data.Message
 
-	mimetype := ""
-	var mediaData []byte
-
-	img := msg.GetImageMessage()
-	audio := msg.GetAudioMessage()
-	document := msg.GetDocumentMessage()
-	video := msg.GetVideoMessage()
-	sticker := msg.GetStickerMessage()
-
-	if img == nil && audio == nil && document == nil && video == nil && sticker == nil {
+	media, kind, mimetype := selectMedia(msg)
+	if media == nil {
 		return nil, "", errors.New("invalid media type")
+	}
+
+	var retryInfo *types.MessageInfo
+	if data.Info != nil {
+		retryInfo, err = data.Info.toMessageInfo()
+		if err != nil {
+			return nil, "", err
+		}
 	}
 
 	userDirectory := fmt.Sprintf(`files/user_%s`, instance.Id)
@@ -433,54 +437,21 @@ func (m *messageService) DownloadMedia(data *DownloadMediaStruct, instance *inst
 		}
 	}
 
-	if img != nil {
-		mediaData, err = client.Download(context.Background(), img)
-		if err != nil {
-			m.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Failed to download image", instance.Id)
-			msg := fmt.Sprintf("Failed to download image %v", err)
-			return nil, "", errors.New(msg)
-		}
-		mimetype = img.GetMimetype()
+	retrier := mediaRetrier{
+		send: client.SendMediaRetryReceipt,
+		wait: func(messageID string) (<-chan *events.MediaRetry, func()) {
+			return m.whatsmeowService.WaitMediaRetry(instance.Id, messageID)
+		},
+		download: client.Download,
+		timeout:  mediaRetryTimeout,
 	}
-
-	if audio != nil {
-		mediaData, err = client.Download(context.Background(), audio)
-		if err != nil {
-			m.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Failed to download audio", instance.Id)
-			msg := fmt.Sprintf("Failed to download audio %v", err)
-			return nil, "", errors.New(msg)
+	mediaData, err := retrier.fetch(context.Background(), media, retryInfo)
+	if err != nil {
+		m.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Failed to download %s", instance.Id, kind)
+		if errors.Is(err, ErrMediaGone) || errors.Is(err, ErrMediaRetryTimeout) {
+			return nil, "", err
 		}
-		mimetype = audio.GetMimetype()
-	}
-
-	if document != nil {
-		mediaData, err = client.Download(context.Background(), document)
-		if err != nil {
-			m.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Failed to download document", instance.Id)
-			msg := fmt.Sprintf("Failed to download document %v", err)
-			return nil, "", errors.New(msg)
-		}
-		mimetype = document.GetMimetype()
-	}
-
-	if video != nil {
-		mediaData, err = client.Download(context.Background(), video)
-		if err != nil {
-			m.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Failed to download video", instance.Id)
-			msg := fmt.Sprintf("Failed to download video %v", err)
-			return nil, "", errors.New(msg)
-		}
-		mimetype = video.GetMimetype()
-	}
-
-	if sticker != nil {
-		mediaData, err = client.Download(context.Background(), sticker)
-		if err != nil {
-			m.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Failed to download sticker", instance.Id)
-			msg := fmt.Sprintf("Failed to download sticker %v", err)
-			return nil, "", errors.New(msg)
-		}
-		mimetype = sticker.GetMimetype()
+		return nil, "", fmt.Errorf("Failed to download %s %v", kind, err)
 	}
 
 	dataURL := dataurl.New(mediaData, mimetype)

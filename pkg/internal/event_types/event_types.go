@@ -8,6 +8,7 @@ const (
 	PRESENCE      = "PRESENCE"
 	HISTORY_SYNC  = "HISTORY_SYNC"
 	CHAT_PRESENCE = "CHAT_PRESENCE"
+	CHAT_SYNC     = "CHAT_SYNC"
 	CALL          = "CALL"
 	CONNECTION    = "CONNECTION"
 	LABEL         = "LABEL"
@@ -28,6 +29,7 @@ var AllEventTypes = []string{
 	PRESENCE,
 	HISTORY_SYNC,
 	CHAT_PRESENCE,
+	CHAT_SYNC,
 	CALL,
 	CONNECTION,
 	LABEL,
@@ -49,6 +51,7 @@ var validEventTypes = map[string]bool{
 	PRESENCE:      true,
 	HISTORY_SYNC:  true,
 	CHAT_PRESENCE: true,
+	CHAT_SYNC:     true,
 	CALL:          true,
 	CONNECTION:    true,
 	LABEL:         true,

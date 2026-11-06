@@ -112,6 +112,22 @@ Cada item foi lido na issue **e no código** antes de mexer. O que não se confi
 
 `pkg/sendqueue` espaça as mensagens de cada instância com intervalo sorteado entre um mínimo e um máximo (#236, #50). **Desligada por padrão** (`SEND_QUEUE_MIN_INTERVAL_MS=0`). Fila cheia ou espera longa demais respondem 429 com `Retry-After`. Variáveis, comportamento e limites em [OPERACAO.md](OPERACAO.md). O limitador tem testes de ordem, isolamento entre instâncias, recusa, cancelamento e concorrência; a ligação com o `SendMessage` (o `Acquire` antes de simular a digitação e enviar) não tem teste porque o `SendMessage` exige um cliente do WhatsApp conectado. Os padrões (100 mensagens na fila, 50 s de espera) e o 429 são escolhas de implementação dentro do que o item D pedia ("limite e intervalo variável por instância"); podem ser ajustados.
 
+### Fase 11: confiabilidade (2026-11-05)
+
+Pedido do proprietário: implementar os recursos do WhatsApp que a análise contra a whatsmeow encontrou, com a confiabilidade primeiro. A lista completa, com o que ficou de fora, está em `docs/whatsapp-recursos-evogo.md` do Whatsflow.
+
+| Item | O que mudou |
+|---|---|
+| Reenvio pelo celular | `configureClient` liga `AutomaticMessageRerequestFromPhone`: a mensagem que não decifra é pedida ao celular uma vez, 5 s depois da falha, e a resposta chega como um `Message` comum, com o mesmo ID. |
+| Mensagem não decifrada | Novo evento `UndecryptableMessage`, no grupo `MESSAGE`. O caso de visualização única continua saindo como `Message`, como antes. |
+| Mídia expirada | `POST /message/downloadmedia` aceita `info` (`id`, `chat`, `sender` em grupos, `fromMe`). Com ela, um 404 ou 410 faz o pedido de reenvio ao aparelho e a requisição espera até 30 s. Respostas novas: 410 `media_gone`, 504 `media_retry_timeout` e 400 `invalid_media_info`. Sem `info`, nada muda. |
+| Eventos do celular | Grupo novo `CHAT_SYNC`, incluído em `ALL`: `MarkChatAsRead`, `DeleteChat`, `ClearChat`, `DeleteForMe`, `Mute`, `Pin`, `Star`, `UserStatusMute`, `Blocklist`, `PrivacySettings`, `UnarchiveChatsSetting` e também `Archive`. Antes caíam no `default` do handler e eram descartados. |
+| Saúde da conexão | Em `CONNECTION`: `ClientOutdated`, `StreamError` (só o código), `KeepAliveTimeout`, `KeepAliveRestored`, `AppStateSyncError` e `CATRefreshError` (com o texto do erro), `OfflineSyncPreview` e `OfflineSyncCompleted`, que antes não tinha grupo. |
+| Outros eventos | `CallReject`, `CallPreAccept` e `CallTransport` em `CALL`; `BusinessName` em `CONTACT`. |
+| Filtro do webhook | O `default` de `CallWebhook` passa a consultar `globalEventGroup`, para a lista do webhook não ficar para trás da tabela das filas globais. |
+
+Os testes falham ao desfazer cada correção (conferido à mão: a opção do cliente, o filtro do webhook e a condição do reenvio). A resposta do celular é testada com a cifra real da whatsmeow, mas o pedido em si só um aparelho prova: seção 7 do roteiro.
+
 ### Mudanças de comportamento a conhecer
 
 - Depois de um timeout de QR, a instância fica parada até um novo `/instance/connect`. Antes gerava QR de novo para sempre.
@@ -124,6 +140,8 @@ Cada item foi lido na issue **e no código** antes de mexer. O que não se confi
 - (Fase 9) O webhook de `Message` ganha `data.messageAction` em edições e exclusões, e `IsEdit` passa a `true` nas edições decifradas. Quem lia `IsEdit` ou o envelope cifrado continua vendo os mesmos campos.
 - (Fase 9) Imagens enviadas por `/send/media`, status e carrossel levam largura e altura.
 - (Fase 9) `GET /polls/{id}/results` responde 501 num servidor sem `POSTGRES_AUTH_DB`. O servidor nesse modo deixa de cair na inicialização.
+- (Fase 11) Quem assina `CONNECTION`, `MESSAGE`, `CALL` ou `CONTACT` passa a receber os eventos novos dessas categorias e precisa ignorar o que não conhece. O Whatsflow já ignora.
+- (Fase 11) Uma mensagem que não decifra gera um pedido ao celular da própria conta.
 - (Fase 10) Com `SEND_QUEUE_MIN_INTERVAL_MS` maior que zero, as rotas `/send/*` podem demorar até `SEND_QUEUE_MAX_WAIT_SECONDS` e passam a responder 429 quando a fila enche.
 
 ### O que NÃO foi validado com WhatsApp real
@@ -160,7 +178,6 @@ Feito na fase 10. Falta decidir os valores para as contas reais (o código não 
 
 - **Evento `SendStatus`:** é emitido por `send_service.go` e não pertence a nenhum grupo em `globalEventGroup`, então provavelmente é descartado pelo filtro do webhook mesmo com `ALL` (o `ALL` é expandido no `connect`). Verificar.
 - **`Disconnect` limpa `instance.Events`** quando a instância estava logada. Não ficou claro se é intencional; relacionado ao #111.
-- **`OfflineSyncCompleted`** é emitido sem grupo (está numa lista de exceções no teste de eventos).
 - **Status HTTP dos erros de envio:** o handler devolve 500 para quase tudo, inclusive `ErrInstanceNotLoggedIn`. Um 409 ou 400 seria mais correto.
 
 ### F. Dependem de conta real ou de decisão

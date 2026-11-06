@@ -277,16 +277,17 @@ func (p *rabbitMQProducer) CreateGlobalQueues() error {
 
 		// Mapeia eventos globais para os eventos originais que precisam de filas (modo antigo)
 		eventMap := map[string][]string{
-			"MESSAGE":       {"message"},
+			"MESSAGE":       {"message", "undecryptablemessage"},
 			"SEND_MESSAGE":  {"sendmessage"},
 			"READ_RECEIPT":  {"receipt"},
 			"PRESENCE":      {"presence"},
 			"HISTORY_SYNC":  {"historysync"},
 			"CHAT_PRESENCE": {"chatpresence", "archive"},
-			"CALL":          {"calloffer", "callaccept", "callterminate", "calloffernotice", "callrelaylatency"},
-			"CONNECTION":    {"connected", "pairsuccess", "temporaryban", "loggedout", "connectfailure", "disconnected"},
+			"CHAT_SYNC":     {"markchatasread", "deletechat", "clearchat", "deleteforme", "mute", "pin", "star", "userstatusmute", "blocklist", "privacysettings", "unarchivechatssetting"},
+			"CALL":          {"calloffer", "callaccept", "callterminate", "calloffernotice", "callrelaylatency", "callreject", "callpreaccept", "calltransport"},
+			"CONNECTION":    {"connected", "pairsuccess", "temporaryban", "loggedout", "connectfailure", "disconnected", "clientoutdated", "streamerror", "keepalivetimeout", "keepaliverestored", "appstatesyncerror", "catrefresherror", "offlinesyncpreview", "offlinesynccompleted"},
 			"LABEL":         {"labeledit", "labelassociationchat", "labelassociationmessage"},
-			"CONTACT":       {"contact", "pushname"},
+			"CONTACT":       {"contact", "pushname", "businessname"},
 			"GROUP":         {"groupinfo", "joinedgroup"},
 			"NEWSLETTER":    {"newsletterjoin", "newsletterleave"},
 			"QRCODE":        {"qrcode", "qrtimeout", "qrsuccess"},

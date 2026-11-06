@@ -78,6 +78,16 @@ Os itens de operação não precisam de conta pareada; os marcados com (conta) p
 - [ ] Fila de envio (#236): com `SEND_QUEUE_MIN_INTERVAL_MS=3000`, `SEND_QUEUE_MAX_INTERVAL_MS=6000` (e **só com as duas instâncias de teste, poucas mensagens**), enviar 4 mensagens seguidas em paralelo: chegam espaçadas de 3 a 6 s e as respostas são as de sempre. Com `SEND_QUEUE_MAX_PENDING=1`, a terceira requisição simultânea responde 429 com `Retry-After`. `evogo_send_queue_*` aparecem em `/metrics`.
 - [ ] Enquete sem Postgres de autenticação: subir com `POSTGRES_AUTH_DB` vazio. O servidor sobe (antes, caía na inicialização) e `GET /polls/:id/results` responde 501.
 
+## 7. Fase 11: confiabilidade (2026-11-05)
+
+Só com as instâncias de teste, poucas mensagens.
+
+- [ ] Mídia expirada (conta): com `info` preenchida, `POST /message/downloadmedia` de uma mídia antiga que hoje responde 404 ou 410. Esperado: o arquivo volta, em até 30 s, com o celular de origem ligado. Com o celular desligado: 504 `media_retry_timeout`. Com a mídia apagada do aparelho: 410 `media_gone`.
+- [ ] Sem `info`, a mesma mídia responde o erro de antes.
+- [ ] Eventos do celular (conta): assinar `CHAT_SYNC`. No celular, ler uma conversa não lida, silenciar, fixar, arquivar e apagar uma conversa de teste. Esperado: `MarkChatAsRead`, `Mute`, `Pin`, `Archive` e `DeleteChat`, cada um uma vez, sem rajada ao reconectar.
+- [ ] Reenvio (conta): difícil de provocar de propósito. Com `UndecryptableMessage` no log do webhook, conferir se o `Message` com o mesmo ID chega depois e se a instância segue estável.
+- [ ] `CONNECTION`: derrubar a rede por alguns minutos e conferir `KeepAliveTimeout` e `KeepAliveRestored`.
+
 ## Fora do roteiro
 
 O passkey (#172), o nono dígito (#214), os botões e listas antigos (#170, #59, #71, #110) e o QR que não gera (#85, #148, #186) não foram corrigidos. Também ficaram de fora o resultado vazio de enquete (#60), a miniatura grande de link (#103), o carrossel em dois balões (#69) e o timer de mensagens temporárias (#79): o motivo de cada um está em [PROGRESSO.md](PROGRESSO.md), seção "O que falta".

@@ -37,7 +37,7 @@ func TestGlobalEventGroup(t *testing.T) {
 
 // Eventos que o handler emite de propósito sem pertencer a nenhum grupo.
 var ungroupedEvents = map[string]bool{
-	"OfflineSyncCompleted": true,
+
 }
 
 // Trava o problema de fundo de #105 e #193: um evento novo emitido em
@@ -50,6 +50,9 @@ func TestEveryEmittedEventHasAGroup(t *testing.T) {
 	}
 	re := regexp.MustCompile(`(?:postMap\["event"\]\s*=\s*|"event":\s*)"(\w+)"`)
 	emitted := map[string]bool{"SendMessage": true} // emitido por send_service.go
+	for _, c := range forwardedCases {
+		emitted[c.name] = true // emitidos por forwardedEvent
+	}
 	for _, m := range re.FindAllSubmatch(src, -1) {
 		emitted[string(m[1])] = true
 	}

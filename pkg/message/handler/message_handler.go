@@ -1,6 +1,7 @@
 package message_handler
 
 import (
+	"errors"
 	"net/http"
 
 	instance_model "github.com/evolution-foundation/evolution-go/pkg/instance/model"
@@ -261,14 +262,16 @@ func (m *messageHandler) MarkPlayed(ctx *gin.Context) {
 
 // DownloadMedia download a media message (image, video, audio, document)
 // @Summary Download media
-// @Description Download the media content of a message (image, video, audio or document)
+// @Description Download the media content of a message (image, video, audio or document). If `info` is sent and WhatsApp no longer has the file (404 or 410), the phone that has it is asked to upload it again; the request waits up to 30 seconds for the answer.
 // @Tags Message
 // @Accept json
 // @Produce json
 // @Param message body message_service.DownloadMediaStruct true "Download media"
 // @Success 200 {object} gin.H "success"
 // @Failure 400 {object} gin.H "Error on validation"
+// @Failure 410 {object} gin.H "The phone no longer has the media (code media_gone)"
 // @Failure 500 {object} gin.H "Internal server error"
+// @Failure 504 {object} gin.H "The phone did not answer in time (code media_retry_timeout)"
 // @Router /message/downloadmedia [post]
 func (m *messageHandler) DownloadMedia(ctx *gin.Context) {
 	getInstance := ctx.MustGet("instance")
@@ -288,7 +291,16 @@ func (m *messageHandler) DownloadMedia(ctx *gin.Context) {
 
 	dataUrl, ts, err := m.messageService.DownloadMedia(data, instance, ctx.Request)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		switch {
+		case errors.Is(err, message_service.ErrMediaGone):
+			ctx.JSON(http.StatusGone, gin.H{"error": err.Error(), "code": "media_gone"})
+		case errors.Is(err, message_service.ErrMediaRetryTimeout):
+			ctx.JSON(http.StatusGatewayTimeout, gin.H{"error": err.Error(), "code": "media_retry_timeout"})
+		case errors.Is(err, message_service.ErrInvalidMediaInfo):
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error(), "code": "invalid_media_info"})
+		default:
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
 		return
 	}
 

@@ -65,6 +65,13 @@ type WhatsmeowService interface {
 	UpdateInstanceAdvancedSettings(instanceId string) error
 	GetPollService() poll_service.PollService // NOVO: Acesso ao serviço de polls
 
+	// WaitMediaRetry registra o interesse na resposta do celular a um pedido de
+	// reenvio de mídia. Registre antes de enviar o pedido e chame a função
+	// devolvida ao terminar.
+	WaitMediaRetry(instanceId, messageId string) (<-chan *events.MediaRetry, func())
+	// DeliverMediaRetry entrega a resposta do celular a quem está esperando por ela.
+	DeliverMediaRetry(instanceId string, evt *events.MediaRetry)
+
 	// Passkey (WebAuthn) pairing bridge — read by the public ceremony endpoint,
 	// written by the whatsmeow event goroutine.
 	PasskeyCeremonyStore() *ceremony.Store
@@ -110,6 +117,7 @@ type whatsmeowService struct {
 	natsProducer       producer_interfaces.Producer
 	loggerWrapper      *logger_wrapper.LoggerManager
 	passkeyCeremony    *ceremony.Store
+	mediaRetries       *mediaRetryWaiters
 	// storeContainer é um ponteiro para que os métodos com receiver por valor
 	// (como StartClient) compartilhem o mesmo container.
 	storeContainer *storeContainerHolder
@@ -613,8 +621,7 @@ func (w whatsmeowService) StartClient(cd *ClientData) {
 	}
 	w.setProxyStatus(cd.Instance.Id, proxyStatus)
 
-	client.EnableAutoReconnect = false
-	client.AutoTrustIdentity = true
+	configureClient(client)
 
 	mycli = &MyClient{
 		service:            &w,
@@ -1030,6 +1037,18 @@ func archiveEventData(evt *events.Archive) map[string]interface{} {
 		"Action":       evt.Action,
 		"FromFullSync": evt.FromFullSync,
 	}
+}
+
+// configureClient aplica as opções do whatsmeow que valem para toda instância.
+//
+// AutomaticMessageRerequestFromPhone pede ao celular a mensagem que não pôde ser
+// decifrada, em vez de deixá-la como "Aguardando esta mensagem". O pedido sai uma
+// vez por mensagem, cinco segundos depois da falha, e a resposta chega como um
+// evento Message comum, com o mesmo ID.
+func configureClient(client *whatsmeow.Client) {
+	client.EnableAutoReconnect = false
+	client.AutoTrustIdentity = true
+	client.AutomaticMessageRerequestFromPhone = true
 }
 
 func (mycli *MyClient) myEventHandler(rawEvt interface{}) {
@@ -2296,12 +2315,26 @@ func (mycli *MyClient) myEventHandler(rawEvt interface{}) {
 			if err != nil {
 				mycli.loggerWrapper.GetLogger(mycli.userID).LogError("[%s] Error reconnecting client: %s", mycli.userID, err)
 			}
+			doWebhook = true
+			postMap["event"] = "UndecryptableMessage"
 		} else {
-			mycli.loggerWrapper.GetLogger(mycli.userID).LogWarn("[%s] ID is not 66 or 67 or view_once, skipping", mycli.userID)
+			// A mensagem pode ainda chegar: o celular a reenvia como um Message comum,
+			// com o mesmo ID. Este evento só diz que por enquanto ela não pôde ser lida.
+			doWebhook = true
+			postMap["event"] = "UndecryptableMessage"
 		}
-	default:
-		mycli.loggerWrapper.GetLogger(mycli.userID).LogWarn("[%s] Unhandled event %s: %+v", mycli.userID, fmt.Sprintf("%T", evt), evt)
+	case *events.MediaRetry:
+		mycli.service.DeliverMediaRetry(mycli.userID, evt)
 		return
+	default:
+		name, data := forwardedEvent(rawEvt)
+		if name == "" {
+			mycli.loggerWrapper.GetLogger(mycli.userID).LogWarn("[%s] Unhandled event %s: %+v", mycli.userID, fmt.Sprintf("%T", evt), evt)
+			return
+		}
+		doWebhook = true
+		postMap["event"] = name
+		postMap["data"] = data
 	}
 
 	if doWebhook {
@@ -2447,7 +2480,7 @@ func (w *whatsmeowService) CallWebhook(instance *instance_model.Instance, queueN
 			w.sendToQueueOrWebhook(instance, queueName, jsonData)
 		}
 	case "ChatPresence", "Archive":
-		if contains(subscriptions, "CHAT_PRESENCE") {
+		if contains(subscriptions, "CHAT_PRESENCE") || (eventType == "Archive" && contains(subscriptions, "CHAT_SYNC")) {
 			w.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Event received of type %s", instance.Id, eventType)
 			w.sendToQueueOrWebhook(instance, queueName, jsonData)
 		}
@@ -2508,7 +2541,12 @@ func (w *whatsmeowService) CallWebhook(instance *instance_model.Instance, queueN
 		}
 
 	default:
-		return
+		// Evento sem caso próprio acima: vale o grupo de globalEventGroup, a mesma
+		// tabela das filas globais, para esta lista não ficar para trás de novo.
+		if group := globalEventGroup(eventType); group != "" && contains(subscriptions, group) {
+			w.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Event received of type %s", instance.Id, eventType)
+			w.sendToQueueOrWebhook(instance, queueName, jsonData)
+		}
 	}
 }
 
@@ -3062,6 +3100,7 @@ func NewWhatsmeowService(
 		natsProducer:       natsProducer,
 		loggerWrapper:      loggerWrapper,
 		passkeyCeremony:    ceremony.NewStore(),
+		mediaRetries:       newMediaRetryWaiters(),
 		storeContainer:     &storeContainerHolder{},
 	}
 }

@@ -674,7 +674,7 @@ O Evolution GO usa dois níveis de classificação de eventos:
 
 ### Eventos de Presença
 
-**Categoria**: `PRESENCE` e `CHAT_PRESENCE`
+**Categoria**: `PRESENCE` e `CHAT_PRESENCE`. O evento `Archive` também é entregue a quem assina `CHAT_SYNC`, a categoria das ações feitas no celular (`MarkChatAsRead`, `DeleteChat`, `ClearChat`, `DeleteForMe`, `Mute`, `Pin`, `Star`, `UserStatusMute`, `Blocklist`, `PrivacySettings`, `UnarchiveChatsSetting`).
 
 - `Presence` - Status online/offline de contato
 - `ChatPresence` - Digitando/gravando áudio

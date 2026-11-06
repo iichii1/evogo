@@ -2136,7 +2136,7 @@ const docTemplate = `{
         },
         "/message/downloadmedia": {
             "post": {
-                "description": "Download the media content of a message (image, video, audio or document)",
+                "description": "Download the media content of a message (image, video, audio or document). If ` + "`" + `info` + "`" + ` is sent and WhatsApp no longer has the file (404 or 410), the phone that has it is asked to upload it again; the request waits up to 30 seconds for the answer.",
                 "consumes": [
                     "application/json"
                 ],
@@ -2171,8 +2171,20 @@ const docTemplate = `{
                             "$ref": "#/definitions/gin.H"
                         }
                     },
+                    "410": {
+                        "description": "The phone no longer has the media (code media_gone)",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "504": {
+                        "description": "The phone did not answer in time (code media_retry_timeout)",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -4765,6 +4777,14 @@ const docTemplate = `{
         "github_com_evolution-foundation_evolution-go_pkg_message_service.DownloadMediaStruct": {
             "type": "object",
             "properties": {
+                "info": {
+                    "description": "Info é opcional. Com ela, a mídia que o WhatsApp já apagou (404 ou 410) é\npedida de novo ao aparelho que a tem; sem ela, o erro volta como antes.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_evolution-foundation_evolution-go_pkg_message_service.MediaMessageInfo"
+                        }
+                    ]
+                },
                 "message": {
                     "$ref": "#/definitions/waE2E.Message"
                 }
@@ -4808,6 +4828,24 @@ const docTemplate = `{
                     }
                 },
                 "number": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_evolution-foundation_evolution-go_pkg_message_service.MediaMessageInfo": {
+            "type": "object",
+            "properties": {
+                "chat": {
+                    "type": "string"
+                },
+                "fromMe": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "sender": {
+                    "description": "obrigatório em grupos",
                     "type": "string"
                 }
             }
